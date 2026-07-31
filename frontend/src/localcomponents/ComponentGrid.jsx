@@ -1,41 +1,11 @@
 import { ArrowUpRight } from "lucide-react";
-
-const demoComponents = [
-  {
-    name: "Glow Button",
-    category: "Buttons",
-    description: "Animated glowing button with hover effects.",
-  },
-  {
-    name: "Glass Card",
-    category: "Cards",
-    description: "Modern glassmorphism card component.",
-  },
-  {
-    name: "Aurora Background",
-    category: "Backgrounds",
-    description: "Animated aurora gradient background.",
-  },
-  {
-    name: "Split Hero",
-    category: "Hero Sections",
-    description: "Responsive hero with CTA and image.",
-  },
-  {
-    name: "Pulse Loader",
-    category: "Loaders",
-    description: "Smooth pulse loading animation.",
-  },
-  {
-    name: "Floating Navbar",
-    category: "Navigation",
-    description: "Modern floating navigation bar.",
-  },
-];
+import { Link } from "react-router-dom";
+import { components } from "../data/components";
 
 const ComponentGrid = () => {
   return (
     <div>
+      {/* Heading */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-white">
           Browse Components
@@ -46,11 +16,13 @@ const ComponentGrid = () => {
         </p>
       </div>
 
+      {/* Grid */}
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-        {demoComponents.map((component) => (
-          <div
-            key={component.name}
-            className="group cursor-pointer overflow-hidden rounded-2xl border border-[#30363D] bg-[#161B22] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/40"
+        {components.map((component) => (
+          <Link
+            key={component.id}
+            to={`/components/${component.category}/${component.slug}`}
+            className="group block overflow-hidden rounded-2xl border border-[#30363D] bg-[#161B22] transition-all duration-300 hover:-translate-y-1 hover:border-cyan-500/40"
           >
             {/* Preview */}
             <div className="flex h-44 items-center justify-center border-b border-[#30363D] bg-[#0D1117]">
@@ -81,7 +53,7 @@ const ComponentGrid = () => {
                 <ArrowUpRight className="h-5 w-5 text-cyan-400 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </div>
