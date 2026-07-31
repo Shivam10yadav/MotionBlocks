@@ -33,7 +33,7 @@ const FEATURES = [
   },
 ];
 
-export default function WhyMotionBlocksList() {
+export default function WhyMotions() {
   return (
     <section className="bg-[#0D1117] text-[#F8FAFC] py-24 px-4 sm:px-6 lg:px-8 font-sans antialiased">
       <div className="max-w-5xl mx-auto">
