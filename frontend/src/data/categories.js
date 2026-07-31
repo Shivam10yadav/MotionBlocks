@@ -24,4 +24,9 @@ export const categories = [
     name: "Backgrounds",
     description: "Animated and creative backgrounds.",
   },
+  {
+    id: "cta-sections",
+    name: "CTA Sections",
+    description: "Call-to-action sections that convert.",
+  },
 ];
