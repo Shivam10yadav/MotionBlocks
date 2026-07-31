@@ -3,6 +3,7 @@ import Landing from './pages/landing/Landing'; // adjust the path to your Landin
 import Components from './pages/components';
 import ComponentDetails from './localcomponents/ComponentsDetails';
 import DocsPage from './pages/DocsPage';
+import ContributePage from './pages/Contribute';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
   <Route path="/" element={<Landing />} />
   <Route path="/components" element={<Components />} />
   <Route path="/docs" element={<DocsPage />} />
+  <Route path="/contribute" element={<ContributePage />} />
   <Route
     path="/components/:category/:slug"
     element={<ComponentDetails />}

@@ -26,7 +26,7 @@ export function Navbar({ githubUrl = "https://github.com", onBrowseClick }) {
     { name: "Components", href: "/components" },
     { name: "Categories", href: "#categories" },
     { name: "Docs", href: "/  docs" },
-    { name: "About", href: "#about" },
+    { name: "Contribute", href: "/contribute" },
   ];
 
   return (
