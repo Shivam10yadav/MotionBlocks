@@ -2,7 +2,9 @@ import GlowButton from "../ui/buttons/GlowButton";
 import GradientButton from "../ui/buttons/GradientButton";
 import CtaSection from "../ui/cta/CTA-1";
 import AuroraTextEffect from "../ui/text-effect/AuroraTextEffect";
-
+import NotFound from "../ui/404/NotFound";
+import Testimonial from "../ui/testimonials/Testimonials-1";
+import HoverGallery from "../ui/gallery/HoverGallery";
 export const components = [
   {
     id: 1,
@@ -336,4 +338,445 @@ const AuroraTextEffect = ({
 
 export default AuroraTextEffect;`,
   },
+  {
+    id: 5,
+    slug: "minimal-light-404",
+    name: "Minimal Light 404",
+    category: "404-pages",
+    description:
+      "A beautifully minimal, light-themed 404 error page with smooth floating physics, soft ambient backdrop gradients, and interactive navigation controls.",
+
+    preview: NotFound,
+
+    install: "npm install framer-motion lucide-react",
+
+    usage: `<NotFound />`,
+
+    code: `import React from "react";
+import { motion } from "framer-motion";
+import { ArrowLeft, Home, Sparkles } from "lucide-react";
+
+export const NotFound = () => {
+  return (
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-slate-50 text-slate-800 antialiased selection:bg-indigo-100 selection:text-indigo-900">
+      
+      {/* Subtle Light-Theme Ambient Gradient Glows */}
+      <div className="pointer-events-none absolute -top-32 left-1/2 h-[450px] w-[600px] -translate-x-1/2 rounded-full bg-gradient-to-b from-indigo-200/60 via-purple-100/40 to-transparent blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 left-1/3 h-[400px] w-[500px] rounded-full bg-gradient-to-t from-pink-200/50 via-indigo-100/30 to-transparent blur-3xl" />
+
+      {/* Floating Decorative Elements */}
+      <motion.div
+        className="pointer-events-none absolute top-1/4 left-1/6 hidden lg:block"
+        animate={{
+          y: [-10, 10, -10],
+          rotate: [0, 5, 0],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
+        <div className="flex items-center gap-2 rounded-2xl border border-slate-200/80 bg-white/70 px-4 py-2.5 shadow-xl shadow-slate-200/50 backdrop-blur-md">
+          <Sparkles className="h-4 w-4 text-indigo-500" />
+          <span className="font-mono text-xs font-medium text-slate-500">Lost in Space</span>
+        </div>
+      </motion.div>
+
+      {/* Main Content Card Container */}
+      <div className="relative z-10 mx-auto flex max-w-xl flex-col items-center px-6 text-center">
+        
+        {/* Animated Badge */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 rounded-full border border-indigo-200/60 bg-indigo-50/80 px-3.5 py-1.5 backdrop-blur-sm"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-indigo-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-indigo-500" />
+          </span>
+          <span className="font-mono text-xs font-semibold uppercase tracking-wider text-indigo-600">
+            Error 404
+          </span>
+        </motion.div>
+
+        {/* Animated Floating 404 Headline */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="relative mt-6 select-none"
+        >
+          <motion.h1
+            animate={{ y: [-6, 6, -6] }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="font-display text-8xl font-black tracking-tight text-slate-900 sm:text-9xl"
+          >
+            4
+            <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              0
+            </span>
+            4
+          </motion.h1>
+        </motion.div>
+
+        {/* Text Details */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <h2 className="mt-4 text-2xl font-semibold text-slate-900 sm:text-3xl">
+            Page not found
+          </h2>
+          <p className="mt-3 text-base leading-relaxed text-slate-500 sm:text-lg">
+            Sorry, we couldn’t find the page you’re looking for. It might have been moved, renamed, or no longer exists.
+          </p>
+        </motion.div>
+
+        {/* Action Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center"
+        >
+          <a
+            href="/"
+            className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-6 py-3.5 text-sm font-semibold text-white shadow-xl shadow-slate-900/10 transition-all duration-200 hover:bg-slate-800 hover:shadow-2xl hover:shadow-slate-900/20 active:scale-[0.98]"
+          >
+            <Home className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5" />
+            <span>Back to Home</span>
+          </a>
+
+          <button
+            onClick={() => window.history.back()}
+            className="inline-flex items-center justify-center gap-2 rounded-2xl border border-slate-200/80 bg-white/80 px-6 py-3.5 text-sm font-semibold text-slate-700 shadow-sm backdrop-blur-md transition-all duration-200 hover:border-slate-300 hover:bg-white hover:text-slate-900 active:scale-[0.98]"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Go Back</span>
+          </button>
+        </motion.div>
+      </div>
+
+      {/* Footer copyright */}
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="absolute bottom-6 text-center font-mono text-xs text-slate-400"
+      >
+        © {new Date().getFullYear()} Your Company. All rights reserved.
+      </motion.footer>
+    </div>
+  );
+};
+
+export default NotFound;`,
+  },
+  {
+    id: 6,
+    slug: "light-testimonial-slider",
+    name: "Light Testimonial Slider",
+    category: "testimonials",
+    description:
+      "A light-themed testimonial carousel featuring smooth AnimatePresence transition effects, star rating displays, profile metadata, and interactive controls.",
+
+    preview: Testimonial,
+
+    install: "npm install framer-motion lucide-react",
+
+    usage: `<Testimonial />`,
+
+    code: `import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
+
+const testimonialsData = [
+  {
+    id: 1,
+    quote:
+      "This library completely revolutionized how fast we build landing pages. The components are ridiculously polished, smooth, and effortless to integrate into our stack.",
+    name: "Sophia Martinez",
+    role: "Lead Product Designer",
+    company: "Vortex Labs",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250",
+    rating: 5,
+  },
+  {
+    id: 2,
+    quote:
+      "The micro-animations and physics-based motion in these components added a level of luxury to our web app that our users mention in almost every feedback survey.",
+    name: "Alexandre Dubois",
+    role: "Senior Frontend Engineer",
+    company: "Lumière Digital",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=250",
+    rating: 5,
+  },
+  {
+    id: 3,
+    quote:
+      "Clean code, exceptional performance, and zero dependency bloat. Easily one of the best UI component sets I've used in years.",
+    name: "Elena Rostova",
+    role: "Co-Founder & CTO",
+    company: "Aether AI",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=250",
+    rating: 5,
+  },
 ];
+
+export const Testimonial = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonialsData.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonialsData.length) % testimonialsData.length);
+  };
+
+  const current = testimonialsData[currentIndex];
+
+  return (
+    <section className="relative overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-50/50 p-8 sm:p-12 lg:p-16 antialiased selection:bg-indigo-100 selection:text-indigo-900">
+      <div className="pointer-events-none absolute -top-24 right-0 h-80 w-80 rounded-full bg-indigo-100/60 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 left-0 h-80 w-80 rounded-full bg-purple-100/50 blur-3xl" />
+
+      <div className="relative z-10 mx-auto max-w-4xl">
+        <Quote className="absolute -top-4 -left-4 h-24 w-24 text-slate-200/50 pointer-events-none" />
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="flex flex-col items-center text-center sm:items-start sm:text-left"
+          >
+            <div className="flex items-center gap-1 text-amber-400">
+              {Array.from({ length: current.rating }).map((_, i) => (
+                <Star key={i} size={18} fill="currentColor" />
+              ))}
+            </div>
+
+            <p className="mt-6 text-2xl font-medium leading-relaxed tracking-tight text-slate-800 sm:text-3xl lg:text-4xl">
+              "{current.quote}"
+            </p>
+
+            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:items-center">
+              <img
+                src={current.avatar}
+                alt={current.name}
+                className="h-14 w-14 rounded-full border-2 border-white object-cover shadow-md shadow-slate-200"
+              />
+              <div>
+                <h4 className="text-base font-semibold text-slate-900">{current.name}</h4>
+                <p className="text-sm font-medium text-slate-500">
+                  {current.role} at <span className="text-indigo-600 font-semibold">{current.company}</span>
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="mt-10 flex items-center justify-between border-t border-slate-200/80 pt-6">
+          <div className="flex items-center gap-2">
+            {testimonialsData.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setCurrentIndex(idx)}
+                aria-label={\`Go to slide \${idx + 1}\`}
+                className={\`h-2.5 rounded-full transition-all duration-300 \${
+                  idx === currentIndex ? "w-8 bg-indigo-600" : "w-2.5 bg-slate-300 hover:bg-slate-400"
+                }\`}
+              />
+            ))}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handlePrev}
+              aria-label="Previous testimonial"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-700 shadow-sm backdrop-blur-md transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 active:scale-95"
+            >
+              <ChevronLeft size={20} />
+            </button>
+
+            <button
+              onClick={handleNext}
+              aria-label="Next testimonial"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-slate-200/80 bg-white text-slate-700 shadow-sm backdrop-blur-md transition-all duration-200 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900 active:scale-95"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Testimonial;`,
+  },
+  {
+    id: 7,
+    slug: "hover-accordion-gallery",
+    name: "Hover Accordion Gallery",
+    category: "galleries",
+    description:
+      "An interactive visual gallery with fluid flex-accordion sliding hover transitions, smooth image scaling, and contextual meta details.",
+
+    preview: HoverGallery,
+
+    install: "npm install framer-motion lucide-react",
+
+    usage: `<HoverGallery />`,
+
+    code: `import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowUpRight, Sparkles } from "lucide-react";
+
+const galleryImages = [
+  {
+    id: 1,
+    title: "Neptune Dunes",
+    category: "Architecture",
+    location: "Reykjavík, Iceland",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    id: 2,
+    title: "Velvet Horizon",
+    category: "Minimalism",
+    location: "Kyoto, Japan",
+    image: "https://images.unsplash.com/photo-1511884642898-4c92249e20b6?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    id: 3,
+    title: "Aetherial Ridge",
+    category: "Landscape",
+    location: "Zermatt, Switzerland",
+    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    id: 4,
+    title: "Cyber Canopy",
+    category: "Abstract",
+    location: "Singapore",
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=1200",
+  },
+  {
+    id: 5,
+    title: "Solar Eclipse",
+    category: "Editorial",
+    location: "Atacama, Chile",
+    image: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&q=80&w=1200",
+  },
+];
+
+export const HoverGallery = () => {
+  const [activeId, setActiveId] = useState(1);
+
+  return (
+    <section className="relative w-full overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-50 p-6 sm:p-10 dark:border-slate-800 dark:bg-slate-950 antialiased">
+      <div className="pointer-events-none absolute -top-24 left-1/2 h-96 w-[600px] -translate-x-1/2 rounded-full bg-gradient-to-b from-indigo-200/40 via-purple-100/20 to-transparent blur-3xl dark:from-indigo-900/20 dark:via-purple-900/10" />
+
+      <div className="relative z-10 mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200/60 bg-indigo-50/80 px-3 py-1 font-mono text-xs font-semibold uppercase tracking-wider text-indigo-600 dark:border-indigo-900/50 dark:bg-indigo-950/50 dark:text-indigo-400">
+            <Sparkles className="h-3.5 w-3.5" />
+            Featured Visuals
+          </div>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+            Curated Showcase
+          </h2>
+        </div>
+        <p className="max-w-xs text-sm text-slate-500 dark:text-slate-400">
+          Hover over any card to smoothly expand the visual landscape and reveal gallery details.
+        </p>
+      </div>
+
+      <div className="relative z-10 flex h-[480px] w-full flex-col gap-3 sm:flex-row sm:gap-4">
+        {galleryImages.map((item) => {
+          const isActive = activeId === item.id;
+
+          return (
+            <motion.div
+              key={item.id}
+              onMouseEnter={() => setActiveId(item.id)}
+              onClick={() => setActiveId(item.id)}
+              layout
+              transition={{
+                type: "spring",
+                stiffness: 200,
+                damping: 25,
+              }}
+              className={\`group relative flex h-full cursor-pointer overflow-hidden rounded-2xl \${
+                isActive ? "sm:flex-[3.5]" : "sm:flex-[1]"
+              } transition-all duration-300\`}
+            >
+              <motion.img
+                src={item.image}
+                alt={item.title}
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent transition-opacity duration-300" />
+
+              {!isActive && (
+                <div className="absolute inset-0 hidden items-end p-6 sm:flex">
+                  <span className="font-display text-lg font-semibold tracking-wide text-white/80 [writing-mode:vertical-lr] rotate-180">
+                    {item.title}
+                  </span>
+                </div>
+              )}
+
+              <AnimatePresence>
+                {isActive && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 15 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute inset-x-0 bottom-0 flex flex-col justify-end p-6 sm:p-8"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-mono text-xs font-semibold uppercase tracking-widest text-indigo-300">
+                          {item.category} • {item.location}
+                        </span>
+                        <h3 className="mt-1 font-display text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                          {item.title}
+                        </h3>
+                      </div>
+
+                      <button
+                        aria-label="View Project"
+                        className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md transition-transform duration-200 hover:scale-110 hover:bg-white hover:text-slate-900"
+                      >
+                        <ArrowUpRight className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+
+export default HoverGallery;`,
+  },
+];
+

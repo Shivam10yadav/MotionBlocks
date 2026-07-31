@@ -35,7 +35,6 @@ export const AuroraTextEffect = ({
     mouseY.set(0);
   };
 
-  // Letter Stagger Animation Variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

@@ -25,7 +25,7 @@ export function Navbar({ githubUrl = "https://github.com", onBrowseClick }) {
   const navLinks = [
     { name: "Components", href: "/components" },
     { name: "Categories", href: "#categories" },
-    { name: "Docs", href: "/  docs" },
+    { name: "Docs", href: "/docs" },
     { name: "Contribute", href: "/contribute" },
   ];
 
