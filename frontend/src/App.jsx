@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Landing from './pages/landing/Landing'; // adjust the path to your Landing component
 import Components from './pages/components';
 import ComponentDetails from './localcomponents/ComponentsDetails';
+import DocsPage from './pages/DocsPage';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
   <Routes>
   <Route path="/" element={<Landing />} />
   <Route path="/components" element={<Components />} />
+  <Route path="/docs" element={<DocsPage />} />
   <Route
     path="/components/:category/:slug"
     element={<ComponentDetails />}

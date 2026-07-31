@@ -29,6 +29,16 @@ const fadeUp = {
   }),
 };
 
+const copyCode = async () => {
+  try {
+    await navigator.clipboard.writeText(panelContent);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 const TABS = [
   { key: "install", label: "Install" },
   { key: "usage", label: "Usage" },
@@ -262,7 +272,7 @@ const ComponentDetails = () => {
               custom={4}
               className="mt-8 w-full min-w-0 scroll-mt-24 overflow-hidden rounded-2xl border border-[#23262F] bg-[#111319]"
             >
-              <div className="flex items-center justify-between border-b border-[#23262F] px-3">
+            <div className="flex items-center justify-between border-b border-[#23262F] px-3">
                 <div className="flex">
                   {TABS.map((t) => (
                     <button
@@ -283,15 +293,13 @@ const ComponentDetails = () => {
                   ))}
                 </div>
 
-                {tab === "code" && (
-                  <button
-                    onClick={copyCode}
-                    className="flex items-center gap-2 rounded-lg bg-[--ember] px-4 py-2 text-sm font-semibold text-[#08090D] transition hover:bg-[#ff8f63]"
-                  >
-                    {copied ? <Check size={16} /> : <Copy size={16} />}
-                    {copied ? "Copied" : "Copy code"}
-                  </button>
-                )}
+            <button
+  onClick={copyCode}
+  className="flex items-center gap-2 rounded-lg bg-[#FF7A45] px-4 py-2 text-sm font-semibold text-[#08090D] transition hover:bg-[#ff8f63]"
+>
+  {copied ? <Check size={16} /> : <Copy size={16} />}
+  {copied ? "Copied" : "Copy"}
+</button>
               </div>
 
               <div className="flex items-center gap-2 border-b border-[#23262F] bg-[#0D0F14] px-5 py-3 font-code text-sm text-[#5C5F6B]">
