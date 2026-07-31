@@ -1,32 +1,12 @@
 export const categories = [
-  {
-    id: "buttons",
-    name: "Buttons",
-    description: "Interactive and animated buttons.",
-  },
-  {
-    id: "cards",
-    name: "Cards",
-    description: "Beautiful reusable card components.",
-  },
-  {
-    id: "loaders",
-    name: "Loaders",
-    description: "Loading animations and spinners.",
-  },
-  {
-    id: "hero-sections",
-    name: "Hero Sections",
-    description: "Modern landing page hero sections.",
-  },
-  {
-    id: "backgrounds",
-    name: "Backgrounds",
-    description: "Animated and creative backgrounds.",
-  },
-  {
-    id: "cta-sections",
-    name: "CTA Sections",
-    description: "Call-to-action sections that convert.",
-  },
+  { id: "all", name: "All Components" },
+  { id: "buttons", name: "Buttons" },
+  { id: "cards", name: "Cards" },
+  { id: "hero-sections", name: "Hero Sections" },
+  { id: "backgrounds", name: "Backgrounds" },
+  { id: "loaders", name: "Loaders" },
+  { id: "forms", name: "Forms" },
+  { id: "navigation", name: "Navigation" },
+  { id: "text-effects", name: "Text Effects" },
+  { id: "cta-sections", name: "CTA Sections" },
 ];

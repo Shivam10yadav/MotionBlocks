@@ -1,16 +1,17 @@
-@import "tailwindcss";
-
-/* Import Google Fonts */
+/* 1. External fonts MUST come first */
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,800;1,500&family=Space+Grotesk:wght@500;700&display=swap');
 
-/* Configure Tech Theme System */
+/* 2. Tailwind v4 main entry import */
+@import "tailwindcss";
+
+/* 3. Theme configuration */
 @theme {
   --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
   --font-tech: "Space Grotesk", var(--font-sans);
   --font-mono: "Fira Code", monospace;
 }
 
-/* Base Body Styles */
+/* 4. Base styles */
 body {
   font-family: var(--font-sans);
   background-color: #09090b; /* zinc-950 */
