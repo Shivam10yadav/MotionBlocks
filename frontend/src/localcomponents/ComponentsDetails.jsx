@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { components } from "../data/components";
+import { getHighlighter } from "../lib/highlighter";
 
 const partNumber = (slug = "") => {
   let hash = 0;
@@ -40,6 +41,7 @@ const ComponentDetails = () => {
   const [tab, setTab] = useState("code");
   const [copied, setCopied] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  const [highlightedHtml, setHighlightedHtml] = useState("");
 
   const component = components.find(
     (item) => item.category === category && item.slug === slug
@@ -62,6 +64,34 @@ const ComponentDetails = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [category, slug]);
+
+  const panelContent = component
+    ? {
+        install: component.install,
+        usage: component.usage,
+        code: component.code,
+      }[tab]
+    : "";
+
+  useEffect(() => {
+    if (!panelContent) return;
+    let cancelled = false;
+
+    const lang = tab === "install" ? "bash" : "jsx";
+
+    getHighlighter().then((highlighter) => {
+      if (cancelled) return;
+      const html = highlighter.codeToHtml(panelContent, {
+        lang,
+        theme: "dracula",
+      });
+      setHighlightedHtml(html);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [panelContent, tab]);
 
   if (!component) {
     return (
@@ -86,19 +116,13 @@ const ComponentDetails = () => {
 
   const copyCode = async () => {
     try {
-      await navigator.clipboard.writeText(component.code);
+      await navigator.clipboard.writeText(panelContent);
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch (err) {
       console.error(err);
     }
   };
-
-  const panelContent = {
-    install: component.install,
-    usage: component.usage,
-    code: component.code,
-  }[tab];
 
   return (
     <main className="min-h-screen w-full overflow-x-hidden bg-[#08090D] text-[#F4F3F1] [--ember:#FF7A45] [--teal:#5EEAD4]">
@@ -112,6 +136,10 @@ const ComponentDetails = () => {
             linear-gradient(to right, rgba(94,234,212,0.08) 1px, transparent 1px),
             linear-gradient(to bottom, rgba(94,234,212,0.08) 1px, transparent 1px);
           background-size: 28px 28px;
+        }
+        .shiki-wrapper pre {
+          background: transparent !important;
+          margin: 0;
         }
         @media (prefers-reduced-motion: reduce) {
           * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
@@ -164,7 +192,7 @@ const ComponentDetails = () => {
                 { id: "preview", label: "Preview" },
                 { id: "spec", label: "Install · Usage · Code" },
               ].map((item) => (
-                
+                <a
                   key={item.id}
                   href={`#${item.id}`}
                   className="block py-1 text-base text-[#8B8D98] transition hover:text-[--ember]"
@@ -303,9 +331,16 @@ const ComponentDetails = () => {
                 </span>
               </div>
 
-              <pre className="max-h-[24rem] overflow-auto px-4 py-4 font-code text-xs leading-relaxed text-[#C9CBD3] sm:max-h-[32rem] sm:px-6 sm:py-6 sm:text-base sm:leading-loose">
-                <code>{panelContent}</code>
-              </pre>
+              {highlightedHtml ? (
+                <div
+                  className="shiki-wrapper max-h-[24rem] overflow-auto px-4 py-4 font-code text-xs leading-relaxed sm:max-h-[32rem] sm:px-6 sm:py-6 sm:text-base sm:leading-loose"
+                  dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+                />
+              ) : (
+                <pre className="max-h-[24rem] overflow-auto px-4 py-4 font-code text-xs leading-relaxed text-[#C9CBD3] sm:max-h-[32rem] sm:px-6 sm:py-6 sm:text-base sm:leading-loose">
+                  <code>{panelContent}</code>
+                </pre>
+              )}
             </motion.section>
           </div>
         </div>
