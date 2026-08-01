@@ -11,7 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { components } from "../data/components";
-import { getHighlighter } from "../lib/highlighter";
+import { getHighlighter } from "../lib/Highlighter";
 
 const partNumber = (slug = "") => {
   let hash = 0;
