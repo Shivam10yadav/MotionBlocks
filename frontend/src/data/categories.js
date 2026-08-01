@@ -7,6 +7,7 @@ export const categories = [
   { id: "testimonials", name: "Testimonials" },
   { id: "galleries", name: "Image Gallery" },
   { id: "faq", name: "FAQ Sections" },
+  { id: "about", name: "About Sections" },
   
 
 ];

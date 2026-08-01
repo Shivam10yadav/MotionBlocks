@@ -29,15 +29,7 @@ const fadeUp = {
   }),
 };
 
-const copyCode = async () => {
-  try {
-    await navigator.clipboard.writeText(panelContent);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
-  } catch (err) {
-    console.error(err);
-  }
-};
+
 
 const TABS = [
   { key: "install", label: "Install" },
@@ -57,17 +49,22 @@ const ComponentDetails = () => {
 
   const serial = useMemo(() => `MB-${partNumber(slug)}`, [slug]);
 
-  useEffect(() => {
-    if (!fullscreen) return;
-    const onKey = (e) => e.key === "Escape" && setFullscreen(false);
-    window.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
-    };
-  }, [fullscreen]);
+useEffect(() => {
+  if (!fullscreen) return;
+  const onKey = (e) => e.key === "Escape" && setFullscreen(false);
+  window.addEventListener("keydown", onKey);
+  const prevOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+  return () => {
+    window.removeEventListener("keydown", onKey);
+    document.body.style.overflow = prevOverflow;
+  };
+}, [fullscreen]);
+
+// add this new one
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, [category, slug]);
 
   if (!component) {
     return (
