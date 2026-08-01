@@ -15,6 +15,9 @@ import LightAuth from "../ui/auth/LightAuth";
 import DarkAuth from "../ui/auth/DarkAuth";
 import Funky404 from "../ui/404/Funky404";
 import { AppleHello } from "../ui/text-effect/AppleHelloTextEffect";
+import FlashyLoader from "../ui/loader/FlashyLoader";
+import MinimalLoader from "../ui/loader/MinimalLoader";
+import LuxuryLoader from "../ui/loader/LuxuryLoader";
 
 export const components = [
   {
@@ -2227,6 +2230,161 @@ const AppleHello = () => {
 
 export default AppleHello;`,
 },
+
+{
+    id: 18,
+    slug: "minimal-loader",
+    name: "MinimalLoader",
+    category: "loaders",
+    description: "A clean tech loader featuring dual counter-rotating arcs and a pulsing warm amber core.",
+    preview: MinimalLoader,
+    install: "npm install framer-motion",
+    usage: `<MinimalLoader />`,
+    code: `import React from "react";
+import { motion } from "framer-motion";
+
+export const MinimalLoader = () => {
+  return (
+    <div className="flex flex-col items-center justify-center p-8 bg-[#0F0D0A] rounded-2xl border border-[#2B231B] shadow-2xl">
+      <div className="relative w-20 h-20 flex items-center justify-center">
+        <motion.div
+          className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#FFB703] border-r-[#FF8800]"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute inset-2 rounded-full border-2 border-transparent border-b-[#FF4500] border-l-[#FF8800]"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="w-4 h-4 rounded-full bg-gradient-to-br from-[#FFB703] to-[#FF4500] shadow-[0_0_15px_rgba(255,183,3,0.6)]"
+          animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+      <motion.p
+        className="mt-5 text-xs font-semibold tracking-widest text-[#D4C3B3] uppercase"
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+      >
+        Processing...
+      </motion.p>
+    </div>
+  );
+}
+  export default MinimalLoader;`,
+  },
+  {
+    id: 19,
+    slug: "cyber-loader",
+    name: "Cyber Lime Matrix Loader",
+    category: "loaders",
+    description: "Futuristic neon emerald and cyber lime orbital spinner with animated status indicators.",
+    preview: FlashyLoader,
+    install: "npm install framer-motion",
+    usage: `<FlashyLoader />`,
+    code: `import React from "react";
+import { motion } from "framer-motion";
+
+export const FlashyLoader = () => {
+  const dots = [0, 1, 2];
+
+  return (
+    <div className="flex flex-col items-center justify-center p-8 bg-[#0A120E] rounded-2xl border border-[#1A2E24] shadow-2xl">
+      <div className="relative w-20 h-20 flex items-center justify-center">
+        <div className="absolute inset-0 rounded-2xl bg-[#00FF87]/10 blur-xl pointer-events-none" />
+        <motion.div
+          className="absolute w-full h-full border border-[#00FF87]/20 rounded-full"
+          animate={{ rotate: 360, scale: [1, 1.05, 1] }}
+          transition={{ rotate: { duration: 3, repeat: Infinity, ease: "linear" }, scale: { duration: 2, repeat: Infinity } }}
+        >
+          <div className="w-3 h-3 bg-[#00FF87] rounded-full shadow-[0_0_12px_#00FF87] absolute -top-1.5 left-1/2 -translate-x-1/2" />
+        </motion.div>
+
+        <motion.div
+          className="absolute w-12 h-12 border border-[#60EFFF]/30 rounded-full"
+          animate={{ rotate: -360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+        >
+          <div className="w-2.5 h-2.5 bg-[#60EFFF] rounded-full shadow-[0_0_10px_#60EFFF] absolute -bottom-1.2 left-1/2 -translate-x-1/2" />
+        </motion.div>
+
+        <motion.div
+          className="w-4 h-4 bg-gradient-to-tr from-[#00FF87] to-[#60EFFF] rotate-45 shadow-[0_0_15px_#00FF87]"
+          animate={{ rotate: [45, 225, 45], scale: [0.9, 1.1, 0.9] }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+        />
+      </div>
+
+      <div className="mt-5 flex items-center gap-1.5">
+        <span className="text-xs font-mono font-bold tracking-wider text-[#00FF87]">SYSTEM_LOADING</span>
+        {dots.map((i) => (
+          <motion.span
+            key={i}
+            className="w-1 h-1 bg-[#00FF87] rounded-full"
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+export default FlashyLoader`,
+  },
+  {
+    id: 20,
+    slug: "horizon-loader",
+    name: "Horizon Wave Loader",
+    category: "loaders",
+    description: "An elegant, rich crimson and gold bar-wave loader designed for premium dark-mode web interfaces.",
+    preview: LuxuryLoader,
+    install: "npm install framer-motion",
+    usage: `<LuxuryLoader />`,
+    code: `import React from "react";
+import { motion } from "framer-motion";
+
+export const LuxuryLoader = () => {
+  const bars = [0, 1, 2, 3, 4];
+
+  return (
+    <div className="flex flex-col items-center justify-center p-8 bg-[#14080A] rounded-2xl border border-[#2E151A] shadow-2xl">
+      <div className="flex items-center gap-2 h-16">
+        {bars.map((index) => (
+          <motion.div
+            key={index}
+            className="w-2.5 rounded-full bg-gradient-to-t from-[#E63946] via-[#FF0055] to-[#FFB703]"
+            animate={{
+              height: ["20%", "100%", "20%"],
+              boxShadow: [
+                "0 0 0px rgba(230,57,70,0)",
+                "0 0 16px rgba(255,0,85,0.8)",
+                "0 0 0px rgba(230,57,70,0)",
+              ],
+            }}
+            transition={{
+              duration: 1.1,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: index * 0.15,
+            }}
+          />
+        ))}
+      </div>
+
+      <motion.p
+        className="mt-4 text-xs font-medium tracking-widest text-[#E2A9B0]"
+        animate={{ opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+      >
+        Initializing Experience
+      </motion.p>
+    </div>
+  );
+};
+export default LuxuryLoader`,
+  },
 ];
 
 

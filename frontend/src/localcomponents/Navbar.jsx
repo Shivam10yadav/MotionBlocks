@@ -12,7 +12,7 @@ const LogoIcon = () => (
   </div>
 );
 
-export function Navbar({ githubUrl = "https://github.com", onBrowseClick }) {
+export function Navbar({ githubUrl = "https://github.com/Shivam10yadav/MotionBlocks", onBrowseClick }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
