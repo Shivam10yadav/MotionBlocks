@@ -8,6 +8,7 @@ export const categories = [
   { id: "galleries", name: "Image Gallery" },
   { id: "faq", name: "FAQ Sections" },
   { id: "about", name: "About Sections" },
+  { id: "auth", name: "Login Forms" },
   
 
 ];

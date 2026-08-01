@@ -114,7 +114,7 @@ const Sidebar = () => {
                     activeCategory === category.id
                       ? "border border-[--teal]/25 bg-[--teal]/10 text-[--teal]"
                       : "border border-[#23262F] bg-[#111319] text-[#8B8D98]"
-                  }`}
+                  }`}z
                 >
                   {category.name}
                 </button>
