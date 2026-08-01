@@ -5,6 +5,11 @@ import AuroraTextEffect from "../ui/text-effect/AuroraTextEffect";
 import NotFound from "../ui/404/NotFound";
 import Testimonial from "../ui/testimonials/Testimonials-1";
 import HoverGallery from "../ui/gallery/HoverGallery";
+import MinimalFaq from "../ui/faq/MinimalFaq";
+import TabbedFaq from "../ui/faq/TabbedFaq";
+import LightPricing from "../ui/pricing/LightPricing";
+import DarkBrownPricing from "../ui/pricing/DarkBrownPricing";
+
 export const components = [
   {
     id: 1,
@@ -778,5 +783,658 @@ export const HoverGallery = () => {
 
 export default HoverGallery;`,
   },
+
+{
+  id: 9,
+  slug: "minimal-faq",
+  name: "Minimalist Accordion FAQ",
+  category: "faq",
+  description: "A clean, dark accordion-style FAQ section with smooth height expansion.",
+  preview: MinimalFaq,
+  install: "npm install framer-motion lucide-react",
+  usage: `<MinimalFaq />`,
+  code: `import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, HelpCircle } from "lucide-react";
+
+const faqs = [
+  {
+    question: "How do I import components into my project?",
+    answer:
+      "Simply browse through our component library, select the one you like, and copy the source code directly into your React project. Make sure you have Tailwind CSS and Framer Motion installed.",
+  },
+  {
+    question: "Are these components accessible (a11y)?",
+    answer:
+      "Yes! All components are constructed using semantic HTML tags and follow standard accessibility guidelines, ensuring proper keyboard navigation and ARIA state management.",
+  },
+  {
+    question: "Can I use these components in commercial projects?",
+    answer:
+      "Absolutely. Everything in this library is released under the open-source MIT license, meaning you can freely use them in personal, educational, or commercial projects.",
+  },
+  {
+    question: "Do I need to install any heavy npm packages?",
+    answer:
+      "No! The entire library relies only on React, Tailwind CSS, Framer Motion, and Lucide React icons to keep your bundle size lightweight.",
+  },
+];
+
+const MinimalFaq = () => {
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const toggleFaq = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  return (
+    <section className="w-full min-h-screen bg-[#08090D] px-4 py-12 sm:px-6 lg:px-8 text-[#F4F3F1] flex items-center justify-center">
+      <div className="w-full max-w-3xl space-y-8">
+        <div className="text-center space-y-3">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#5EEAD4]/20 bg-[#5EEAD4]/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider text-[#5EEAD4]">
+            <HelpCircle size={14} className="text-[#5EEAD4]" />
+            Got Questions?
+          </span>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Frequently Asked Questions
+          </h2>
+          <p className="text-sm sm:text-base text-[#8B8D98]">
+            Everything you need to know about integrating MotionBlocks into your workflow.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {faqs.map((faq, index) => {
+            const isOpen = openIndex === index;
+            return (
+              <div
+                key={index}
+                className={\`overflow-hidden rounded-2xl border transition-colors duration-200 \${
+                  isOpen
+                    ? "border-[#323644] bg-[#111319]"
+                    : "border-[#23262F] bg-[#0B0D12] hover:border-[#323644]"
+                }\`}
+              >
+                <button
+                  onClick={() => toggleFaq(index)}
+                  className="flex w-full items-center justify-between p-5 sm:p-6 text-left transition-colors duration-150"
+                  aria-expanded={isOpen}
+                >
+                  <span className="text-base font-semibold sm:text-lg text-[#F4F3F1]">
+                    {faq.question}
+                  </span>
+                  <div
+                    className={\`ml-4 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-[#23262F] bg-[#111319] text-[#8B8D98] transition-transform duration-300 \${
+                      isOpen ? "rotate-180 text-[#FF7A45] border-[#FF7A45]/30" : ""
+                    }\`}
+                  >
+                    <ChevronDown size={18} />
+                  </div>
+                </button>
+
+                <AnimatePresence initial={false}>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                    >
+                      <div className="border-t border-[#23262F]/60 px-5 pb-6 pt-4 sm:px-6 text-sm sm:text-base leading-relaxed text-[#8B8D98]">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default MinimalFaq;`,
+},
+{
+  id: 10,
+  slug: "tabbed-faq",
+  name: "Categorized Tabbed FAQ",
+  category: "faq",
+  description: "Advanced FAQ component with search capability, active tab highlights, and dynamic 2-column layout.",
+  preview: TabbedFaq,
+  install: "npm install framer-motion lucide-react",
+  usage: `<TabbedFaq />`,
+  code: `import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Minus, Search, Sparkles, Layers, ShieldCheck, Zap } from "lucide-react";
+
+const categories = [
+  { id: "all", label: "All Questions", icon: Layers },
+  { id: "general", label: "General", icon: Sparkles },
+  { id: "tech", label: "Technical", icon: Zap },
+  { id: "license", label: "Licensing", icon: ShieldCheck },
+];
+
+const faqsData = [
+  {
+    id: 1,
+    category: "general",
+    question: "What makes MotionBlocks different from component libraries?",
+    answer:
+      "MotionBlocks is completely copy-and-paste. You don't have to install npm packages, worry about version mismatches, or fight against locked component APIs.",
+  },
+  {
+    id: 2,
+    category: "tech",
+    question: "How do I customize the theme or colors?",
+    answer:
+      "Since all components are built using native Tailwind CSS utility classes with hex codes, you can directly edit the class names or modify Tailwind's config file.",
+  },
+  {
+    id: 3,
+    category: "general",
+    question: "Can I contribute my own components to MotionBlocks?",
+    answer:
+      "Yes! Check out our contribution guide in the repository. Simply create your component file under src/ui/ and register it in components.js.",
+  },
+  {
+    id: 4,
+    category: "tech",
+    question: "Is TypeScript supported out of the box?",
+    answer:
+      "All code samples are written in standard React JSX for max flexibility, but converting them to TSX is straightforward by adding interface types for props.",
+  },
+  {
+    id: 5,
+    category: "license",
+    question: "Can I use these components for client projects?",
+    answer:
+      "Yes, you are free to build client applications, commercial SaaS applications, or personal portfolio projects using any component from this library.",
+  },
+  {
+    id: 6,
+    category: "license",
+    question: "Do I need to attribute MotionBlocks in my app?",
+    answer:
+      "Attribution is strictly optional but appreciated! You are free to remove any comments or credit lines in your production code.",
+  },
+];
+
+const TabbedFaq = () => {
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [expandedId, setExpandedId] = useState(null);
+
+  const filteredFaqs = useMemo(() => {
+    return faqsData.filter((faq) => {
+      const matchesCategory = activeTab === "all" || faq.category === activeTab;
+      const matchesSearch =
+        faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeTab, searchQuery]);
+
+  return (
+    <section className="w-full min-h-screen bg-[#08090D] px-4 py-12 sm:px-8 lg:px-12 text-[#F4F3F1]">
+      <div className="mx-auto max-w-5xl space-y-10">
+        <div className="flex flex-col gap-6 text-center lg:flex-row lg:items-end lg:justify-between lg:text-left">
+          <div className="max-w-2xl space-y-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#FF7A45]/20 bg-[#FF7A45]/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider text-[#FF7A45]">
+              Knowledge Base
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight sm:text-5xl">
+              Help Center & FAQ
+            </h2>
+            <p className="text-base text-[#8B8D98]">
+              Search or filter through categories to find quick answers to common questions.
+            </p>
+          </div>
+
+          <div className="relative w-full max-w-md mx-auto lg:mx-0">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8B8D98]" size={18} />
+            <input
+              type="text"
+              placeholder="Search questions..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-2xl border border-[#23262F] bg-[#111319] py-3.5 pl-11 pr-4 text-sm text-[#F4F3F1] placeholder-[#5C5F6B] outline-none transition duration-200 focus:border-[#FF7A45]"
+            />
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 border-b border-[#23262F] pb-4">
+          {categories.map((cat) => {
+            const Icon = cat.icon;
+            const isActive = activeTab === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveTab(cat.id)}
+                className={\`relative flex items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-medium sm:text-sm transition-all duration-200 \${
+                  isActive ? "text-[#08090D]" : "text-[#8B8D98] hover:text-[#F4F3F1]"
+                }\`}
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeTabGlow"
+                    className="absolute inset-0 rounded-xl bg-[#5EEAD4]"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-2">
+                  <Icon size={16} />
+                  {cat.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {filteredFaqs.length > 0 ? (
+            filteredFaqs.map((faq) => {
+              const isOpen = expandedId === faq.id;
+              return (
+                <div
+                  key={faq.id}
+                  className={\`flex flex-col justify-between rounded-2xl border p-5 transition-all duration-200 \${
+                    isOpen
+                      ? "border-[#FF7A45]/40 bg-[#111319]"
+                      : "border-[#23262F] bg-[#0B0D12] hover:border-[#323644]"
+                  }\`}
+                >
+                  <button
+                    onClick={() => setExpandedId(isOpen ? null : faq.id)}
+                    className="flex items-start justify-between gap-4 text-left"
+                  >
+                    <span className="font-semibold text-[#F4F3F1] sm:text-lg">
+                      {faq.question}
+                    </span>
+                    <span
+                      className={\`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg border transition-colors \${
+                        isOpen
+                          ? "border-[#FF7A45] bg-[#FF7A45] text-[#08090D]"
+                          : "border-[#23262F] bg-[#111319] text-[#8B8D98]"
+                      }\`}
+                    >
+                      {isOpen ? <Minus size={16} /> : <Plus size={16} />}
+                    </span>
+                  </button>
+
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        <p className="mt-4 border-t border-[#23262F] pt-4 text-xs sm:text-sm leading-relaxed text-[#8B8D98]">
+                          {faq.answer}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })
+          ) : (
+            <div className="col-span-full py-12 text-center text-[#8B8D98]">
+              No questions found matching your search criteria.
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default TabbedFaq;`,
+},
+
+{
+  id: 11,
+  slug: "light-pricing",
+  name: "Light Theme 3-Tier Pricing",
+  category: "pricing",
+  description: "A sleek, high-contrast light 3-tier pricing section with animated monthly/yearly toggle.",
+  preview: LightPricing,
+  install: "npm install framer-motion lucide-react",
+  usage: `<LightPricing />`,
+  code: `import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Check, Sparkles } from "lucide-react";
+
+const plans = [
+  {
+    name: "Starter",
+    description: "Perfect for freelancers and individual developers.",
+    priceMonthly: 19,
+    priceYearly: 15,
+    features: [
+      "Access to 50+ basic components",
+      "Single developer license",
+      "Community Discord support",
+      "Standard documentation",
+      "Free lifetime updates",
+    ],
+    popular: false,
+    cta: "Start Free Trial",
+  },
+  {
+    name: "Pro",
+    description: "Ideal for growing teams and active production apps.",
+    priceMonthly: 49,
+    priceYearly: 39,
+    features: [
+      "Access to all 200+ components",
+      "Up to 5 team members",
+      "Priority email & chat support",
+      "Figma design files included",
+      "Commercial usage license",
+      "Advanced animated templates",
+    ],
+    popular: true,
+    cta: "Get Started Pro",
+  },
+  {
+    name: "Enterprise",
+    description: "Custom solutions for large agencies and corporations.",
+    priceMonthly: 99,
+    priceYearly: 79,
+    features: [
+      "Unlimited team members",
+      "Custom component requests",
+      "Dedicated account manager",
+      "1-on-1 code integration support",
+      "Custom SLA & security audit",
+      "Source code repository access",
+    ],
+    popular: false,
+    cta: "Contact Sales",
+  },
+];
+
+const LightPricing = () => {
+  const [isYearly, setIsYearly] = useState(false);
+
+  return (
+    <section className="w-full min-h-screen bg-[#F8FAFC] py-16 px-4 sm:px-6 lg:px-8 text-[#0F172A] flex items-center justify-center">
+      <div className="w-full max-w-6xl space-y-12">
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0EA5E9]/20 bg-[#0EA5E9]/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-[#0284C7]">
+            <Sparkles size={14} /> Flexible Pricing
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#0F172A]">
+            Simple plans for every project
+          </h2>
+          <p className="text-base sm:text-lg text-[#64748B]">
+            Start free, scale seamlessly. Choose the plan that best fits your workflow.
+          </p>
+
+          <div className="flex items-center justify-center gap-3 pt-4">
+            <span className={\`text-sm font-medium \${!isYearly ? "text-[#0F172A]" : "text-[#64748B]"}\`}>
+              Monthly
+            </span>
+            <button
+              onClick={() => setIsYearly(!isYearly)}
+              className="relative h-8 w-16 rounded-full bg-[#E2E8F0] p-1 transition-colors duration-200"
+            >
+              <motion.div
+                animate={{ x: isYearly ? 32 : 0 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                className="h-6 w-6 rounded-full bg-[#0284C7] shadow-md"
+              />
+            </button>
+            <span className={\`text-sm font-medium flex items-center gap-1.5 \${isYearly ? "text-[#0F172A]" : "text-[#64748B]"}\`}>
+              Yearly
+              <span className="rounded-full bg-[#10B981]/10 border border-[#10B981]/20 px-2 py-0.5 text-[10px] font-bold text-[#059669]">
+                Save 20%
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-stretch">
+          {plans.map((plan, index) => {
+            const price = isYearly ? plan.priceYearly : plan.priceMonthly;
+            return (
+              <div
+                key={index}
+                className={\`relative flex flex-col justify-between rounded-3xl p-8 transition-all duration-300 \${
+                  plan.popular
+                    ? "bg-[#FFFFFF] border-2 border-[#0284C7] shadow-xl shadow-[#0284C7]/10 lg:-translate-y-2"
+                    : "bg-[#FFFFFF] border border-[#E2E8F0] shadow-sm hover:border-[#CBD5E1]"
+                }\`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-[#0284C7] px-4 py-1 text-xs font-bold uppercase tracking-wider text-[#FFFFFF] shadow-md">
+                    Most Popular
+                  </div>
+                )}
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xl font-bold text-[#0F172A]">{plan.name}</h3>
+                    <p className="mt-2 text-xs sm:text-sm text-[#64748B] min-h-[40px]">
+                      {plan.description}
+                    </p>
+                  </div>
+
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl sm:text-5xl font-black text-[#0F172A]">\${price}</span>
+                    <span className="text-sm font-medium text-[#64748B]">/month</span>
+                  </div>
+
+                  <div className="border-t border-[#F1F5F9] pt-6 space-y-3">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-[#94A3B8]">
+                      What's Included
+                    </p>
+                    <ul className="space-y-2.5">
+                      {plan.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-center gap-3 text-sm text-[#334155]">
+                          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0284C7]/10 text-[#0284C7]">
+                            <Check size={12} strokeWidth={3} />
+                          </div>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <button
+                  className={\`mt-8 w-full rounded-2xl py-3.5 px-4 text-sm font-semibold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] \${
+                    plan.popular
+                      ? "bg-[#0284C7] text-[#FFFFFF] hover:bg-[#0369A1] shadow-lg shadow-[#0284C7]/20"
+                      : "bg-[#F1F5F9] text-[#0F172A] hover:bg-[#E2E8F0]"
+                  }\`}
+                >
+                  {plan.cta}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default LightPricing;`,
+},
+{
+  id: 12,
+  slug: "dark-brown-pricing",
+  name: "Luxury Dark Brown Pricing",
+  category: "pricing",
+  description: "A luxury dark espresso & bronze themed 3-tier pricing table with subtle glow effects and interactive pricing toggles.",
+  preview: DarkBrownPricing,
+  install: "npm install framer-motion lucide-react",
+  usage: `<DarkBrownPricing />`,
+  code: `import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { Check, Shield, Crown } from "lucide-react";
+
+const plans = [
+  {
+    name: "Essential",
+    description: "Core toolkit for independent creators and boutique builds.",
+    priceMonthly: 29,
+    priceYearly: 24,
+    features: [
+      "Access to standard component suite",
+      "Single commercial project",
+      "Standard documentation",
+      "Email support within 48h",
+    ],
+    popular: false,
+    cta: "Select Plan",
+  },
+  {
+    name: "Pro Studio",
+    description: "Full suite for design agencies and high-end digital products.",
+    priceMonthly: 79,
+    priceYearly: 64,
+    features: [
+      "All luxury components & micro-interactions",
+      "Unlimited commercial projects",
+      "Figma design system access",
+      "Priority VIP support",
+      "Early access to new components",
+      "Custom CSS variables setup",
+    ],
+    popular: true,
+    cta: "Unlock Pro Studio",
+  },
+  {
+    name: "Custom Atelier",
+    description: "Tailored component architecture for enterprise platforms.",
+    priceMonthly: 199,
+    priceYearly: 159,
+    features: [
+      "Custom tailored component build",
+      "Full source code ownership",
+      "Dedicated design team liaison",
+      "Quarterly architecture review",
+      "Unlimited internal seats",
+      "Custom animation fine-tuning",
+    ],
+    popular: false,
+    cta: "Request Consultation",
+  },
+];
+
+const DarkBrownPricing = () => {
+  const [isYearly, setIsYearly] = useState(false);
+
+  return (
+    <section className="w-full min-h-screen bg-[#120D0B] py-16 px-4 sm:px-6 lg:px-8 text-[#F5EBE6] flex items-center justify-center">
+      <div className="w-full max-w-6xl space-y-12">
+        <div className="text-center space-y-4 max-w-2xl mx-auto">
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#D97706]/30 bg-[#D97706]/10 px-3.5 py-1.5 text-xs font-medium uppercase tracking-widest text-[#F59E0B]">
+            <Crown size={14} /> Luxury Collection
+          </span>
+          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#F5EBE6]">
+            Elevate Your Build
+          </h2>
+          <p className="text-base text-[#A8988E]">
+            Transparent pricing crafted for individuals and scaling studios.
+          </p>
+
+          <div className="flex items-center justify-center gap-4 pt-4">
+            <span className={\`text-xs sm:text-sm uppercase tracking-wider font-semibold \${!isYearly ? "text-[#F5EBE6]" : "text-[#78685E]"}\`}>
+              Billed Monthly
+            </span>
+            <button
+              onClick={() => setIsYearly(!isYearly)}
+              className="relative h-8 w-16 rounded-full border border-[#3D2E27] bg-[#1A1412] p-1 transition-colors duration-200"
+            >
+              <motion.div
+                animate={{ x: isYearly ? 32 : 0 }}
+                transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                className="h-6 w-6 rounded-full bg-[#D97706] shadow-lg shadow-[#D97706]/30"
+              />
+            </button>
+            <span className={\`text-xs sm:text-sm uppercase tracking-wider font-semibold flex items-center gap-2 \${isYearly ? "text-[#F5EBE6]" : "text-[#78685E]"}\`}>
+              Billed Yearly
+              <span className="rounded-md border border-[#D97706]/30 bg-[#D97706]/20 px-2 py-0.5 text-[10px] font-bold text-[#F59E0B]">
+                20% OFF
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-stretch">
+          {plans.map((plan, index) => {
+            const price = isYearly ? plan.priceYearly : plan.priceMonthly;
+            return (
+              <div
+                key={index}
+                className={\`relative flex flex-col justify-between rounded-3xl p-8 transition-all duration-300 \${
+                  plan.popular
+                    ? "bg-[#1E1714] border-2 border-[#D97706] shadow-2xl shadow-[#D97706]/10 lg:-translate-y-2"
+                    : "bg-[#17110E] border border-[#2E221C] hover:border-[#4A382E]"
+                }\`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full border border-[#F59E0B]/40 bg-[#D97706] px-4 py-1 text-[11px] font-extrabold uppercase tracking-widest text-[#120D0B] shadow-md">
+                    Recommended
+                  </div>
+                )}
+
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="text-xl font-bold text-[#F5EBE6]">{plan.name}</h3>
+                    <p className="mt-2 text-xs sm:text-sm text-[#A8988E] min-h-[40px]">
+                      {plan.description}
+                    </p>
+                  </div>
+
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl sm:text-5xl font-black text-[#F5EBE6]">\${price}</span>
+                    <span className="text-sm font-medium text-[#78685E]">/ month</span>
+                  </div>
+
+                  <div className="border-t border-[#2E221C] pt-6 space-y-3">
+                    <p className="text-[11px] font-bold uppercase tracking-widest text-[#78685E]">
+                      Included Features
+                    </p>
+                    <ul className="space-y-3">
+                      {plan.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-center gap-3 text-sm text-[#D4C5BC]">
+                          <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#D97706]/20 text-[#F59E0B]">
+                            <Check size={12} strokeWidth={3} />
+                          </div>
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <button
+                  className={\`mt-8 w-full rounded-2xl py-3.5 px-4 text-sm font-bold tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] \${
+                    plan.popular
+                      ? "bg-[#D97706] text-[#120D0B] hover:bg-[#F59E0B] shadow-lg shadow-[#D97706]/20"
+                      : "border border-[#3D2E27] bg-[#241B17] text-[#F5EBE6] hover:bg-[#2E221C]"
+                  }\`}
+                >
+                  {plan.cta}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default DarkBrownPricing;`,
+},
 ];
 

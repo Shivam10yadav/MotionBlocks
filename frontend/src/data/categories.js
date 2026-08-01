@@ -6,5 +6,7 @@ export const categories = [
   { id: "cta-sections", name: "CTA Sections" },
   { id: "testimonials", name: "Testimonials" },
   { id: "galleries", name: "Image Gallery" },
+  { id: "faq", name: "FAQ Sections" },
+  
 
 ];
