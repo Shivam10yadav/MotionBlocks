@@ -9,9 +9,12 @@ import {
   PlayCircle,
   Maximize2,
   X,
+  Smartphone,
+  Tablet,
+  Monitor,
 } from "lucide-react";
 import { components } from "../data/components";
-import { getHighlighter } from "../lib/Highlighter";
+import { getHighlighter } from "../lib/highlighter";
 
 const partNumber = (slug = "") => {
   let hash = 0;
@@ -36,12 +39,19 @@ const TABS = [
   { key: "code", label: "Code" },
 ];
 
+const DEVICES = [
+  { key: "mobile", label: "Mobile", icon: Smartphone, width: "375px" },
+  { key: "tablet", label: "Tablet", icon: Tablet, width: "768px" },
+  { key: "desktop", label: "Desktop", icon: Monitor, width: "100%" },
+];
+
 const ComponentDetails = () => {
   const { category, slug } = useParams();
   const [tab, setTab] = useState("code");
   const [copied, setCopied] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const [highlightedHtml, setHighlightedHtml] = useState("");
+  const [device, setDevice] = useState("desktop");
 
   const component = components.find(
     (item) => item.category === category && item.slug === slug
@@ -245,6 +255,27 @@ const ComponentDetails = () => {
                     rendering
                   </span>
 
+                  <div className="flex items-center gap-1 rounded-lg border border-[#23262F] bg-[#111319] p-1">
+                    {DEVICES.map((d) => {
+                      const Icon = d.icon;
+                      return (
+                        <button
+                          key={d.key}
+                          onClick={() => setDevice(d.key)}
+                          aria-label={d.label}
+                          title={d.label}
+                          className={`flex items-center justify-center rounded-md p-1.5 transition cursor-pointer ${
+                            device === d.key
+                              ? "bg-[--teal]/10 text-[--teal]"
+                              : "text-[#8B8D98] hover:text-[#F4F3F1]"
+                          }`}
+                        >
+                          <Icon size={14} />
+                        </button>
+                      );
+                    })}
+                  </div>
+
                   <button
                     onClick={() => setFullscreen(true)}
                     className="inline-flex items-center gap-1.5 rounded-lg border border-[#23262F] bg-[#111319] px-3 py-1.5 normal-case tracking-normal text-[#8B8D98] transition hover:border-[--teal]/40 hover:text-[--teal] cursor-pointer"
@@ -271,7 +302,13 @@ const ComponentDetails = () => {
                   ))}
 
                   {PreviewComponent ? (
-                    <div className="flex w-full min-w-0 items-center justify-center">
+                    <div
+                      className="flex w-full min-w-0 items-center justify-center transition-[width] duration-300"
+                      style={{
+                        width: DEVICES.find((d) => d.key === device)?.width,
+                        maxWidth: "100%",
+                      }}
+                    >
                       <PreviewComponent />
                     </div>
                   ) : (
@@ -361,13 +398,40 @@ const ComponentDetails = () => {
                 <span className="h-2 w-2 shrink-0 rounded-full bg-[--teal] shadow-[0_0_8px_#5EEAD4]" />
                 <span className="truncate">{component.name} · {serial}</span>
               </div>
-              <button
-                onClick={() => setFullscreen(false)}
-                className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-lg border border-[#23262F] bg-[#111319] px-3 py-1.5 font-code text-xs uppercase tracking-widest text-[#8B8D98] transition hover:border-[--ember]/40 hover:text-[--ember] cursor-pointer sm:self-auto"
-              >
-                <X size={14} />
-                Close (Esc)
-              </button>
+
+              <div className="flex shrink-0 items-center gap-3 self-start sm:self-auto">
+                <div
+                  className="flex items-center gap-1 rounded-lg border border-[#23262F] bg-[#111319] p-1"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {DEVICES.map((d) => {
+                    const Icon = d.icon;
+                    return (
+                      <button
+                        key={d.key}
+                        onClick={() => setDevice(d.key)}
+                        aria-label={d.label}
+                        title={d.label}
+                        className={`flex items-center justify-center rounded-md p-1.5 transition cursor-pointer ${
+                          device === d.key
+                            ? "bg-[--teal]/10 text-[--teal]"
+                            : "text-[#8B8D98] hover:text-[#F4F3F1]"
+                        }`}
+                      >
+                        <Icon size={14} />
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  onClick={() => setFullscreen(false)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#23262F] bg-[#111319] px-3 py-1.5 font-code text-xs uppercase tracking-widest text-[#8B8D98] transition hover:border-[--ember]/40 hover:text-[--ember] cursor-pointer"
+                >
+                  <X size={14} />
+                  Close (Esc)
+                </button>
+              </div>
             </div>
 
             <motion.div
@@ -376,7 +440,17 @@ const ComponentDetails = () => {
               transition={{ delay: 0.05, duration: 0.25 }}
               className="blueprint-grid flex flex-1 items-center justify-center overflow-auto p-4 sm:p-8"
             >
-              {PreviewComponent && <PreviewComponent />}
+              {PreviewComponent && (
+                <div
+                  className="flex w-full items-center justify-center transition-[width] duration-300"
+                  style={{
+                    width: DEVICES.find((d) => d.key === device)?.width,
+                    maxWidth: "100%",
+                  }}
+                >
+                  <PreviewComponent />
+                </div>
+              )}
             </motion.div>
           </motion.div>
         )}
