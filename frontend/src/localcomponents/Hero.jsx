@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowRight, FaGithub } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function cn(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -260,8 +261,10 @@ export function Hero({
   secondaryCtaMobile = "GitHub",
   onPrimaryClick,
   onSecondaryClick,
-  githubUrl = "https://github.com",
+  githubUrl = "https://github.com/Shivam10yadav/MotionBlocks",
 }) {
+
+   const navigate = useNavigate();
   const [isLoaded, setIsLoaded] = useState(false);
 
   // High contrast dark pixel canvas colors
@@ -345,7 +348,7 @@ export function Hero({
         style={{ transitionDelay: "450ms" }}
       >
         <button
-          onClick={onPrimaryClick}
+          onClick={()=>navigate("/components")}
           className="relative inline-flex h-10 md:h-12 items-center justify-center gap-1.5 md:gap-2 rounded-xl bg-gradient-to-b from-cyan-500 to-blue-600 px-4 md:px-8 text-xs md:text-sm font-semibold text-white shadow-[0_0_20px_rgba(6,182,212,0.35),inset_0_1px_1px_rgba(255,255,255,0.4)] ring-1 ring-cyan-400/30 transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] active:scale-[0.98] cursor-pointer"
         >
           <span className="inline md:hidden">{primaryCtaMobile}</span>
