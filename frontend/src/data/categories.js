@@ -1,6 +1,7 @@
 export const categories = [
   { id: "all", name: "All Components" },
   { id: "buttons", name: "Buttons" },
+  { id: "hero", name: "Hero Sections" },
   { id: "auth", name: "Login & Auth" },
   { id: "ecommerce", name: "Ecommerce" },
   { id: "cta-sections", name: "CTA Sections" },

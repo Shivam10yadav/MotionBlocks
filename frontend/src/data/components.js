@@ -22,6 +22,9 @@ import LightCard from "../ui/ecommerce/LightCard";
 import DarkCard from "../ui/ecommerce/DarkCard";
 import DarkPagination from "../ui/pagination/DarkPagination";
 import LightPagination from "../ui/pagination/LightPagination";
+import DarkHero from "../ui/hero/DarkHero";
+import LightHero from "../ui/hero/LightHero";
+
 
 export const components = [
   {
@@ -2884,6 +2887,192 @@ export const DarkPagination = ({
 
 export default DarkPagination;`,
   },
+  {
+    id: 27,
+    slug: "light-organic-hero",
+    name: "Light Minimal Organic Hero",
+    category: "hero",
+    description: "Refined light-theme hero section featuring interactive cursor-following movement, subtle card hover tilt, and warm organic tone accents.",
+    preview: LightHero,
+    install: "npm install framer-motion",
+    usage: `<LightHero />`,
+    code: `import React, { useState } from "react";
+import { motion } from "framer-motion";
+
+export const LightHero = () => {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const { innerWidth, innerHeight } = window;
+    setMousePosition({
+      x: (clientX / innerWidth - 0.5) * 30,
+      y: (clientY / innerHeight - 0.5) * 30,
+    });
+  };
+
+  return (
+    <div 
+      onMouseMove={handleMouseMove}
+      className="relative min-h-[90vh] w-full overflow-hidden bg-[#FAF8F5] text-stone-900 flex items-center justify-center px-6 py-20"
+    >
+      <motion.div
+        animate={{
+          x: [0, 40, -20, 0],
+          y: [0, -30, 20, 0],
+          scale: [1, 1.15, 0.95, 1],
+        }}
+        transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        style={{ x: mousePosition.x * -0.5, y: mousePosition.y * -0.5 }}
+        className="absolute top-10 left-10 h-[420px] w-[420px] rounded-full bg-gradient-to-tr from-amber-200/50 via-orange-100/40 to-yellow-100/30 blur-[90px] pointer-events-none"
+      />
+
+      <motion.div
+        animate={{
+          x: [0, -50, 30, 0],
+          y: [0, 40, -30, 0],
+          scale: [1, 0.9, 1.1, 1],
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
+        style={{ x: mousePosition.x * 0.8, y: mousePosition.y * 0.8 }}
+        className="absolute bottom-10 right-10 h-[480px] w-[480px] rounded-full bg-gradient-to-br from-emerald-200/40 via-teal-100/30 to-lime-100/20 blur-[100px] pointer-events-none"
+      />
+
+      <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-stone-900/5 border border-stone-900/10 backdrop-blur-md text-xs font-semibold tracking-wide text-stone-700"
+        >
+          <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
+          Crafting Digital Excellence
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-5xl sm:text-7xl font-bold tracking-tight text-stone-900 leading-[1.1]"
+        >
+          Build refined web applications with{" "}
+          <span className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-emerald-700">
+            tactile elegance.
+          </span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="max-w-2xl mx-auto text-lg sm:text-xl text-stone-600 font-normal leading-relaxed"
+        >
+          A minimalist approach to high-performance interface design. Clean structure, organic warm tones, and silky motion dynamics.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+        >
+          <button className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-stone-900 text-stone-50 font-medium text-base shadow-lg shadow-stone-900/10 hover:bg-stone-800 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5">
+            Explore Components
+          </button>
+          <button className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-stone-900/5 hover:bg-stone-900/10 border border-stone-900/10 text-stone-800 font-medium text-base transition-all duration-300">
+            View Live Demos
+          </button>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+export default LightHero;`,
+  },
+  {
+    id: 28,
+    slug: "dark-amber-hero",
+    name: "Dark Amber Warm Hero",
+    category: "hero",
+    description: "Bespoke dark hero component built with deep obsidian canvas, warm amber and crimson lighting, diagonal light sweeps, and glassmorphism feature bar.",
+    preview: DarkHero,
+    install: "npm install framer-motion",
+    usage: `<DarkHero />`,
+    code: `import React from "react";
+import { motion } from "framer-motion";
+
+export const DarkHero = () => {
+  return (
+    <div className="relative min-h-[90vh] w-full overflow-hidden bg-[#0A0806] text-stone-100 flex items-center justify-center px-6 py-20">
+      <motion.div
+        animate={{
+          opacity: [0.3, 0.5, 0.3],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-gradient-to-br from-amber-600/20 via-orange-600/10 to-transparent blur-[120px] pointer-events-none"
+      />
+
+      <motion.div
+        animate={{ rotate: [0, 360] }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        className="absolute -bottom-32 left-1/4 h-[400px] w-[400px] rounded-full bg-gradient-to-tr from-rose-700/15 via-amber-500/10 to-transparent blur-[110px] pointer-events-none"
+      />
+
+      <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-medium tracking-wider uppercase"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+          Next-Gen UI Architecture
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="text-5xl sm:text-7xl font-extrabold tracking-tight leading-[1.1]"
+        >
+          Engineered for digital products that need{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-orange-300 to-amber-500">
+            depth and character.
+          </span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="max-w-2xl mx-auto text-lg sm:text-xl text-stone-400 font-normal leading-relaxed"
+        >
+          Steer clear of dull, repetitive templates. High-contrast amber lighting, dark slate canvas, and liquid-smooth entrance dynamics.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.3 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2"
+        >
+          <button className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-stone-950 font-semibold text-base shadow-lg shadow-amber-500/20 hover:brightness-110 transition-all duration-300 hover:-translate-y-0.5">
+            Get Started Now
+          </button>
+          <button className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-stone-900/80 hover:bg-stone-800 border border-stone-800 text-stone-200 font-medium text-base transition-all duration-300">
+            Read Documentation
+          </button>
+        </motion.div>
+      </div>
+    </div>
+  );
+};
+
+export default DarkHero;`,
+  },
+
 ];
 
 
