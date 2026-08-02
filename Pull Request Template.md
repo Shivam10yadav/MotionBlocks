@@ -18,7 +18,7 @@ Confirms this follows the [Contributing Guide](../Contributing.md):
 - [ ] No shadcn/ui or other external UI kits — dependencies kept minimal (`framer-motion`, `lucide-react`, etc.)
 - [ ] Registered in `src/data/components.js` with a unique `id` and `slug`
 - [ ] `category` matches an existing id in `src/data/categories.js` exactly — only added a new category if it truly didn't exist
-- [ ] `code` string in `components.js` matches the actual component file exactly
+- [ ] code field references the imported ?raw file, not an inline string
 - [ ] Preview renders correctly with no console errors
 - [ ] Did **not** modify `Sidebar.jsx`, `ComponentGrid.jsx`, or `ComponentDetails.jsx` (if you did, explain why below)
 
