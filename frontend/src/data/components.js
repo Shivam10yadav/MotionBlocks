@@ -18,6 +18,8 @@ import { AppleHello } from "../ui/text-effect/AppleHelloTextEffect";
 import FlashyLoader from "../ui/loader/FlashyLoader";
 import MinimalLoader from "../ui/loader/MinimalLoader";
 import LuxuryLoader from "../ui/loader/LuxuryLoader";
+import LightCard from "../ui/ecommerce/LightCard";
+import DarkCard from "../ui/ecommerce/DarkCard";
 
 export const components = [
   {
@@ -794,7 +796,7 @@ export default HoverGallery;`,
   },
 
 {
-  id: 9,
+  id: 8,
   slug: "minimal-faq",
   name: "Minimalist Accordion FAQ",
   category: "faq",
@@ -907,7 +909,7 @@ const MinimalFaq = () => {
 export default MinimalFaq;`,
 },
 {
-  id: 10,
+  id: 9,
   slug: "tabbed-faq",
   name: "Categorized Tabbed FAQ",
   category: "faq",
@@ -1105,7 +1107,7 @@ export default TabbedFaq;`,
 },
 
 {
-  id: 11,
+  id: 10,
   slug: "light-pricing",
   name: "Light Theme 3-Tier Pricing",
   category: "pricing",
@@ -1276,7 +1278,7 @@ const LightPricing = () => {
 export default LightPricing;`,
 },
 {
-  id: 12,
+  id: 11,
   slug: "dark-brown-pricing",
   name: "Luxury Dark Brown Pricing",
   category: "pricing",
@@ -1447,7 +1449,7 @@ export default DarkBrownPricing;`,
 },
 
 {
-  id: 13,
+  id: 12,
   slug: "light-about",
   name: "Light Theme About Section",
   category: "about",
@@ -1571,7 +1573,7 @@ const LightAbout = () => {
 export default LightAbout;`,
 },
 {
-  id: 14,
+  id: 13,
   slug: "dark-about",
   name: "Luxury Dark Themed About Section",
   category: "about",
@@ -1687,7 +1689,7 @@ export default DarkAbout;`,
 },
 
 {
-  id: 15,
+  id: 14,
   slug: "light-auth",
   name: "Light Auth Card",
   category: "auth",
@@ -1861,7 +1863,7 @@ const LightAuth = () => {
 export default LightAuth;`,
 },
 {
-  id: 16,
+  id: 15,
   slug: "dark-auth",
   name: "Dark Split Auth",
   category: "auth",
@@ -2031,7 +2033,7 @@ export default DarkAuth;`,
 
 
 {
- id: 17,
+ id: 16,
   slug: "funky-404",
   name: "Funky Playful 404 Page",
 category: "404-pages",
@@ -2155,7 +2157,7 @@ export default Funky404;`,
 },
 
 {
-id: 18,
+id: 17,
   slug: "apple-hello",
   name: "Apple Hello Text Effect",
   category: "text-effects",
@@ -2276,7 +2278,7 @@ export const MinimalLoader = () => {
   export default MinimalLoader;`,
   },
   {
-    id: 19,
+    id: 29,
     slug: "cyber-loader",
     name: "Cyber Lime Matrix Loader",
     category: "loaders",
@@ -2384,6 +2386,255 @@ export const LuxuryLoader = () => {
   );
 };
 export default LuxuryLoader`,
+  },
+
+{
+    id: 21,
+    slug: "light-product-card",
+    name: "Minimal Light Product Card",
+    category: "ecommerce",
+    description: "Clean light-theme e-commerce card with interactive color swatches, instant add-to-cart state animations, and subtle elevation on hover.",
+    preview: LightCard,
+    install: "npm install react-icons framer-motion",
+    usage: `<LightCard />`,
+    code: `import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiHeart, FiShoppingBag, FiCheck, FiStar } from "react-icons/fi";
+
+export const LighttCard = () => {
+  const [selectedColor, setSelectedColor] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+
+  const colors = [
+    { name: "Sand", hex: "#E5D9C5", image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop" },
+    { name: "Olive", hex: "#556B2F", image: "https://images.unsplash.com/photo-1608256246200-53e635b5b65f?q=80&w=800&auto=format&fit=crop" },
+    { name: "Charcoal", hex: "#2C3539", image: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?q=80&w=800&auto=format&fit=crop" },
+  ];
+
+  const handleAddToCart = () => {
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 1800);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="group relative w-full max-w-sm rounded-3xl bg-white p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] border border-neutral-100 hover:shadow-[0_20px_40px_rgba(0,0,0,0.1)] transition-shadow duration-300"
+    >
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-neutral-100">
+        <motion.img
+          key={selectedColor}
+          initial={{ opacity: 0.6, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          src={colors[selectedColor].image}
+          alt="Product"
+          className="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+        />
+
+        <div className="absolute top-3 left-3 right-3 flex items-center justify-between">
+          <span className="rounded-full bg-white/80 backdrop-blur-md px-3 py-1 text-xs font-semibold text-neutral-800 shadow-sm">
+            NEW
+          </span>
+
+          <motion.button
+            whileTap={{ scale: 0.85 }}
+            onClick={() => setIsLiked(!isLiked)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 backdrop-blur-md text-neutral-700 shadow-sm transition-colors hover:bg-white"
+          >
+            <FiHeart className={\`text-base transition-colors \${isLiked ? "fill-red-500 text-red-500" : ""}\`} />
+          </motion.button>
+        </div>
+
+        <div className="absolute bottom-3 right-3">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.92 }}
+            onClick={handleAddToCart}
+            className={\`flex h-11 items-center justify-center gap-2 rounded-full px-4 text-xs font-bold text-white shadow-lg backdrop-blur-md transition-all \${
+              isAdded ? "bg-emerald-600" : "bg-neutral-900 hover:bg-neutral-800"
+            }\`}
+          >
+            <AnimatePresence mode="wait">
+              {isAdded ? (
+                <motion.span key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="flex items-center gap-1.5">
+                  <FiCheck className="text-sm" /> Added
+                </motion.span>
+              ) : (
+                <motion.span key="cart" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-1.5">
+                  <FiShoppingBag className="text-sm" /> + Add
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
+      </div>
+
+      <div className="mt-4 px-1 space-y-2">
+        <div className="flex items-center justify-between">
+          <p className="text-xs font-medium uppercase tracking-wider text-neutral-400">Footwear</p>
+          <div className="flex items-center gap-1 text-xs font-semibold text-amber-500">
+            <FiStar className="fill-amber-400" />
+            <span>4.9</span>
+          </div>
+        </div>
+
+        <h3 className="text-base font-bold text-neutral-800 group-hover:text-neutral-900">
+          Aero Dynamic Runner
+        </h3>
+
+        <div className="flex items-center justify-between pt-1">
+          <div className="flex items-center gap-1.5">
+            {colors.map((color, idx) => (
+              <button
+                key={color.name}
+                onClick={() => setSelectedColor(idx)}
+                className={\`h-5 w-5 rounded-full border-2 transition-all \${
+                  selectedColor === idx ? "border-neutral-900 scale-110" : "border-transparent opacity-70 hover:opacity-100"
+                }\`}
+                style={{ backgroundColor: color.hex }}
+              />
+            ))}
+          </div>
+
+          <div className="text-right">
+            <span className="text-sm font-extrabold text-neutral-900">$149.00</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default LightCard;`,
+  },
+  {
+    id: 22,
+    slug: "dark-product-card",
+    name: "Luxury Dark Product Card",
+    category: "ecommerce",
+    description: "Sleek dark luxury e-commerce card with dynamic glow backdrop, hover preview trigger, and buy-now animation states.",
+    preview: DarkCard,
+    install: "npm install react-icons framer-motion",
+    usage: `<DarkCard />`,
+    code: `import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiEye, FiShoppingBag, FiStar, FiCheck, FiBookmark } from "react-icons/fi";
+
+export const DarkCard = () => {
+  const [isSaved, setIsSaved] = useState(false);
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleAddToCart = () => {
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.35, ease: "easeOut" }}
+      className="group relative w-full max-w-sm rounded-3xl bg-[#141218] p-4 border border-[#2B2735] shadow-2xl hover:border-[#FF4500]/40 transition-colors duration-300"
+    >
+      <div className="absolute -inset-0.5 rounded-3xl bg-gradient-to-r from-[#FF4500] to-[#FF0055] opacity-0 blur-xl group-hover:opacity-20 transition-opacity duration-500 pointer-events-none" />
+
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[#1D1926]">
+        <motion.img
+          whileHover={{ scale: 1.08 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=800&auto=format&fit=crop"
+          alt="Premium Headphones"
+          className="h-full w-full object-cover object-center"
+        />
+
+        <div className="absolute top-3 left-3 right-3 flex items-center justify-between z-10">
+          <span className="rounded-full bg-[#120D0A]/80 border border-[#3A2B22] backdrop-blur-md px-3 py-1 text-[10px] font-bold tracking-widest text-[#FFB703] uppercase">
+            LIMITED
+          </span>
+
+          <motion.button
+            whileTap={{ scale: 0.8 }}
+            onClick={() => setIsSaved(!isSaved)}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-[#141218]/80 border border-[#2B2735] backdrop-blur-md text-neutral-300 transition-colors hover:text-white"
+          >
+            <FiBookmark className={\`text-sm \${isSaved ? "fill-[#FF4500] text-[#FF4500]" : ""}\`} />
+          </motion.button>
+        </div>
+
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileHover={{ opacity: 1 }}
+          className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center gap-3 transition-opacity duration-300"
+        >
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="flex items-center gap-2 rounded-xl bg-white/10 border border-white/20 backdrop-blur-md px-4 py-2 text-xs font-semibold text-white shadow-lg"
+          >
+            <FiEye className="text-sm" /> Preview
+          </motion.button>
+        </motion.div>
+      </div>
+
+      <div className="mt-4 px-1 space-y-3">
+        <div className="flex items-center justify-between text-xs text-neutral-400">
+          <span className="font-mono text-[#FF8800]">AUDIO / PRO</span>
+          <div className="flex items-center gap-1 text-amber-400 font-bold">
+            <FiStar className="fill-amber-400" />
+            <span>4.9</span>
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-extrabold text-white tracking-tight group-hover:text-[#FFB703] transition-colors">
+            SonicPulse ANC Pro
+          </h3>
+          <p className="text-xs text-neutral-400 line-clamp-1 mt-0.5">
+            Spatial audio with adaptive noise cancellation.
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between pt-2 border-t border-[#221E2C]">
+          <div>
+            <span className="text-xs text-neutral-500 line-through mr-1.5">$349.00</span>
+            <span className="text-lg font-black text-white">$289.00</span>
+          </div>
+
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.92 }}
+            onClick={handleAddToCart}
+            className={\`flex h-10 items-center justify-center gap-2 rounded-xl px-4 text-xs font-bold transition-all shadow-lg \${
+              isAdded
+                ? "bg-emerald-500 text-white shadow-emerald-500/20"
+                : "bg-gradient-to-r from-[#FF4500] to-[#FF0055] text-white shadow-[#FF4500]/25 hover:brightness-110"
+            }\`}
+          >
+            <AnimatePresence mode="wait">
+              {isAdded ? (
+                <motion.span key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} className="flex items-center gap-1.5">
+                  <FiCheck className="text-base" /> Added
+                </motion.span>
+              ) : (
+                <motion.span key="bag" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-1.5">
+                  <FiShoppingBag className="text-base" /> Buy Now
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+export default DarkCard;`,
   },
 ];
 

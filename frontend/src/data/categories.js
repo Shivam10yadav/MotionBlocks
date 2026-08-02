@@ -4,6 +4,7 @@ export const categories = [
   { id: "404-pages", name: "404 Pages" },
   { id: "text-effects", name: "Text Effects" },
   { id: "loaders", name: "Loaders" },
+  { id: "ecommerce", name: "Ecommerce" },
   { id: "cta-sections", name: "CTA Sections" },
   { id: "testimonials", name: "Testimonials" },
   { id: "galleries", name: "Image Gallery" },
