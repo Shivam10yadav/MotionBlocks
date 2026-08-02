@@ -4,6 +4,7 @@ import Components from './pages/components';
 import ComponentDetails from './localcomponents/ComponentsDetails';
 import DocsPage from './pages/DocsPage';
 import ContributePage from './pages/Contribute';
+import NotFound from './localcomponents/NotFound';
 
 function App() {
   return (
@@ -17,6 +18,10 @@ function App() {
     path="/components/:category/:slug"
     element={<ComponentDetails />}
   />
+
+
+    <Route path="*" element={<NotFound />} />
+
 </Routes>
     </BrowserRouter>
   );

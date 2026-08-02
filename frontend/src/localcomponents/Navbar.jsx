@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { FaGithub, FaBars, FaTimes, FaChevronRight } from "react-icons/fa";
+import { FaGithub, FaBars, FaTimes, FaChevronRight, FaStar } from "react-icons/fa";
 
 /* Brand mark — corner-bracket motif borrowed from the
    schematic preview viewport, ember/teal duotone gradient
@@ -77,13 +77,14 @@ export function Navbar({ githubUrl = "https://github.com/Shivam10yadav/MotionBlo
           <div className="hidden items-center gap-3 md:flex">
             <a
               href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3.5 py-2 font-code text-xs font-medium text-white transition-all duration-200 hover:scale-[1.03] hover:border-white/20 hover:bg-white/[0.1] active:scale-[0.97]"
-            >
-              <FaGithub className="h-3.5 w-3.5 text-[#C4C6CF]" />
-              <span>GitHub</span>
-            </a>
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3.5 py-2 font-code text-xs font-medium text-white transition-all duration-200 hover:scale-[1.03] hover:border-white/20 hover:bg-white/[0.1] active:scale-[0.97]"
+>
+  <FaGithub className="h-3.5 w-3.5 text-[#C4C6CF]" />
+  <span>Star on GitHub</span>
+  <FaStar className="h-3 w-3 text-[--ember]" />
+</a>
 
            <Link
   to="/components"
