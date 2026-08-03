@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useSearchParams } from "react-router-dom";
 import { Navbar } from "../localcomponents/Navbar";
 import Sidebar from "../localcomponents/Sidebar";
 import ComponentGrid from "../localcomponents/ComponentGrid";
@@ -21,6 +22,9 @@ const fadeUp = {
 };
 
 const Components = () => {
+  const [searchParams] = useSearchParams();
+  const showSidebar = Boolean(searchParams.get("category") || searchParams.get("q"));
+
   return (
     <>
       <Navbar />
@@ -67,14 +71,14 @@ const Components = () => {
 
         {/* ================= Sidebar + grid ================= */}
         <div className="flex w-full items-start">
-          <Sidebar />
+          {showSidebar && <Sidebar />}
 
           <motion.section
             variants={fadeUp}
             initial="hidden"
             animate="show"
             custom={1}
-            className="flex-1 px-4 pb-28 pt-6 sm:px-8 md:pb-8"
+            className={`flex-1 px-4 pb-28 pt-6 sm:px-8 md:pb-8 ${showSidebar ? "" : "max-w-7xl mx-auto"}`}
           >
             <ComponentGrid />
           </motion.section>
