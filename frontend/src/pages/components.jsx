@@ -64,9 +64,7 @@ const Components = () => {
               Components
             </h1>
           </div>
-          <p className="max-w-md text-base leading-relaxed text-[#8B8D98]">
-            Copy-paste parts for your next build — browse, preview live, grab the code.
-          </p>
+        
         </motion.div>
 
         {/* ================= Sidebar + grid ================= */}

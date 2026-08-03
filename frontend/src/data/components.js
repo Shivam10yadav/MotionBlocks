@@ -52,9 +52,15 @@ import LightHero from "../ui/hero/LightHero";
 import LightHeroCode from "../ui/hero/LightHero.jsx?raw";
 import animatedNotFound from "../ui/404/AnimatedNoteFound";
 import animatedNotFoundCode from "../ui/404/AnimatedNoteFound.jsx?raw";
+import DockComp from "../ui/dock/DockComp";
+import DockCompCode from "../ui/dock/DockComp.jsx?raw";
+import DockItem from "../ui/dock/DockItem";
+import DockItemCode from "../ui/dock/DockItem.jsx?raw";
 
 
 export const components = [
+
+  
   {
     id: 1,
     slug: "glow-button",
@@ -362,5 +368,29 @@ export const components = [
     install: "npm install gsap",
     usage: `\`<AnimatedNotFound />\``,
     code: animatedNotFoundCode
+  },
+
+  {
+    id: 28,
+    slug: "dock-01",
+    name: "Dock compoenent",
+    category: "dock",
+    description: "A full-page GSAP-animated 404 with staggered digit reveal, ambient glow pulse, and idle floating motion. Exact Component used in our Website",
+    preview: DockComp,
+    install: "npm install gsap framer react-icons",
+    usage: `\`<DockComp />\``,
+    code: DockCompCode
+  },
+
+    {
+    id: 29,
+    slug: "dock-02",
+    name: "Dock component",
+    category: "dock",
+    description: "A full-page GSAP-animated 404 with staggered digit reveal, ambient glow pulse, and idle floating motion. Exact Component used in our Website",
+    preview: DockItem,
+    install: "npm install gsap framer react-icons",
+    usage: `\`<DockItem />\``,
+    code: DockItemCode
   },
 ];
