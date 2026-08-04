@@ -52,6 +52,10 @@ import LightHero from "../ui/hero/LightHero";
 import LightHeroCode from "../ui/hero/LightHero.jsx?raw";
 import animatedNotFound from "../ui/404/AnimatedNoteFound";
 import animatedNotFoundCode from "../ui/404/AnimatedNoteFound.jsx?raw";
+import  LightProgress  from "../ui/progressBar/LightProgress";
+import LightProgressCode  from "../ui/progressBar/LightProgress.jsx?raw";
+import  DarkProgressCode from "../ui/progressBar/DarkProgress.jsx?raw";
+import DarkProgress from "../ui/progressBar/DarkProgress";
 
 
 
@@ -368,5 +372,31 @@ export const components = [
     code: animatedNotFoundCode
   },
 
-
+{
+    id: 28,
+    slug: "light-progress-bar",
+    name: "Light Theme Animated Progress Bar",
+    category: "progress-bars",
+    description: "A soft, glassmorphic progress indicator featuring smooth Framer Motion spring fill, continuous shimmer animation, and dynamic percent pill.",
+    preview: LightProgress,
+    install: "npm install framer-motion react-icons",
+    usage: `<LightProgress progress={75} title="Uploading Files" />`,
+    code: LightProgressCode
+  },
+  {
+    id: 29,
+    slug: "dark-progress-bar",
+    name: "Dark  Progress Bar",
+    category: "progress-bars",
+    description: "A neon cyan animated progress bar for dark themes featuring striped shimmer overlays, glowing leading edges, and high-tech typography.",
+    preview: DarkProgress,
+    install: "npm install framer-motion react-icons",
+    usage: `<DarkProgress  title="loading" />`,
+    code: DarkProgressCode
+  }
 ];
+
+
+
+
+
