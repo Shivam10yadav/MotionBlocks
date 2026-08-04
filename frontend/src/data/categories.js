@@ -13,6 +13,7 @@ export const categories = [
   { id: "text-effects", name: "Text Effects" },
   { id: "loaders", name: "Loaders" },
   { id: "galleries", name: "Image Gallery" },
+  { id: "pricing", name: "Pricing Plans" },
   { id: "pagination", name: "Pagination" },
   { id: "404-pages", name: "404 Pages" },
 ];
