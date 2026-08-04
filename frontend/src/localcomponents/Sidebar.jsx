@@ -33,7 +33,11 @@ const Sidebar = () => {
   return (
     <>
       {/* ================= Desktop rail ================= */}
-      <aside className="sticky top-[88px] hidden h-[calc(100vh-88px)] w-72 shrink-0 border-r border-[#23262F] bg-[#08090D] p-6 md:block [--ember:#FF7A45] [--teal:#5EEAD4]">
+<aside
+  className="self-start hidden w-72 shrink-0
+             border-r border-[#23262F] bg-[#08090D] p-6 md:block
+             [--ember:#FF7A45] [--teal:#5EEAD4]"
+>
         <div>
           <p className="font-code text-xs uppercase tracking-widest text-[--teal]">
             Library
@@ -114,7 +118,7 @@ const Sidebar = () => {
                     activeCategory === category.id
                       ? "border border-[--teal]/25 bg-[--teal]/10 text-[--teal]"
                       : "border border-[#23262F] bg-[#111319] text-[#8B8D98]"
-                  }`}z
+                  }`}
                 >
                   {category.name}
                 </button>

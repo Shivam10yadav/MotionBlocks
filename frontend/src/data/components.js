@@ -56,6 +56,10 @@ import  LightProgress  from "../ui/progressBar/LightProgress";
 import LightProgressCode  from "../ui/progressBar/LightProgress.jsx?raw";
 import  DarkProgressCode from "../ui/progressBar/DarkProgress.jsx?raw";
 import DarkProgress from "../ui/progressBar/DarkProgress";
+import LightDock from "../ui/dock/LightDock";
+import LightDockCode from "../ui/dock/LightDock.jsx?raw";
+import DarkDockCode from "../ui/dock/DarkDock.jsx?raw";
+import DarkDock from "../ui/dock/DarkDock";
 
 
 
@@ -393,6 +397,29 @@ export const components = [
     install: "npm install framer-motion react-icons",
     usage: `<DarkProgress  title="loading" />`,
     code: DarkProgressCode
+  },
+
+  {
+    id: 30,
+    slug: "white-wave-dock",
+    name: "Glassmorphic Wave Dock (Light)",
+    category: "docks",
+    description: "A floating light-themed navbar featuring proximity-based spring magnification wave motion on hover.",
+    preview: LightDock,
+    install: "npm install framer-motion react-icons",
+    usage: `<LightDock />`,
+    code: LightDockCode
+  },
+  {
+    id: 31,
+    slug: "dark-wave-dock",
+    name: "Obsidian Teal Wave Dock (Dark)",
+    category: "docks",
+    description: "A floating dark-themed navbar using a rich Obsidian Teal palette with proximity-based wave magnification on hover.",
+    preview: DarkDock,
+    install: "npm install framer-motion react-icons",
+    usage: `<DarkWaveDock />`,
+    code: DarkDockCode
   }
 ];
 

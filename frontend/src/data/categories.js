@@ -5,6 +5,7 @@ export const categories = [
   { id: "auth", name: "Login & Auth" },
   { id: "progress-bars", name: "Progress Bars" },
   { id: "ecommerce", name: "Ecommerce" },
+  { id: "docks", name: "Docks" },
   { id: "cta-sections", name: "CTA Sections" },
   { id: "testimonials", name: "Testimonials" },
   { id: "faq", name: "FAQ Sections" },
