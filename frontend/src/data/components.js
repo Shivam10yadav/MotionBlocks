@@ -60,6 +60,8 @@ import LightDock from "../ui/dock/LightDock";
 import LightDockCode from "../ui/dock/LightDock.jsx?raw";
 import DarkDockCode from "../ui/dock/DarkDock.jsx?raw";
 import DarkDock from "../ui/dock/DarkDock";
+import WarHero from "../ui/hero/WarHero";
+import WarHeroCode from "../ui/hero/WarHero.jsx?raw";
 
 
 
@@ -420,7 +422,19 @@ export const components = [
     install: "npm install framer-motion react-icons",
     usage: `<DarkWaveDock />`,
     code: DarkDockCode
-  }
+  },
+
+  {
+  id: 32,
+  slug: "war-hero-section",
+  name: "War Tactical Hero Section",
+  category: "hero",
+  description: "Aggressive war-themed hero section featuring ember gradients, tactical grid layout, entry stagger animations, and GSAP ScrollTrigger parallax depth.",
+  preview: WarHero,
+  install: "npm install gsap @gsap/react lucide-react",
+  usage: `<WarHeroSection />`,
+  code: WarHeroCode
+}
 ];
 
 
