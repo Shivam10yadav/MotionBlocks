@@ -62,6 +62,8 @@ import DarkDockCode from "../ui/dock/DarkDock.jsx?raw";
 import DarkDock from "../ui/dock/DarkDock";
 import WarHero from "../ui/hero/WarHero";
 import WarHeroCode from "../ui/hero/WarHero.jsx?raw";
+import HorizontalScrollText from "../ui/text-effect/HorizontalScrollText";
+import HorizontalScrollTextCode from "../ui/text-effect/HorizontalScrollText.jsx?raw";
 
 
 
@@ -434,6 +436,18 @@ export const components = [
   install: "npm install gsap @gsap/react lucide-react",
   usage: `<WarHeroSection />`,
   code: WarHeroCode
+},
+
+{
+  id: 33,
+  slug: "war-hero-section",
+  name: "War Tactical Hero Section",
+  category: "text-effects",
+  description: "Aggressive war-themed hero section featuring ember gradients, tactical grid layout, entry stagger animations, and GSAP ScrollTrigger parallax depth.",
+  preview: HorizontalScrollText,
+  install: "npm install gsap @gsap/react lucide-react",
+  usage: `<WarHeroSection />`,
+  code: HorizontalScrollTextCode
 }
 ];
 
