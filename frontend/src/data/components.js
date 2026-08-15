@@ -63,7 +63,17 @@ import DarkDock from "../ui/dock/DarkDock";
 import WarHero from "../ui/hero/WarHero";
 import WarHeroCode from "../ui/hero/WarHero.jsx?raw";
 import HorizontalScrollText from "../ui/text-effect/HorizontalScrollText";
-import HorizontalScrollTextCode from "../ui/text-effect/HorizontalScrollText.jsx?raw";
+import LightFooter from "../ui/footer/LightFooter";
+import LightFooterCode from "../ui/footer/LightFooter.jsx?raw";
+import DarkFooter from "../ui/footer/DarkFooter";
+import DarkFooterCode from "../ui/footer/DarkFooter.jsx?raw";
+import DarkNavbar from "../ui/navbar/DarkNavbar";
+import DarkNavbarCode from "../ui/navbar/DarkNavbar.jsx?raw";
+import LightNavbar from "../ui/navbar/LightNavbar";
+import LightNavbarCode from "../ui/navbar/LightNavbar.jsx?raw";
+import LightMarquee from "../ui/marquee/LightMarquee";
+import LightMarqueeCode from "../ui/marquee/LightMarquee.jsx?raw";
+
 
 
 
@@ -438,17 +448,71 @@ export const components = [
   code: WarHeroCode
 },
 
+
+
 {
-  id: 33,
-  slug: "war-hero-section",
-  name: "War Tactical Hero Section",
-  category: "text-effects",
-  description: "Aggressive war-themed hero section featuring ember gradients, tactical grid layout, entry stagger animations, and GSAP ScrollTrigger parallax depth.",
-  preview: HorizontalScrollText,
-  install: "npm install gsap @gsap/react lucide-react",
-  usage: `<WarHeroSection />`,
-  code: HorizontalScrollTextCode
-}
+    id: 33,
+    slug: "light-footer",
+    name: "Light Footer",
+    category: "footers",
+    description: "Warm cream-toned editorial footer featuring subtle background glow animations, interactive newsletter input, and staggered link reveals.",
+    preview: LightFooter,
+    install: "npm install framer-motion react-icons",
+    usage: `<LightFooter />`,
+    code: LightFooterCode
+  },
+  {
+    id: 34,
+    slug: "dark-footer",
+    name: "Dark Footer",
+    category: "footers",
+    description: "Modern dark-themed footer featuring ambient glowing light orbs, frosted glass CTA card, and subtle hover micro-interactions.",
+    preview: DarkFooter,
+    install: "npm install framer-motion react-icons",
+    usage: `<DarkFooter />`,
+    code: DarkFooterCode
+  },
+
+  {
+  id: 35,
+  slug: "light-navbar",
+  name: "Light Navbar",
+  category: "navbars",
+  description: "Editorial warm-cream sticky navbar with backdrop glassmorphism, responsive animated drawer, and smooth hover states.",
+  preview: LightNavbar,
+  install: "npm install framer-motion react-icons",
+  usage: `<LightNavbar />`,
+  code: LightNavbarCode
+},
+
+{
+  id: 36,
+  slug: "dark-navbar",
+  name: "Dark Navbar",
+  category: "navbars",
+  description: "Sleek dark-themed sticky navbar featuring custom brand mark, blurred glass backdrop, and responsive mobile drawer.",
+  preview: DarkNavbar,
+  install: "npm install framer-motion react-icons",
+  usage: `<DarkNavbar />`,
+  code: DarkNavbarCode
+},
+{
+id: 37,
+  slug: "light-marquee",
+  name: "Light Infinite Marquee",
+  category: "marquees",
+  description: "Warm cream infinite auto-scrolling brand logo marquee with edge fading and interactive hover states.",
+  preview: LightMarquee,
+  install: "npm install framer-motion",
+  usage: `<LightMarquee />`,
+  code: LightMarqueeCode
+},
+
+
+
+  
+
+
 ];
 
 
