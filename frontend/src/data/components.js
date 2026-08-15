@@ -73,6 +73,10 @@ import LightNavbar from "../ui/navbar/LightNavbar";
 import LightNavbarCode from "../ui/navbar/LightNavbar.jsx?raw";
 import LightMarquee from "../ui/marquee/LightMarquee";
 import LightMarqueeCode from "../ui/marquee/LightMarquee.jsx?raw";
+import OtpVerify from "../ui/input/VerifyOtp";
+import OtpVerifyCode from "../ui/input/VerifyOtp.jsx?raw";
+import DarkVerifyOtpCode from "../ui/input/DarkVerifyOtp.jsx?raw";
+import DarkVerifyOtp from "../ui/input/DarkVerifyOtp";
 
 
 
@@ -510,7 +514,29 @@ id: 37,
 
 
 
-  
+  {
+  id: 38,
+  slug: "animated-otp-input",
+  name: "Animated OTP Verification",
+  category: "inputs", // or "auth"
+  description: "Light-themed 4-digit animated OTP verification field with auto-focus, paste support, and interactive success states.",
+  preview: OtpVerify,
+  install: "npm install framer-motion",
+  usage: `<OtpVerify />`,
+  code: OtpVerifyCode
+},
+
+{
+  id: 39,
+  slug: "animated-otp-card",
+  name: "Dark OTP Card",
+  category: "inputs",
+  description: "Dark-mode cyber aesthetic OTP input card with slate and cyan styling, scanning beam indicators, grid overlay, and error feedback.",
+  preview: DarkVerifyOtp,
+  install: "npm install framer-motion",
+  usage: `<CyberOtpCard />`,
+  code: DarkVerifyOtpCode
+}
 
 
 ];

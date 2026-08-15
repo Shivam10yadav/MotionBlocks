@@ -1,159 +1,121 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { 
-  FaGithub, 
-  FaXTwitter, 
-  FaDiscord, 
-  FaEnvelope, 
-  FaArrowUpRightFromSquare, 
-  FaCube 
-} from 'react-icons/fa6';
+import React, { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const FOOTER_LINKS = {
-  components: [
-    { name: 'Buttons', href: '#buttons' },
-    { name: 'Cards', href: '#cards' },
-    { name: 'Hero Sections', href: '#hero-sections' },
-    { name: 'Backgrounds', href: '#backgrounds' },
-    { name: 'Loaders', href: '#loaders' },
-  ],
-  resources: [
-    { name: 'Documentation', href: '#docs' },
-    { name: 'Contribute', href: '#contribute' },
-    { name: 'Changelog', href: '#changelog' },
-    { name: 'License', href: '#license' },
-  ],
-  connect: [
-    { name: 'GitHub', href: 'https://github.com', icon: FaGithub, external: true },
-    { name: 'X (Twitter)', href: 'https://x.com', icon: FaXTwitter, external: true },
-    { name: 'Discord', href: 'https://discord.com', icon: FaDiscord, external: true },
-    { name: 'Email', href: 'mailto:hello@motionblocks.dev', icon: FaEnvelope, external: false },
-  ],
-};
+gsap.registerPlugin(ScrollTrigger);
 
-export default function Footer() {
+export default function FooterTextReveal() {
+  const containerRef = useRef(null);
+  const textRef = useRef(null);
+  const mountainRef = useRef(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    const textEl = textRef.current;
+
+    if (!container || !textEl) return;
+
+    const ctx = gsap.context(() => {
+      // Enhanced 3D Pop-Out & Rise Reveal Timeline
+      gsap.fromTo(
+        textEl,
+        {
+          yPercent: 85,
+          scale: 0.75,
+          rotateX: 25,
+          opacity: 0,
+          filter: "blur(8px)",
+        },
+        {
+          yPercent: -15,
+          scale: 1.12, // Pops OUT toward the viewer
+          rotateX: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: container,
+            start: "top 90%",
+            end: "bottom bottom",
+            scrub: 1.2,
+          },
+        }
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <footer className="w-full bg-[#0D1117] border-t border-[#30363D] text-[#F8FAFC] font-sans antialiased">
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+    <footer
+      ref={containerRef}
+      className="relative flex min-h-[85vh] sm:min-h-screen w-full flex-col justify-between overflow-hidden bg-[#0A061D] text-white [perspective:1000px]"
+    >
+      {/* Background Radial Spotlight Glow for Contrast */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#8B5CF6]/30 via-[#6D28D9]/40 to-[#0A061D] opacity-90" />
+      <div className="pointer-events-none absolute left-1/2 top-1/4 h-[400px] w-[80vw] -translate-x-1/2 rounded-full bg-[#A78BFA]/20 blur-[140px]" />
+
+      {/* Top Header */}
+      <div className="relative z-20 flex items-center justify-between px-5 pt-6 sm:px-10 sm:pt-10 font-mono text-xs sm:text-sm uppercase tracking-wider">
+        <span className="cursor-pointer hover:opacity-80">▲ Top</span>
+        <div className="flex gap-4 sm:gap-6">
+          <a href="#about" className="hover:underline">About</a>
+          <a href="#projects" className="hover:underline">Projects</a>
+          <a href="#contact" className="hover:underline">Contact</a>
+        </div>
+      </div>
+
+      {/* MAIN POP-OUT ANIMATION CONTAINER */}
+      <div className="relative flex w-full flex-1 items-end justify-center overflow-hidden">
         
-        {/* Main 4-Column Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 mb-16">
-          
-          {/* Section 1: Branding & Description */}
-          <div className="lg:col-span-5 flex flex-col space-y-4">
-            <a href="#" className="inline-flex items-center gap-2.5 group w-fit">
-              <div className="p-2 rounded-xl bg-[#161B22] border border-[#30363D] text-[#06B6D4] group-hover:border-[#06B6D4]/50 transition-colors duration-300">
-                <FaCube className="w-5 h-5" />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-[#F8FAFC] group-hover:text-[#06B6D4] transition-colors duration-300">
-                MotionBlocks
-              </span>
-            </a>
-            <p className="text-sm text-[#94A3B8] leading-relaxed max-w-sm">
-              Beautiful animated React components built for modern developers. Copy, customize, and ship faster.
-            </p>
-          </div>
+        {/* LAYER 1 (BEHIND): POP-OUT TEXT */}
+        <h1
+          ref={textRef}
+          className="pointer-events-none absolute z-0 text-center font-black uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/80 text-[25vw] sm:text-[19vw] leading-none select-none will-change-transform drop-shadow-[0_25px_35px_rgba(0,0,0,0.7)] mb-[14vh] sm:mb-[18vh]"
+          style={{
+            textShadow:
+              "0 0 50px rgba(167, 139, 250, 0.6), 0 0 100px rgba(139, 92, 246, 0.3)",
+          }}
+        >
+          MOTION
+        </h1>
 
-          {/* Section 2: Components */}
-          <div className="lg:col-span-2 space-y-4">
-            <h3 className="text-sm font-semibold text-[#F8FAFC] tracking-wider uppercase">
-              Components
-            </h3>
-            <ul className="space-y-2.5">
-              {FOOTER_LINKS.components.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-[#94A3B8] hover:text-[#06B6D4] transition-colors duration-300 inline-block"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Section 3: Resources */}
-          <div className="lg:col-span-2 space-y-4">
-            <h3 className="text-sm font-semibold text-[#F8FAFC] tracking-wider uppercase">
-              Resources
-            </h3>
-            <ul className="space-y-2.5">
-              {FOOTER_LINKS.resources.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    className="text-sm text-[#94A3B8] hover:text-[#06B6D4] transition-colors duration-300 inline-block"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Section 4: Connect */}
-          <div className="lg:col-span-3 space-y-4">
-            <h3 className="text-sm font-semibold text-[#F8FAFC] tracking-wider uppercase">
-              Connect
-            </h3>
-            <ul className="space-y-2.5">
-              {FOOTER_LINKS.connect.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <li key={link.name}>
-                    <motion.a
-                      href={link.href}
-                      target={link.external ? '_blank' : '_self'}
-                      rel={link.external ? 'noopener noreferrer' : undefined}
-                      whileHover={{ x: 2 }}
-                      transition={{ duration: 0.2 }}
-                      className="group inline-flex items-center gap-2 text-sm text-[#94A3B8] hover:text-[#06B6D4] transition-colors duration-300"
-                    >
-                      <Icon className="w-4 h-4 transition-transform duration-300 group-hover:scale-110 group-hover:text-[#06B6D4]" />
-                      <span>{link.name}</span>
-                      {link.external && (
-                        <FaArrowUpRightFromSquare className="w-3 h-3 text-[#94A3B8]/60 group-hover:text-[#06B6D4] transition-colors duration-300" />
-                      )}
-                    </motion.a>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-
-        </div>
-
-        {/* Bottom Bar Divider */}
-        <div className="w-full h-px bg-[#30363D] mb-8" />
-
-        {/* Bottom Bar Content */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
-          
-          {/* Copyright & Tech Stack Info */}
-          <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
-            <span>© 2026 MotionBlocks. All rights reserved.</span>
-            <span className="hidden sm:inline text-[#30363D]">•</span>
-            <span className="text-[#94A3B8]/80">
-              Built with React, Tailwind CSS & Framer Motion.
-            </span>
-          </div>
-
-          {/* GitHub Quick Link */}
-          <motion.a
-            href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.2 }}
-            className="p-2 rounded-lg bg-[#161B22] border border-[#30363D] text-[#94A3B8] hover:text-[#06B6D4] hover:border-[#06B6D4]/40 transition-colors duration-300"
-            aria-label="GitHub Repository"
+        {/* LAYER 2 (IN FRONT): Responsive SVG Mountains */}
+        <div
+          ref={mountainRef}
+          className="relative z-10 w-full h-[45vh] sm:h-[55vh] flex items-end justify-center"
+        >
+          <svg
+            viewBox="0 0 1440 600"
+            preserveAspectRatio="none"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-full h-full drop-shadow-[0_-10px_20px_rgba(0,0,0,0.5)]"
           >
-            <FaGithub className="w-4 h-4" />
-          </motion.a>
-
+            {/* Back Mountain Peaks Layer */}
+            <path
+              d="M0 600V350L180 240L360 380L600 160L850 340L1100 200L1300 310L1440 220V600H0Z"
+              fill="#7C3AED"
+              fillOpacity="0.75"
+            />
+            {/* Midground Mountain Layer */}
+            <path
+              d="M0 600V420L220 280L480 440L720 210L980 400L1220 260L1440 380V600H0Z"
+              fill="#5B21B6"
+            />
+            {/* Foreground Cutout Layer (Hides text base) */}
+            <path
+              d="M0 600V480L300 360L580 490L840 310L1120 460L1440 340V600H0Z"
+              fill="#0A061D"
+            />
+          </svg>
         </div>
+      </div>
 
+      {/* Mobile-Friendly Bottom Footer Bar */}
+      <div className="relative z-20 flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-white/10 px-5 py-4 sm:px-10 sm:py-6 font-mono text-[10px] sm:text-xs opacity-75">
+        <span>© 2026 MOTIONBLOCKS</span>
+        <span className="tracking-widest">SCROLL TO UNFOLD</span>
       </div>
     </footer>
   );

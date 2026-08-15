@@ -1,5 +1,6 @@
 export const categories = [
   { id: "all", name: "All Components" },
+  { id: "inputs", name: "Inputs & Forms" },
   { id: "buttons", name: "Buttons" },
   { id: "hero", name: "Hero Sections" },
   { id: "auth", name: "Login & Auth" },
