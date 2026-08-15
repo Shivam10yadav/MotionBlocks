@@ -91,7 +91,7 @@ function drawCanvasVFX(ctx, width, height, scrollProgress, time, accentHex) {
 export function Hero({
   eyebrow = "",
   titleWord1 = "MOTION",
-  titleWord2 = "BLOCK",
+  titleWord2 = "BLOCKS",
   description = "A copy-paste library of high-performance animated React components built with GSAP and Canvas VFX.",
   watermarkText = "MOTION BLOCK • KINETIC ENGINE • REACT COMPONENTS • ",
   accentHex = "#FF7A45",

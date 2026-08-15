@@ -28,7 +28,7 @@ export default function FooterTextReveal() {
         },
         {
           yPercent: -15,
-          scale: 1.12, // Pops OUT toward the viewer
+          scale: 1.20, // Pops OUT toward the viewer
           rotateX: 0,
           opacity: 1,
           filter: "blur(0px)",
