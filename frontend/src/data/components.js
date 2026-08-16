@@ -16,14 +16,8 @@ import MinimalFaq from "../ui/faq/MinimalFaq";
 import MinimalFaqCode from "../ui/faq/MinimalFaq.jsx?raw";
 import TabbedFaq from "../ui/faq/TabbedFaq";
 import TabbedFaqCode from "../ui/faq/TabbedFaq.jsx?raw";
-import LightPricing from "../ui/pricing/LightPricing";
-import LightPricingCode from "../ui/pricing/LightPricing.jsx?raw";
-import DarkBrownPricing from "../ui/pricing/DarkBrownPricing";
-import DarkBrownPricingCode from "../ui/pricing/DarkBrownPricing.jsx?raw";
-import LightAbout from "../ui/about/LightAbout";
-import LightAboutCode from "../ui/about/LightAbout.jsx?raw";
-import DarkAbout from "../ui/about/DarkAbout";
-import DarkAboutCode from "../ui/about/DarkAbout.jsx?raw";
+
+
 import LightAuth from "../ui/auth/LightAuth";
 import LightAuthCode from "../ui/auth/LightAuth.jsx?raw";
 import DarkAuth from "../ui/auth/DarkAuth";
@@ -46,10 +40,7 @@ import DarkPagination from "../ui/pagination/DarkPagination";
 import DarkPaginationCode from "../ui/pagination/DarkPagination.jsx?raw";
 import LightPagination from "../ui/pagination/LightPagination";
 import LightPaginationCode from "../ui/pagination/LightPagination.jsx?raw";
-import DarkHero from "../ui/hero/DarkHero";
-import DarkHeroCode from "../ui/hero/DarkHero.jsx?raw";
-import LightHero from "../ui/hero/LightHero";
-import LightHeroCode from "../ui/hero/LightHero.jsx?raw";
+
 import animatedNotFound from "../ui/404/AnimatedNoteFound";
 import animatedNotFoundCode from "../ui/404/AnimatedNoteFound.jsx?raw";
 import  LightProgress  from "../ui/progressBar/LightProgress";
@@ -77,6 +68,9 @@ import OtpVerify from "../ui/input/VerifyOtp";
 import OtpVerifyCode from "../ui/input/VerifyOtp.jsx?raw";
 import DarkVerifyOtpCode from "../ui/input/DarkVerifyOtp.jsx?raw";
 import DarkVerifyOtp from "../ui/input/DarkVerifyOtp";
+import PromptInput from "../ui/input/PromptInput";
+import PromptInputCode from "../ui/input/PromptInput.jsx?raw";
+
 
 
 
@@ -195,50 +189,7 @@ export const components = [
     usage: `<TabbedFaq />`,
     code: TabbedFaqCode
   },
-  {
-    id: 10,
-    slug: "light-pricing",
-    name: "Light Theme 3-Tier Pricing",
-    category: "pricing",
-    description: "A sleek, high-contrast light 3-tier pricing section with animated monthly/yearly toggle.",
-    preview: LightPricing,
-    install: "npm install framer-motion lucide-react",
-    usage: `<LightPricing />`,
-    code: LightPricingCode
-  },
-  {
-    id: 11,
-    slug: "dark-brown-pricing",
-    name: "Luxury Dark Brown Pricing",
-    category: "pricing",
-    description: "A luxury dark espresso & bronze themed 3-tier pricing table with subtle glow effects and interactive pricing toggles.",
-    preview: DarkBrownPricing,
-    install: "npm install framer-motion lucide-react",
-    usage: `<DarkBrownPricing />`,
-    code: DarkBrownPricingCode
-  },
-  {
-    id: 12,
-    slug: "light-about",
-    name: "Light Theme About Section",
-    category: "about",
-    description: "A clean, modern about section featuring highlights, team mission, and animated stat counters.",
-    preview: LightAbout,
-    install: "npm install framer-motion lucide-react",
-    usage: `<LightAbout />`,
-    code: LightAboutCode
-  },
-  {
-    id: 13,
-    slug: "dark-about",
-    name: "Luxury Dark Themed About Section",
-    category: "about",
-    description: "A luxury dark espresso & amber about section featuring scroll animations and custom value cards.",
-    preview: DarkAbout,
-    install: "npm install framer-motion lucide-react",
-    usage: `<DarkAbout />`,
-    code: DarkAboutCode
-  },
+
   {
     id: 14,
     slug: "light-auth",
@@ -360,28 +311,7 @@ export const components = [
     usage: `<DarkPagination totalPages={10} initialPage={1} onPageChange={(page) => console.log(page)} />`,
     code: DarkPaginationCode
   },
-  {
-    id: 25,
-    slug: "light-organic-hero",
-    name: "Light Minimal Organic Hero",
-    category: "hero",
-    description: "Refined light-theme hero section featuring interactive cursor-following movement, subtle card hover tilt, and warm organic tone accents.",
-    preview: LightHero,
-    install: "npm install framer-motion",
-    usage: `<LightHero />`,
-    code: LightHeroCode
-  },
-  {
-    id: 26,
-    slug: "dark-amber-hero",
-    name: "Dark Amber Warm Hero",
-    category: "hero",
-    description: "Bespoke dark hero component built with deep obsidian canvas, warm amber and crimson lighting, diagonal light sweeps, and glassmorphism feature bar.",
-    preview: DarkHero,
-    install: "npm install framer-motion",
-    usage: `<DarkHero />`,
-    code: DarkHeroCode
-  },
+
   {
     id: 27,
     slug: "animated-404",
@@ -536,7 +466,21 @@ id: 37,
   install: "npm install framer-motion",
   usage: `<CyberOtpCard />`,
   code: DarkVerifyOtpCode
-}
+},
+
+{
+  id: 40,
+  slug: "AI prompt box",
+  name: "Prompt",
+  category: "inputs",
+  description: "Modern light-theme AI prompt input card with file context attachments, search/think feature toggles, and responsive state animations.",
+  preview: PromptInput,
+  install: "npm install framer-motion",
+  usage: `<PromptInput />`,
+  code: PromptInputCode
+},
+
+
 
 
 ];
