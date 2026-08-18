@@ -16,6 +16,7 @@ const MENU_ITEMS = [
 
 export default function WheelNavigation() {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isSpinning, setIsSpinning] = useState(false);
   const wheelRef = useRef(null);
   const currentRotation = useRef(0);
 
@@ -23,33 +24,43 @@ export default function WheelNavigation() {
   const angleStep = 360 / totalItems;
   const radius = 170;
 
-  const rotateTo = (targetIndex) => {
-    let diff = (targetIndex - selectedIndex) % totalItems;
+  // Lucky Draw Fast Spin Animation Function
+  const spinTo = (targetIndex, direction = 1) => {
+    if (isSpinning) return; // Prevent overlapping spins
+    setIsSpinning(true);
 
+    // Calculate item target base angle
+    let diff = (targetIndex - selectedIndex) % totalItems;
     if (diff > totalItems / 2) diff -= totalItems;
     if (diff < -totalItems / 2) diff += totalItems;
 
-    const targetRotation = currentRotation.current - diff * angleStep;
+    // Add 2 full extra spins (720 deg) for the rapid "lucky draw" wheel effect
+    const extraSpins = 360 * 2 * direction;
+    const targetRotation = currentRotation.current - diff * angleStep - extraSpins;
 
     gsap.to(wheelRef.current, {
       rotation: targetRotation,
-      duration: 0.8,
-      ease: 'back.out(1.4)',
+      duration: 1.8, // Duration of fast spin + slow deceleration
+      ease: 'power4.out', // Starts super fast, then gradually decelerates and lands softly
       onUpdate: () => {
         currentRotation.current = gsap.getProperty(wheelRef.current, 'rotation');
-        
+
+        // Keep item labels upright throughout high-speed rotation
         const items = wheelRef.current.querySelectorAll('.wheel-item-label');
         items.forEach((item) => {
           gsap.set(item, { rotation: -currentRotation.current });
         });
+      },
+      onComplete: () => {
+        setIsSpinning(false);
       },
     });
 
     setSelectedIndex((targetIndex + totalItems) % totalItems);
   };
 
-  const handleNext = () => rotateTo((selectedIndex + 1) % totalItems);
-  const handlePrev = () => rotateTo((selectedIndex - 1 + totalItems) % totalItems);
+  const handleNext = () => spinTo((selectedIndex + 1) % totalItems, 1);
+  const handlePrev = () => spinTo((selectedIndex - 1 + totalItems) % totalItems, -1);
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-[#121316] text-zinc-100 font-sans">
@@ -60,7 +71,7 @@ export default function WheelNavigation() {
           boxShadow: '18px 18px 36px #0d0e10, -18px -18px 36px #272a30, inset 1px 1px 2px rgba(255,255,255,0.08)',
         }}
       >
-        {/* Physical Top Notch Pointer */}
+        {/* Top Winner Pointer */}
         <div className="absolute top-10 z-30 flex flex-col items-center">
           <div 
             className="h-0 w-0 border-x-[10px] border-x-transparent border-t-[14px] border-t-emerald-400"
@@ -70,7 +81,7 @@ export default function WheelNavigation() {
           />
         </div>
 
-        {/* Groove Track Ring (Sunken Path) */}
+        {/* Sunken Wheel Track */}
         <div 
           className="absolute h-[340px] w-[340px] rounded-full"
           style={{
@@ -78,7 +89,7 @@ export default function WheelNavigation() {
           }}
         />
 
-        {/* Rotatable Dial Wheel */}
+        {/* Rapid Spinning Dial */}
         <div 
           ref={wheelRef} 
           className="absolute flex h-[340px] w-[340px] items-center justify-center rounded-full"
@@ -95,7 +106,7 @@ export default function WheelNavigation() {
             return (
               <div
                 key={item.id}
-                onClick={() => rotateTo(index)}
+                onClick={() => spinTo(index)}
                 style={{
                   left: `calc(50% + ${x}px)`,
                   top: `calc(50% + ${y}px)`,
@@ -103,7 +114,6 @@ export default function WheelNavigation() {
                 }}
                 className="absolute z-20 cursor-pointer"
               >
-                {/* Skeuomorphic Tactile Buttons */}
                 <div
                   className={`wheel-item-label flex h-11 items-center justify-center rounded-full px-5 text-sm font-semibold transition-all duration-300 select-none ${
                     isActive
@@ -127,14 +137,13 @@ export default function WheelNavigation() {
           })}
         </div>
 
-        {/* Central Beveled Knob (Raised Inner Hub) */}
+        {/* Central Display & Trigger */}
         <div 
           className="z-30 flex h-56 w-56 flex-col items-center justify-center rounded-full bg-gradient-to-b from-[#22252b] to-[#16171b]"
           style={{
             boxShadow: '12px 12px 24px #0c0d0f, -10px -10px 20px #282b31, inset 0px 1px 2px rgba(255,255,255,0.15)',
           }}
         >
-          {/* Engraved Display Screen */}
           <div 
             className="flex flex-col items-center justify-center px-6 py-2 rounded-2xl bg-[#101114] border border-[#1e2025]"
             style={{
@@ -142,16 +151,16 @@ export default function WheelNavigation() {
             }}
           >
             <span className="text-[9px] font-bold tracking-widest text-emerald-400 uppercase">
-              Now Browsing
+              {isSpinning ? 'Spinning...' : 'Selected'}
             </span>
 
             <div className="h-8 my-0.5 flex items-center justify-center overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.h2
                   key={MENU_ITEMS[selectedIndex].id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.15 }}
                   className="text-xl font-extrabold text-zinc-100 tracking-wider"
                 >
@@ -161,11 +170,12 @@ export default function WheelNavigation() {
             </div>
           </div>
 
-          {/* Physical Push Buttons */}
+          {/* Trigger Buttons */}
           <div className="mt-4 flex items-center gap-4">
             <button
               onClick={handlePrev}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-zinc-950 bg-gradient-to-b from-emerald-300 to-emerald-500 active:scale-95 transition-transform"
+              disabled={isSpinning}
+              className="flex h-11 w-11 items-center justify-center rounded-full text-zinc-950 bg-gradient-to-b from-emerald-300 to-emerald-500 active:scale-95 disabled:opacity-50 transition-transform"
               style={{
                 boxShadow: '3px 3px 8px #0c0d0f, -2px -2px 6px #282b31, inset 0px 2px 2px rgba(255,255,255,0.5)',
               }}
@@ -175,7 +185,8 @@ export default function WheelNavigation() {
             </button>
             <button
               onClick={handleNext}
-              className="flex h-11 w-11 items-center justify-center rounded-full text-zinc-300 bg-gradient-to-b from-[#26292f] to-[#181a1e] active:scale-95 transition-transform"
+              disabled={isSpinning}
+              className="flex h-11 w-11 items-center justify-center rounded-full text-zinc-300 bg-gradient-to-b from-[#26292f] to-[#181a1e] active:scale-95 disabled:opacity-50 transition-transform"
               style={{
                 boxShadow: '4px 4px 8px #0c0d0f, -3px -3px 7px #282b31, inset 0px 1px 1px rgba(255,255,255,0.1)',
               }}
