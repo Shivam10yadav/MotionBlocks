@@ -8,14 +8,26 @@ import HorizontalScroll from '../../localcomponents/HorizontalScroll'
 
 const Landing = () => {
   return (
-    <>
-    <Navbar/>
-    <Hero/>
-    <HorizontalScroll/>
-    <Categories/>
-    <WhyMotions/>
-    <Footer/>
-    </>
+    <div className="relative bg-[#F9F6F0]">
+      <Navbar />
+      <Hero />
+      
+      {/* Container for the Stacked Overlay Sequence */}
+      <div className="relative">
+        {/* Pinned Section */}
+        <div className="relative z-10">
+          <HorizontalScroll />
+        </div>
+
+        {/* Overlapping Section */}
+        <div className="relative z-20 -mt-[100vh]">
+          <Categories />
+        </div>
+      </div>
+
+      <WhyMotions />
+      <Footer />
+    </div>
   )
 }
 

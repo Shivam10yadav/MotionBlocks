@@ -1,379 +1,241 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import {
-  MousePointerClick,
-  LayoutTemplate,
-  KeyRound,
-  ShoppingCart,
-  Megaphone,
-  Quote,
-  HelpCircle,
-  Users,
-  Type,
-  Loader2,
-  Images,
-  ListOrdered,
-  Ghost,
-  Layers,
-  ArrowUpRight,
-  Sparkles,
-} from "lucide-react";
 import { categories } from "../data/categories";
 import { components } from "../data/components";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CATEGORY_META = {
-  buttons: {
-    icon: MousePointerClick,
-    description: "Interactive triggers with micro-animations and state feedback.",
-    tag: "Essential",
-  },
-  hero: {
-    icon: LayoutTemplate,
-    description: "High-impact entry layouts built to capture immediate viewer attention.",
-    tag: "Featured",
-  },
-  auth: {
-    icon: KeyRound,
-    description: "Secure, smooth sign-in, sign-up, and verification flows.",
-    tag: "Security",
-  },
-  ecommerce: {
-    icon: ShoppingCart,
-    description: "Product cards, interactive checkouts, and shopping modules.",
-    tag: "Conversion",
-  },
-  "cta-sections": {
-    icon: Megaphone,
-    description: "Conversion-focused call-to-action blocks.",
-    tag: "High Yield",
-  },
-  testimonials: {
-    icon: Quote,
-    description: "Social proof carousels, grids, and verified customer quotes.",
-    tag: "Social Proof",
-  },
-  faq: {
-    icon: HelpCircle,
-    description: "Accordions and expandable question layouts.",
-    tag: "Utility",
-  },
-  about: {
-    icon: Users,
-    description: "Team profiles, company timeline, and mission sections.",
-    tag: "Branding",
-  },
-  "text-effects": {
-    icon: Type,
-    description: "Gradient shifts, kinetic typography, and typewriter styles.",
-    tag: "Kinetic UI",
-  },
-  loaders: {
-    icon: Loader2,
-    description: "Smooth progress indicators, skeletons, and loading spinners.",
-    tag: "Feedback",
-  },
-  galleries: {
-    icon: Images,
-    description: "Interactive image grids, lightboxes, and modern carousels.",
-    tag: "Visuals",
-  },
-  pagination: {
-    icon: ListOrdered,
-    description: "Page navigation controls and infinite-scroll patterns.",
-    tag: "Navigation",
-  },
-  "404-pages": {
-    icon: Ghost,
-    description: "Playful, interactive, and minimal not-found pages.",
-    tag: "Fallback",
-  },
-};
+const ACCENT = "#8C5E32";
+const ACCENT_SOFT = "rgba(140, 94, 50, 0.08)";
+const ACCENT_BORDER = "rgba(140, 94, 50, 0.3)";
 
-const FALLBACK_META = {
-  icon: Layers,
-  description: "Explore curated components in this category.",
-  tag: "Module",
-};
-
-// Dynamic Bento Layout pattern matching Hero's structure
-function getBentoClasses(index) {
-  const patterns = [
-    "md:col-span-2 lg:col-span-2", // Card 0: Wide Feature
-    "md:col-span-1 lg:col-span-1", // Card 1: Standard
-    "md:col-span-1 lg:col-span-1", // Card 2: Standard
-    "md:col-span-2 lg:col-span-2", // Card 3: Wide Highlight
-    "md:col-span-1 lg:col-span-1", // Card 4: Standard
-    "md:col-span-1 lg:col-span-2", // Card 5: Medium Wide
-    "md:col-span-1 lg:col-span-1", // Card 6: Standard
-  ];
-
-  return patterns[index % patterns.length];
+function chunk(arr, size) {
+  const out = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
 }
 
-export default function Categories({ accentHex = "#FF7A45" }) {
+export default function CategoriesSection() {
+  const navigate = useNavigate();
   const sectionRef = useRef(null);
+  const rowRefs = useRef([]);
+  const marqueeTweens = useRef([]);
+  const buttonIconRef = useRef(null);
 
   const categoryCards = useMemo(() => {
     return categories
       .filter((cat) => cat.id !== "all")
-      .map((cat, index) => {
-        const meta = CATEGORY_META[cat.id] ?? FALLBACK_META;
-        const count = components.filter((c) => c.category === cat.id).length;
-        return {
-          id: cat.id,
-          title: cat.name,
-          description: meta.description,
-          icon: meta.icon,
-          tag: meta.tag,
-          count,
-          bentoClass: getBentoClasses(index),
-        };
-      });
+      .map((cat) => ({
+        id: cat.id,
+        title: cat.name,
+        count: components.filter((c) => c.category === cat.id).length,
+      }));
   }, []);
 
-  // GSAP Entrance Reveal with 3D Flip Effects
-useEffect(() => {
-  const cards = gsap.utils.toArray(
-    sectionRef.current.querySelectorAll("[data-bento-card]")
-  );
+  const rowSize = Math.max(Math.ceil(categoryCards.length / 3), 1);
+  const rows = useMemo(() => chunk(categoryCards, rowSize), [categoryCards, rowSize]);
 
-  if (!cards.length) return;
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Smooth stack/overlay transition over HorizontalScroll
+      gsap.fromTo(
+        sectionRef.current,
+        { y: "100vh" },
+        {
+          y: "0vh",
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "top top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
 
-  const ctx = gsap.context(() => {
-    // 1. Prepare cards initially
-    gsap.set(cards, {
-      opacity: 0,
-      y: 40,
-      scale: 0.94,
-      rotateX: -10,
+      // Content reveal timeline
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse",
+        },
+      });
+
+      tl.from("[data-header-eyebrow]", { opacity: 0, y: 16, duration: 0.6 })
+        .from("[data-header-title]", { opacity: 0, y: 24, duration: 0.7 }, "-=0.4")
+        .from(
+          rowRefs.current.filter(Boolean),
+          { opacity: 0, y: 30, duration: 0.8, stagger: 0.15 },
+          "-=0.4"
+        );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [rows.length]);
+
+  // Infinite marquee
+  useEffect(() => {
+    marqueeTweens.current.forEach((t) => t && t.kill());
+    marqueeTweens.current = rowRefs.current.map((el, i) => {
+      if (!el) return null;
+      const track = el.querySelector("[data-marquee-track]");
+      if (!track) return null;
+
+      const direction = i % 2 === 0 ? -1 : 1;
+      gsap.set(track, { xPercent: direction === -1 ? 0 : -33.333 });
+
+      return gsap.to(track, {
+        xPercent: direction === -1 ? -33.333 : 0,
+        duration: 32,
+        ease: "none",
+        repeat: -1,
+      });
     });
 
-    // 2. Batch trigger execution
-    ScrollTrigger.batch(cards, {
-      start: "top 90%",
-      once: true,
-      onEnter: (batch) => {
-        gsap.to(batch, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          rotateX: 0,
-          duration: 0.8,
-          ease: "power4.out",
-          stagger: 0.08,
-          overwrite: "auto",
-        });
-      },
-    });
+    return () => marqueeTweens.current.forEach((t) => t && t.kill());
+  }, [rows.length]);
 
-    // 3. Force recalculation of scroll positions
-    ScrollTrigger.refresh();
-  }, sectionRef);
+  const pauseRow = (i) => marqueeTweens.current[i]?.pause();
+  const resumeRow = (i) => marqueeTweens.current[i]?.resume();
 
-  return () => ctx.revert();
-}, [categoryCards]);
-
-  // Mouse Move: 3D Perspective Tilt & Cursor Radial Glow
-  const handleMouseMove = (e, cardEl) => {
-    const rect = cardEl.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    cardEl.style.setProperty("--mouse-x", `${x}px`);
-    cardEl.style.setProperty("--mouse-y", `${y}px`);
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-
+  const handleCardEnter = (cardEl) => {
     gsap.to(cardEl, {
-      rotateX,
-      rotateY,
-      duration: 0.4,
+      borderColor: ACCENT_BORDER,
+      backgroundColor: ACCENT_SOFT,
+      y: -4,
+      scale: 1.02,
+      boxShadow: "0 10px 25px -5px rgba(140, 94, 50, 0.12)",
+      duration: 0.3,
       ease: "power2.out",
-      transformPerspective: 1000,
     });
+    const count = cardEl.querySelector("[data-card-count]");
+    const title = cardEl.querySelector("[data-card-title]");
+    if (count) gsap.to(count, { color: ACCENT, backgroundColor: "rgba(140, 94, 50, 0.12)", duration: 0.25 });
+    if (title) gsap.to(title, { color: ACCENT, duration: 0.25 });
   };
 
-  // Mouse Enter GSAP Micro-Animations
-  const handleMouseEnterCard = (cardEl) => {
-    const icon = cardEl.querySelector("[data-card-icon]");
-    const arrow = cardEl.querySelector("[data-card-arrow]");
-    const badge = cardEl.querySelector("[data-card-badge]");
-
-    gsap.to(icon, {
-      rotate: 12,
-      scale: 1.15,
-      duration: 0.3,
-      ease: "back.out(1.7)",
-    });
-
-    gsap.to(arrow, {
-      x: 3,
-      y: -3,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-
-    gsap.to(badge, {
-      scale: 1.05,
-      borderColor: accentHex,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
-
-  // Mouse Leave Reset Animations
-  const handleMouseLeaveCard = (cardEl) => {
-    const icon = cardEl.querySelector("[data-card-icon]");
-    const arrow = cardEl.querySelector("[data-card-arrow]");
-    const badge = cardEl.querySelector("[data-card-badge]");
-
+  const handleCardLeave = (cardEl) => {
     gsap.to(cardEl, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 0.6,
-      ease: "power2.out",
-    });
-
-    gsap.to(icon, {
-      rotate: 0,
-      scale: 1,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-
-    gsap.to(arrow, {
-      x: 0,
+      borderColor: "rgba(140, 94, 50, 0.15)",
+      backgroundColor: "#FFFDF9",
       y: 0,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-
-    gsap.to(badge, {
       scale: 1,
-      borderColor: "rgba(255, 255, 255, 0.1)",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.02)",
       duration: 0.3,
       ease: "power2.out",
     });
+    const count = cardEl.querySelector("[data-card-count]");
+    const title = cardEl.querySelector("[data-card-title]");
+    if (count) gsap.to(count, { color: "rgba(44, 36, 28, 0.5)", backgroundColor: "rgba(0,0,0,0.04)", duration: 0.25 });
+    if (title) gsap.to(title, { color: "#2C241C", duration: 0.25 });
   };
 
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen overflow-hidden bg-[#08090D] px-4 py-24 font-sans text-[#F4F3F1] antialiased sm:px-6 lg:px-8"
+      className="relative z-20 flex min-h-screen w-full flex-col justify-between rounded-t-[2.5rem] bg-[#F9F6F0] px-4 py-16 text-[#2C241C] shadow-[0_-25px_60px_rgba(0,0,0,0.12)] sm:px-6 sm:py-20 lg:px-8"
     >
-      {/* Hero Ambient Spotlight Glow */}
-      <div
-        className="pointer-events-none absolute -left-40 top-0 h-[500px] w-[500px] rounded-full opacity-[0.12] blur-[140px]"
-        style={{ backgroundColor: accentHex }}
-      />
-      <div
-        className="pointer-events-none absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full opacity-[0.08] blur-[140px]"
-        style={{ backgroundColor: accentHex }}
-      />
-
-      <div className="relative mx-auto max-w-7xl">
-        {/* Header Section */}
-        <div className="mb-16 flex flex-col items-start space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-md">
-            <span
-              className="h-2 w-2 rounded-full animate-pulse"
-              style={{ backgroundColor: accentHex }}
-            />
-            <span className="font-mono text-xs uppercase tracking-widest text-white/80">
-              Component Library
-            </span>
-          </div>
-
-          <h2 className="font-black text-4xl uppercase tracking-tight text-white sm:text-5xl lg:text-6xl">
-            BROWSE BY <span style={{ color: accentHex }}>CATEGORY</span>
+      <div className="mx-auto flex h-full w-full max-w-7xl flex-1 flex-col justify-between">
+        <div className="mb-8">
+          <span
+            data-header-eyebrow
+            className="font-mono text-xs uppercase tracking-widest text-[#2C241C]/50"
+          >
+            Component Library
+          </span>
+          <h2
+            data-header-title
+            className="mt-3 text-4xl font-black uppercase tracking-tight text-[#2C241C] sm:text-5xl"
+          >
+            Browse by <span style={{ color: ACCENT }}>Category</span>
           </h2>
-
-          <p className="max-w-2xl text-balance text-sm font-normal text-white/70 sm:text-base md:text-lg">
-            Explore ready-to-use, accessible MotionBlocks components crafted with GSAP animations and Tailwind CSS.
-          </p>
         </div>
 
-        {/* Bento Grid Layout */}
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:grid-cols-4">
-          {categoryCards.map((cat) => {
-            const Icon = cat.icon;
-            return (
-              <Link
-                key={cat.id}
-                data-bento-card
-                to={`/components?category=${cat.id}`}
-                onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
-                onMouseEnter={(e) => handleMouseEnterCard(e.currentTarget)}
-                onMouseLeave={(e) => handleMouseLeaveCard(e.currentTarget)}
-                className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-white/20 ${cat.bentoClass}`}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                {/* Mouse-Driven Radial Light Glow Overlay */}
-                <div
-                  className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  style={{
-                    background: `radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${accentHex}15, transparent 40%)`,
-                  }}
-                />
+        <div className="my-auto flex flex-col gap-6 py-6">
+          {rows.slice(0, 3).map((row, i) => (
+            <MarqueeRow
+              key={i}
+              row={row}
+              setRowRef={(el) => (rowRefs.current[i] = el)}
+              onEnterRow={() => pauseRow(i)}
+              onLeaveRow={() => resumeRow(i)}
+              onCardEnter={handleCardEnter}
+              onCardLeave={handleCardLeave}
+            />
+          ))}
+        </div>
 
-                {/* Top Section */}
-                <div className="relative z-10">
-                  <div className="mb-6 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div
-                        data-card-icon
-                        className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-white shadow-inner transition-colors duration-300 group-hover:bg-white/10"
-                        style={{ color: accentHex }}
-                      >
-                        <Icon className="h-6 w-6" />
-                      </div>
-                      <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-white/60">
-                        {cat.tag}
-                      </span>
-                    </div>
-
-                    <span
-                      data-card-badge
-                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs font-semibold text-white/80 transition-colors duration-300"
-                    >
-                      {cat.count} {cat.count === 1 ? "Item" : "Items"}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="mb-2 text-2xl font-black uppercase tracking-tight text-white transition-colors duration-300 group-hover:text-white">
-                    {cat.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="line-clamp-2 text-xs leading-relaxed text-white/60 transition-colors duration-300 group-hover:text-white/80 sm:text-sm">
-                    {cat.description}
-                  </p>
-                </div>
-
-                {/* Bottom Section */}
-                <div className="relative z-10 mt-8 flex items-center justify-between border-t border-white/10 pt-4 font-mono text-xs font-semibold uppercase tracking-wider text-white/60 transition-colors duration-300 group-hover:text-white">
-                  <span>Explore Collection</span>
-                  <div
-                    data-card-arrow
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition-all duration-300 group-hover:border-white/20"
-                    style={{ color: accentHex }}
-                  >
-                    <ArrowUpRight className="h-4 w-4" />
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+        <div className="mt-8 flex justify-center">
+          <button
+            onClick={() => navigate("/components")}
+            className="group relative flex items-center gap-3 overflow-hidden rounded-full border border-[#8C5E32]/30 bg-[#FFFDF9] px-8 py-3.5 font-mono text-xs uppercase tracking-widest text-[#2C241C] shadow-sm transition-all duration-300 hover:text-[#8C5E32]"
+            onMouseEnter={(e) => {
+              gsap.to(e.currentTarget, {
+                borderColor: ACCENT,
+                backgroundColor: ACCENT_SOFT,
+                duration: 0.25,
+              });
+              if (buttonIconRef.current) gsap.to(buttonIconRef.current, { x: 4, duration: 0.2 });
+            }}
+            onMouseLeave={(e) => {
+              gsap.to(e.currentTarget, {
+                borderColor: "rgba(140, 94, 50, 0.3)",
+                backgroundColor: "#FFFDF9",
+                duration: 0.25,
+              });
+              if (buttonIconRef.current) gsap.to(buttonIconRef.current, { x: 0, duration: 0.2 });
+            }}
+          >
+            <span>View All Components</span>
+            <svg
+              ref={buttonIconRef}
+              className="h-3.5 w-3.5 fill-current text-[#8C5E32]"
+              viewBox="0 0 16 16"
+            >
+              <path
+                fillRule="evenodd"
+                d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </section>
+  );
+}
+
+function MarqueeRow({ row, setRowRef, onEnterRow, onLeaveRow, onCardEnter, onCardLeave }) {
+  const extendedRow = [...row, ...row, ...row];
+
+  return (
+    <div
+      ref={setRowRef}
+      className="relative overflow-hidden py-1"
+      onMouseEnter={onEnterRow}
+      onMouseLeave={onLeaveRow}
+    >
+      <div data-marquee-track className="flex w-max gap-4">
+        {extendedRow.map((cat, idx) => (
+          <Link
+            key={`${cat.id}-${idx}`}
+            to={`/components?category=${cat.id}`}
+            onMouseEnter={(e) => onCardEnter(e.currentTarget)}
+            onMouseLeave={(e) => onCardLeave(e.currentTarget)}
+            className="flex shrink-0 items-center gap-4 rounded-xl border border-[#8C5E32]/15 bg-[#FFFDF9] px-7 py-4 shadow-sm transition-shadow duration-300"
+          >
+            <span data-card-title className="text-sm font-semibold uppercase tracking-wider text-[#2C241C]">
+              {cat.title}
+            </span>
+            <span data-card-count className="rounded-full bg-black/5 px-2.5 py-0.5 font-mono text-xs text-[#2C241C]/50 transition-colors">
+              {cat.count}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }

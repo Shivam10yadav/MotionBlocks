@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Copy, Sliders, ShieldCheck, Code2, Sparkles } from "lucide-react";
+import { Copy, Sliders, ShieldCheck, Code2, ArrowUpRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -9,248 +9,199 @@ const FEATURES = [
   {
     id: "copy-paste",
     step: "01",
-    title: "Copy & Paste Components",
-    description:
-      "No npm packages, lock-in, or bloat. Grab component source files and plug them straight into your codebase.",
+    title: "Copy & Paste",
+    description: "No extra packages or bloat. Direct access to source code built to paste straight into your project.",
     icon: Copy,
-    bentoClass: "md:col-span-2 lg:col-span-2",
   },
   {
     id: "customizable",
     step: "02",
     title: "Fully Customizable",
-    description:
-      "Built on standard Tailwind utilities so you can tweak animations, colors, and layouts instantly.",
+    description: "Built on clean Tailwind utility classes so you can adjust styling, timings, and layouts effortlessly.",
     icon: Sliders,
-    bentoClass: "md:col-span-1 lg:col-span-1",
   },
   {
     id: "production-ready",
     step: "03",
     title: "Production Ready",
-    description:
-      "Fully accessible, keyboard navigable, and optimized for smooth 60fps GPU-accelerated transitions.",
+    description: "Accessible, keyboard-navigable, and performance-tuned for smooth 60fps animations.",
     icon: ShieldCheck,
-    bentoClass: "md:col-span-1 lg:col-span-1",
   },
   {
-    id: "react-tailwind",
+    id: "tech-stack",
     step: "04",
-    title: "React + GSAP + Tailwind",
-    description:
-      "Engineered specifically for modern React application architectures, App Routers, and Next.js stacks.",
+    title: "Modern Tech Stack",
+    description: "Engineered specifically for React, Next.js, Tailwind CSS, and modern web application standards.",
     icon: Code2,
-    bentoClass: "md:col-span-2 lg:col-span-2",
   },
 ];
 
 export default function WhyMotions({ accentHex = "#FF7A45" }) {
   const sectionRef = useRef(null);
+  const cardsRef = useRef([]);
 
-  // GSAP Entrance Reveal with 3D Flip Effects
   useEffect(() => {
-    const cards = gsap.utils.toArray(
-      sectionRef.current.querySelectorAll("[data-why-card]")
-    );
-
     const ctx = gsap.context(() => {
-      gsap.set(cards, {
-        opacity: 0,
-        y: 50,
-        scale: 0.92,
-        rotateX: -15,
-      });
+      // 1. Stack Overlay ScrollTrigger (Slides over Categories)
+      gsap.fromTo(
+        sectionRef.current,
+        { y: "100vh" },
+        {
+          y: "0vh",
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "top top",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
 
-      ScrollTrigger.batch(cards, {
-        start: "top 88%",
-        onEnter: (batch) =>
-          gsap.to(batch, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            rotateX: 0,
-            duration: 0.8,
-            ease: "power4.out",
-            stagger: 0.08,
-            overwrite: true,
-          }),
-        once: true,
-      });
-
-      ScrollTrigger.refresh();
+      // 2. Minimalist Stagger Reveal for Cards
+      gsap.fromTo(
+        cardsRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 60%",
+          },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
   }, []);
 
-  // Mouse Move: 3D Tilt & Cursor Radial Glow
-  const handleMouseMove = (e, cardEl) => {
-    const rect = cardEl.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  // Micro Hover Animations with GSAP
+  const handleMouseEnter = (index) => {
+    const card = cardsRef.current[index];
+    if (!card) return;
 
-    cardEl.style.setProperty("--mouse-x", `${x}px`);
-    cardEl.style.setProperty("--mouse-y", `${y}px`);
+    const icon = card.querySelector("[data-card-icon]");
+    const arrow = card.querySelector("[data-card-arrow]");
 
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-
-    gsap.to(cardEl, {
-      rotateX,
-      rotateY,
-      duration: 0.4,
+    gsap.to(card, {
+      y: -4,
+      borderColor: "rgba(255, 255, 255, 0.25)",
+      duration: 0.3,
       ease: "power2.out",
-      transformPerspective: 1000,
     });
+
+    if (icon) {
+      gsap.to(icon, {
+        scale: 1.1,
+        color: accentHex,
+        duration: 0.25,
+        ease: "power2.out",
+      });
+    }
+
+    if (arrow) {
+      gsap.to(arrow, {
+        x: 3,
+        y: -3,
+        opacity: 1,
+        duration: 0.25,
+        ease: "power2.out",
+      });
+    }
   };
 
-  // Micro-Animations on Mouse Enter
-  const handleMouseEnterCard = (cardEl) => {
-    const icon = cardEl.querySelector("[data-card-icon]");
-    const stepBadge = cardEl.querySelector("[data-step-badge]");
+  const handleMouseLeave = (index) => {
+    const card = cardsRef.current[index];
+    if (!card) return;
 
-    gsap.to(icon, {
-      rotate: 12,
-      scale: 1.15,
-      duration: 0.3,
-      ease: "back.out(1.7)",
-    });
+    const icon = card.querySelector("[data-card-icon]");
+    const arrow = card.querySelector("[data-card-arrow]");
 
-    gsap.to(stepBadge, {
-      scale: 1.05,
-      borderColor: accentHex,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
-
-  // Mouse Leave Reset
-  const handleMouseLeaveCard = (cardEl) => {
-    const icon = cardEl.querySelector("[data-card-icon]");
-    const stepBadge = cardEl.querySelector("[data-step-badge]");
-
-    gsap.to(cardEl, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 0.6,
-      ease: "power2.out",
-    });
-
-    gsap.to(icon, {
-      rotate: 0,
-      scale: 1,
+    gsap.to(card, {
+      y: 0,
+      borderColor: "rgba(255, 255, 255, 0.08)",
       duration: 0.3,
       ease: "power2.out",
     });
 
-    gsap.to(stepBadge, {
-      scale: 1,
-      borderColor: "rgba(255, 255, 255, 0.1)",
-      duration: 0.3,
-      ease: "power2.out",
-    });
+    if (icon) {
+      gsap.to(icon, {
+        scale: 1,
+        color: "#9CA3AF",
+        duration: 0.25,
+        ease: "power2.out",
+      });
+    }
+
+    if (arrow) {
+      gsap.to(arrow, {
+        x: 0,
+        y: 0,
+        opacity: 0.3,
+        duration: 0.25,
+        ease: "power2.out",
+      });
+    }
   };
 
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-screen overflow-hidden bg-[#08090D] px-4 py-24 font-sans text-[#F4F3F1] antialiased sm:px-6 lg:px-8"
+      className="relative z-30 min-h-screen w-full rounded-t-[2.5rem] bg-[#0A0A0C] px-6 py-20 text-[#E4E4E7] shadow-[0_-25px_60px_rgba(0,0,0,0.6)] sm:px-12 sm:py-28 lg:px-16"
     >
-      {/* Background Hero Ambient Glows */}
-      <div
-        className="pointer-events-none absolute -left-40 top-0 h-[500px] w-[500px] rounded-full opacity-[0.12] blur-[140px]"
-        style={{ backgroundColor: accentHex }}
-      />
-      <div
-        className="pointer-events-none absolute -right-40 bottom-0 h-[500px] w-[500px] rounded-full opacity-[0.08] blur-[140px]"
-        style={{ backgroundColor: accentHex }}
-      />
-
-      <div className="relative mx-auto max-w-7xl">
-        {/* Header Section */}
-        <div className="mb-16 flex flex-col items-start space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 backdrop-blur-md">
-            <span
-              className="h-2 w-2 rounded-full animate-pulse"
-              style={{ backgroundColor: accentHex }}
-            />
-            <span className="font-mono text-xs uppercase tracking-widest text-white/80">
-              Why MotionBlocks
-            </span>
-          </div>
-
-          <h2 className="font-black text-4xl uppercase tracking-tight text-white sm:text-5xl lg:text-6xl">
-            BUILT FOR <span style={{ color: accentHex }}>DEVELOPERS</span>
+      <div className="mx-auto flex h-full max-w-6xl flex-col justify-between">
+        
+        {/* Header */}
+        <div className="mb-16 max-w-xl">
+          <p className="font-mono text-xs uppercase tracking-widest text-zinc-500">
+            Engineered For Speed
+          </p>
+          <h2 className="mt-3 font-sans text-3xl font-medium tracking-tight text-white sm:text-4xl lg:text-5xl">
+            Why MotionBlocks.
           </h2>
-
-          <p className="max-w-2xl text-balance text-sm font-normal text-white/70 sm:text-base md:text-lg">
-            Engineered to streamline your workflow without sacrificing design fidelity, code clarity, or performance flexibility.
+          <p className="mt-4 text-sm leading-relaxed text-zinc-400 sm:text-base">
+            Essential UI components designed to cut down development time without sacrificing code ownership or performance.
           </p>
         </div>
 
-        {/* Bento Grid Features Layout */}
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {FEATURES.map((item) => {
+        {/* Minimal 2x2 Grid Layout */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {FEATURES.map((item, index) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.id}
-                data-why-card
-                onMouseMove={(e) => handleMouseMove(e, e.currentTarget)}
-                onMouseEnter={(e) => handleMouseEnterCard(e.currentTarget)}
-                onMouseLeave={(e) => handleMouseLeaveCard(e.currentTarget)}
-                className={`group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-xl shadow-2xl transition-all duration-300 hover:border-white/20 ${item.bentoClass}`}
-                style={{ transformStyle: "preserve-3d" }}
+                ref={(el) => (cardsRef.current[index] = el)}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={() => handleMouseLeave(index)}
+                className="group relative flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[0.02] p-8 transition-colors duration-300"
               >
-                {/* Mouse Radial Glow Overlay */}
-                <div
-                  className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                  style={{
-                    background: `radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), ${accentHex}15, transparent 40%)`,
-                  }}
-                />
-
-                {/* Card Header & Badges */}
-                <div className="relative z-10">
-                  <div className="mb-6 flex items-center justify-between">
-                    <div
-                      data-card-icon
-                      className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 shadow-inner transition-colors duration-300 group-hover:bg-white/10"
-                      style={{ color: accentHex }}
-                    >
-                      <Icon className="h-6 w-6" />
+                <div>
+                  <div className="mb-8 flex items-center justify-between">
+                    <Icon data-card-icon className="h-6 w-6 text-zinc-400 transition-colors" />
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs text-zinc-600">{item.step}</span>
+                      <ArrowUpRight data-card-arrow className="h-4 w-4 opacity-30 text-zinc-400" />
                     </div>
-
-                    <span
-                      data-step-badge
-                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs font-semibold text-white/80 transition-colors duration-300"
-                    >
-                      {item.step}
-                    </span>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="mb-2 text-2xl font-black uppercase tracking-tight text-white">
+                  <h3 className="text-lg font-medium text-white tracking-tight">
                     {item.title}
                   </h3>
-
-                  {/* Description */}
-                  <p className="text-xs leading-relaxed text-white/60 transition-colors duration-300 group-hover:text-white/80 sm:text-sm">
+                  <p className="mt-2 text-sm text-zinc-400 leading-relaxed">
                     {item.description}
                   </p>
-                </div>
-
-                {/* Bottom Highlight Feature Marker */}
-                <div className="relative z-10 mt-8 flex items-center gap-2 border-t border-white/10 pt-4 font-mono text-xs uppercase tracking-wider text-white/50 transition-colors duration-300 group-hover:text-white/80">
-                  <Sparkles className="h-3.5 w-3.5" style={{ color: accentHex }} />
-                  <span>Production Ready Feature</span>
                 </div>
               </div>
             );
           })}
         </div>
+
       </div>
     </section>
   );
