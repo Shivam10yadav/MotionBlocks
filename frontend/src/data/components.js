@@ -70,6 +70,12 @@ import DarkVerifyOtpCode from "../ui/input/DarkVerifyOtp.jsx?raw";
 import DarkVerifyOtp from "../ui/input/DarkVerifyOtp";
 import PromptInput from "../ui/input/PromptInput";
 import PromptInputCode from "../ui/input/PromptInput.jsx?raw";
+import  SuccessModal  from "../ui/modal/SuccessModal";
+import  SuccessModalCode  from "../ui/modal/SuccessModal.jsx?raw";
+import  CreateProjectModal  from "../ui/modal/CreateProjectModal";
+import  CreateProjectModalCode  from "../ui/modal/CreateProjectModal.jsx?raw";
+import ConfirmModal  from "../ui/modal/confirmModal";
+import ConfirmModalCode  from "../ui/modal/confirmModal.jsx?raw";
 
 
 
@@ -479,6 +485,40 @@ id: 37,
   usage: `<PromptInput />`,
   code: PromptInputCode
 },
+
+{
+    id: 41,
+    slug: "clean-confirm-modal",
+    name: "Confirmation Dialog",
+    category: "modals",
+    description: "Light-theme warning dialog with spring scaling animation, subtle backdrop blur, and dual action buttons.",
+    preview: ConfirmModal,
+    install: "npm install framer-motion lucide-react",
+    usage: `<ConfirmModal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={handleAction} />`,
+    code: ConfirmModalCode
+  },
+  {
+    id: 42,
+    slug: "slide-up-form-modal",
+    name: "Project Form Sheet",
+    category: "modals",
+    description: "Modern slide-up input form modal featuring clean focused fields, dynamic state validation, and glassmorphic overlay.",
+    preview: CreateProjectModal,
+    install: "npm install framer-motion lucide-react",
+    usage: `<CreateProjectModal isOpen={isOpen} onClose={() => setIsOpen(false)} onCreate={handleCreate} />`,
+    code: CreateProjectModalCode
+  },
+  {
+    id: 43,
+    slug: "glassmorphic-success-modal",
+    name: "Success Card Modal",
+    category: "modals",
+    description: "Lightweight popup card with spring pop micro-interaction, emerald status icon, and full-width CTA button.",
+    preview: SuccessModal,
+    install: "npm install framer-motion lucide-react",
+    usage: `<SuccessModal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Updated!" />`,
+    code: SuccessModalCode
+  }
 
 
 

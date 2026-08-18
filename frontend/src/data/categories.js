@@ -8,6 +8,7 @@ export const categories = [
   { id: "ecommerce", name: "Ecommerce" },
   { id: "docks", name: "Docks" },
   { id: "marquees", name: "Marquee" },
+  { id: "modals", name: "Modals" },
   { id: "cta-sections", name: "CTA Sections" },
   { id: "testimonials", name: "Testimonials" },
   { id: "faq", name: "FAQ Sections" },

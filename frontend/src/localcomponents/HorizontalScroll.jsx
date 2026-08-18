@@ -41,7 +41,7 @@ export default function HorizontalScroll({
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-screen w-full items-center overflow-hidden bg-[#08090D] font-sans antialiased"
+      className="relative flex h-screen w-full items-center overflow-hidden bg-[#F5F5DC] font-sans antialiased"
     >
       {/* Subtle Background Glows */}
       <div
@@ -57,7 +57,7 @@ export default function HorizontalScroll({
       <div className="flex w-full overflow-hidden select-none">
         <h2
           ref={textRef}
-          className="whitespace-nowrap italic font-black uppercase tracking-tighter text-[#F4F3F1] will-change-transform text-[25vw] sm:text-[22vw] leading-none"
+          className="whitespace-nowrap font-black uppercase tracking-tighter text-black will-change-transform text-[25vw] sm:text-[22vw] leading-none"
         >
           {text} • <span style={{ color: accentHex }}>COPY & PASTE</span> • {text} •
         </h2>
