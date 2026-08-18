@@ -57,7 +57,7 @@ export default function HorizontalScroll({
       <div className="flex w-full overflow-hidden select-none">
         <h2
           ref={textRef}
-          className="whitespace-nowrap italic font-black uppercase tracking-tighter text-black will-change-transform text-[25vw] sm:text-[22vw] leading-none"
+          className="whitespace-nowrap  font-black uppercase tracking-tighter text-black will-change-transform text-[25vw] sm:text-[22vw] leading-none"
         >
           {text} • <span style={{ color: accentHex }}>COPY & PASTE</span> • {text} •
         </h2>
