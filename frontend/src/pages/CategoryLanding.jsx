@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useLayoutEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { motion, useMotionValue, useMotionTemplate } from "framer-motion";
+import gsap from "gsap";
 import {
   MousePointerClick,
   LayoutTemplate,
@@ -18,8 +18,8 @@ import {
   Layers,
   ArrowUpRight,
   Search,
-  Sparkles,
-  Grid,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { categories } from "../data/categories";
 import { components } from "../data/components";
@@ -42,112 +42,132 @@ const CATEGORY_META = {
 
 const FALLBACK_META = { icon: Layers, description: "Explore curated components in this category." };
 
-// Variants for staggered entrance animation
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.06 },
-  },
-};
+const ACCENTS = ["#FF7A45", "#5EEAD4"];
+const PAPER = "#F4F3F1";
 
-const cardVariants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-};
+// Small, believable resting tilts — a printed strip that's been handled,
+// not thrown across the desk.
+const TILTS = [-2, 1.5, -1, 2, -1.5, 1];
 
 /**
- * Enhanced Category Card with Interactive Mouse Spotlight
- * Uses framer-motion for smooth spring-based movement.
+ * A single ticket stub: main panel + perforated tear line + a narrow
+ * stub carrying the component count, vertical-text style. A sheet of
+ * paper sits just behind it, offset and rotated slightly, so every
+ * ticket reads as mounted onto the same backing sheet — the "white
+ * layer" that visually threads the whole strip together.
  */
-const CategoryCard = ({ cat, openCategory }) => {
+const CategoryCard = ({ cat, openCategory, accent, tilt }) => {
   const Icon = cat.icon;
+  const wrapRef = useRef(null);
+  const paperRef = useRef(null);
 
-  // UseMotionValue handles dynamic values without triggering re-renders
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+  useLayoutEffect(() => {
+    gsap.set(wrapRef.current, { rotation: tilt });
+  }, [tilt]);
 
-  // Updates mouse coordinates relative to the card dimensions
-  const handleMouseMove = ({ currentTarget, clientX, clientY }) => {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
+  const handleMouseEnter = () => {
+    gsap.to(wrapRef.current, {
+      rotation: 0,
+      y: -10,
+      scale: 1.04,
+      duration: 0.45,
+      ease: "power3.out",
+    });
+    gsap.to(paperRef.current, {
+      x: 10,
+      y: 12,
+      rotate: 4,
+      duration: 0.45,
+      ease: "power3.out",
+    });
   };
 
-  // Creates the dynamic background gradient string (the spotlight)
-  const spotlightGradient = useMotionTemplate`
-    radial-gradient(
-      350px circle at ${mouseX}px ${mouseY}px,
-      rgba(255, 122, 69, 0.22),
-      transparent 80%
-    )
-  `;
+  const handleMouseLeave = () => {
+    gsap.to(wrapRef.current, {
+      rotation: tilt,
+      y: 0,
+      scale: 1,
+      duration: 0.5,
+      ease: "power3.out",
+    });
+    gsap.to(paperRef.current, {
+      x: 6,
+      y: 7,
+      rotate: 2.5,
+      duration: 0.5,
+      ease: "power3.out",
+    });
+  };
 
   return (
-    <motion.button
-      variants={cardVariants}
-      whileHover={{ y: -6, scale: 1.01 }}
-      whileTap={{ scale: 0.99 }}
-      onClick={() => openCategory(cat.id)}
-      onMouseMove={handleMouseMove}
-      // Added transition-colors to the main background and border for smooth state changes
-      className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-[#23262F] bg-[#0D0E14] p-8 text-left shadow-xl transition-colors duration-300 hover:border-[#FF7A45] hover:shadow-2xl hover:shadow-[#FF7A45]/15"
-    >
-      {/* 
-        Interactive Orange Spotlight Layer
-        Fades in smoothly on hover, then tracks the mouse.
-      */}
-      <motion.div
-        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{ background: spotlightGradient }}
+    <div ref={wrapRef} className="relative w-[300px] shrink-0 will-change-transform">
+      {/* backing sheet — the connecting white layer behind every ticket */}
+      <div
+        ref={paperRef}
+        className="absolute inset-0"
+        style={{
+          backgroundColor: PAPER,
+          borderRadius: 8,
+          transform: "translate(6px, 7px) rotate(2.5deg)",
+          boxShadow: "0 6px 14px -8px rgba(0,0,0,0.5)",
+        }}
       />
 
-      {/* 
-        Static Orange Split Accent Layer (Top-Right Gradient Pop-up)
-        Provides base glow contrast behind the dynamic spotlight.
-      */}
-      <div className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 scale-125 rounded-full bg-gradient-to-br from-[#FF7A45]/25 to-transparent blur-3xl opacity-30 transition-all duration-500 group-hover:scale-150 group-hover:opacity-100" />
+      <button
+        onClick={() => openCategory(cat.id)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="group relative block w-full text-left"
+      >
+        {/* perforation notches, cut into the ticket at the tear line */}
+        <span
+          className="absolute z-10 h-3 w-3 rounded-full"
+          style={{ backgroundColor: PAPER, top: -6, right: 52 }}
+        />
+        <span
+          className="absolute z-10 h-3 w-3 rounded-full"
+          style={{ backgroundColor: PAPER, bottom: -6, right: 52 }}
+        />
 
-      {/* 
-        Teal Blueprint Corner Crosshairs
-        Transitions color and sharpens intensity on hover.
-      */}
-      <div className="pointer-events-none absolute left-4 top-4 h-2.5 w-2.5 border-l border-t border-[#5EEAD4]/30 transition-colors duration-300 group-hover:border-[#FF7A45]" />
-      <div className="pointer-events-none absolute right-4 top-4 h-2.5 w-2.5 border-r border-t border-[#5EEAD4]/30 transition-colors duration-300 group-hover:border-[#FF7A45]" />
-      <div className="pointer-events-none absolute bottom-4 left-4 h-2.5 w-2.5 border-b border-l border-[#5EEAD4]/30 transition-colors duration-300 group-hover:border-[#FF7A45]" />
-      <div className="pointer-events-none absolute bottom-4 right-4 h-2.5 w-2.5 border-b border-r border-[#5EEAD4]/30 transition-colors duration-300 group-hover:border-[#FF7A45]" />
+        <div
+          className="relative flex overflow-hidden border border-[#23262F] bg-[#0D0E14]"
+          style={{ borderRadius: 8, boxShadow: "0 10px 22px -12px rgba(0,0,0,0.6)" }}
+        >
+          {/* accent edge */}
+          <span className="absolute left-0 top-0 h-full w-1" style={{ backgroundColor: accent }} />
 
-      <div className="relative z-10">
-        {/* Header Row: Icon and Component Count */}
-        <div className="flex items-center justify-between">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-[#23262F] bg-[#050608] text-[#F4F3F1] shadow-inner transition-all duration-300 group-hover:border-[#FF7A45] group-hover:bg-[#FF7A45]/10 group-hover:text-[#FF7A45] group-hover:shadow-md group-hover:shadow-[#FF7A45]/10">
-            <Icon className="h-7 w-7 transition-transform duration-300 group-hover:scale-110" />
+          {/* main panel */}
+          <div className="flex flex-1 flex-col justify-between border-r border-dashed border-[#23262F] p-6 pl-7">
+            <div className="flex h-10 w-10 items-center justify-center border border-[#23262F] text-[#8B8D98] transition-colors duration-300 group-hover:border-current"
+                 style={{ color: undefined }}
+            >
+              <Icon className="h-5 w-5" style={{ color: "#8B8D98" }} />
+            </div>
+
+            <div className="mt-6">
+              <h3 className="text-lg font-semibold tracking-tight text-white">{cat.title}</h3>
+              <p className="mt-2 text-xs leading-relaxed text-[#8B8D98]">{cat.description}</p>
+            </div>
+
+            <div className="mt-6 font-code text-[10px] tracking-wider text-[#8B8D98]">
+              ADMIT ONE · {cat.id.toUpperCase()}
+            </div>
           </div>
 
-          <span className="rounded-full border border-[#23262F] bg-[#050608] px-3.5 py-1.5 font-code text-xs font-semibold text-[#8B8D98] transition-colors duration-300 group-hover:border-[#FF7A45]/30 group-hover:text-[#FF7A45] group-hover:shadow-lg group-hover:shadow-[#FF7A45]/5">
-            {cat.count} {cat.count === 1 ? "Component" : "Components"}
-          </span>
+          {/* stub */}
+          <div className="flex w-14 flex-col items-center justify-between py-6" style={{ backgroundColor: `${accent}12` }}>
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" style={{ color: accent }} />
+            <span
+              className="font-code text-[10px] font-semibold tracking-[0.2em] text-white"
+              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+            >
+              {String(cat.count).padStart(2, "0")} COMPONENTS
+            </span>
+            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: accent }} />
+          </div>
         </div>
-
-        {/* Content Section: Title and Description */}
-        <div className="mt-8">
-          <h3 className="text-2xl font-bold tracking-tight text-white transition-colors duration-300 group-hover:text-[#FF7A45]">
-            {cat.title}
-          </h3>
-          <p className="mt-3 text-sm leading-relaxed text-[#8B8D98] transition-colors duration-300 group-hover:text-white/80">
-            {cat.description}
-          </p>
-        </div>
-      </div>
-
-      {/* Footer Section: View Call-to-Action */}
-      <div className="relative z-10 mt-10 flex items-center justify-between border-t border-[#23262F]/80 pt-5 font-code text-xs font-semibold tracking-wider text-[#8B8D98] transition-colors duration-300 group-hover:text-white">
-        <span>VIEW COLLECTION</span>
-        <div className="flex h-8 w-8 items-center justify-center rounded-xl border border-[#23262F] bg-[#050608] transition-all duration-300 group-hover:border-[#FF7A45] group-hover:bg-[#FF7A45] group-hover:text-black">
-          <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-        </div>
-      </div>
-    </motion.button>
+      </button>
+    </div>
   );
 };
 
@@ -155,7 +175,9 @@ const CategoryLanding = () => {
   const [, setSearchParams] = useSearchParams();
   const [filterText, setFilterText] = useState("");
 
-  // Memoize card data calculation to avoid expensive re-renders
+  const trackRef = useRef(null);
+  const tweenRef = useRef(null);
+
   const categoryCards = useMemo(() => {
     return categories
       .filter((cat) => cat.id !== "all")
@@ -172,7 +194,6 @@ const CategoryLanding = () => {
       });
   }, []);
 
-  // Sync state and compute filter in one render phase
   const filteredCategories = useMemo(() => {
     if (!filterText.trim()) return categoryCards;
     const q = filterText.toLowerCase();
@@ -181,7 +202,6 @@ const CategoryLanding = () => {
     );
   }, [categoryCards, filterText]);
 
-  // Compute total count for the high-contrast stats banner
   const totalComponents = useMemo(
     () => categoryCards.reduce((acc, curr) => acc + curr.count, 0),
     [categoryCards]
@@ -193,94 +213,132 @@ const CategoryLanding = () => {
     setSearchParams(next);
   };
 
-  return (
-    <div className="[--ember:#FF7A45] [--teal:#5EEAD4] space-y-12 py-4">
-      {/* High Contrast, Sleek Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="relative overflow-hidden rounded-3xl border border-[#23262F] bg-[#090A0F] p-8 shadow-2xl md:p-12"
-      >
-        {/* Glow Spheres for depth */}
-        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-[#FF7A45]/15 blur-[100px]" />
-        <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-[#5EEAD4]/10 blur-[100px]" />
+  const numCards = filteredCategories.length;
+  const loopList = numCards > 0 ? [...filteredCategories, ...filteredCategories] : [];
 
-        <div className="relative z-10 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="max-w-2xl space-y-4">
-          
-            <h1 className="font-display text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Browse Categories
+  useLayoutEffect(() => {
+    if (numCards === 0 || !trackRef.current) return;
+
+    const tween = gsap.to(trackRef.current, {
+      xPercent: -50,
+      duration: numCards * 4.5,
+      ease: "none",
+      repeat: -1,
+    });
+    tweenRef.current = tween;
+
+    return () => tween.kill();
+  }, [numCards]);
+
+  const step = (direction) => {
+    const tween = tweenRef.current;
+    if (!tween || numCards === 0) return;
+    const fraction = 1 / numCards;
+    const target = gsap.utils.wrap(0, 1, tween.progress() + direction * fraction);
+
+    tween.pause();
+    gsap.to(tween, {
+      progress: target,
+      duration: 0.6,
+      ease: "power3.out",
+      onComplete: () => tween.play(),
+    });
+  };
+
+  const pause = () => tweenRef.current?.pause();
+  const resume = () => tweenRef.current?.play();
+
+  return (
+    <div className="space-y-10 py-4">
+      {/* Header */}
+      <div className="border-b border-[#23262F] pb-10">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="max-w-xl">
+            <p className="font-code text-xs tracking-wider text-[#8B8D98]">
+              <span style={{ color: ACCENTS[0] }}>{categoryCards.length} CATEGORIES</span>
+              {" · "}
+              <span style={{ color: ACCENTS[1] }}>{totalComponents} COMPONENTS</span>
+            </p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+              Browse categories
             </h1>
-            <p className="text-base leading-relaxed text-[#8B8D98]">
-              Select a design category below to mount live previews on demand. This pattern keeps the index extremely fast with zero canvas lag.
+            <p className="mt-4 text-base leading-relaxed text-[#8B8D98]">
+              Select a category to mount live previews on demand — the index
+              stays fast with zero canvas lag.
             </p>
           </div>
 
-          {/* High-Contrast Stats Banner: Now includes colored iconography */}
-          <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-[#23262F] bg-[#111319]/90 p-4 shadow-xl backdrop-blur-xl sm:flex-nowrap">
-            <div className="flex items-center gap-3.5 border-r border-[#23262F] pr-6">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#5EEAD4]/30 bg-[#5EEAD4]/10 text-[#5EEAD4]">
-                <Grid className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="font-code text-xs font-medium uppercase tracking-wider text-[#8B8D98]">Categories</p>
-                <p className="text-xl font-bold text-white">{categoryCards.length}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3.5 pl-2">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-[#FF7A45]/30 bg-[#FF7A45]/10 text-[#FF7A45]">
-                <Sparkles className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="font-code text-xs font-medium uppercase tracking-wider text-[#8B8D98]">Components</p>
-                <p className="text-xl font-bold text-white">{totalComponents}</p>
-              </div>
-            </div>
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8B8D98]" />
+            <input
+              type="text"
+              placeholder="Search categories..."
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="w-full border-b border-[#23262F] bg-transparent py-3 pl-7 text-sm text-[#F4F3F1] placeholder-[#8B8D98] transition-colors duration-300 focus:border-[#FF7A45] focus:outline-none"
+            />
           </div>
         </div>
+      </div>
 
-        {/* High-Contrast Search Bar */}
-        <div className="relative mt-10 max-w-lg">
-          <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8B8D98]" />
-          <input
-            type="text"
-            placeholder="Search categories..."
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-            className="w-full rounded-2xl border border-[#23262F] bg-[#050608] py-4 pl-12 pr-4 text-sm text-[#F4F3F1] placeholder-[#8B8D98] shadow-inner transition-all duration-300 focus:border-[#FF7A45] focus:outline-none focus:ring-2 focus:ring-[#FF7A45]/20"
-          />
+      {/* Strip controls */}
+      <div className="flex items-center justify-between">
+        <p className="font-code text-xs tracking-wider text-[#8B8D98]">
+          AUTO-SCROLLING · HOVER TO PAUSE
+        </p>
+        <div className="flex gap-2">
+          <button
+            onClick={() => step(-1)}
+            aria-label="Previous"
+            className="flex h-9 w-9 items-center justify-center border border-[#23262F] text-[#8B8D98] transition-colors duration-300 hover:border-[#FF7A45]/50 hover:text-[#FF7A45]"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            onClick={() => step(1)}
+            aria-label="Next"
+            className="flex h-9 w-9 items-center justify-center border border-[#23262F] text-[#8B8D98] transition-colors duration-300 hover:border-[#5EEAD4]/50 hover:text-[#5EEAD4]"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Grid with extra spacing and staggered entrance animations */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid grid-cols-1 gap-8 sm:grid-cols-2 xl:grid-cols-3"
-      >
-        {filteredCategories.map((cat) => (
-          <CategoryCard key={cat.id} cat={cat} openCategory={openCategory} />
-        ))}
-      </motion.div>
-
-      {/* Empty Search State */}
-      {filteredCategories.length === 0 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex min-h-[240px] flex-col items-center justify-center rounded-3xl border border-dashed border-[#23262F] bg-[#090A0F] p-8 text-center"
+      {/* Auto-scrolling strip, corkboard-style backdrop */}
+      {numCards > 0 ? (
+        <div
+          className="overflow-hidden py-8"
+          style={{
+            backgroundImage: "radial-gradient(rgba(139,141,152,0.15) 1px, transparent 1px)",
+            backgroundSize: "18px 18px",
+          }}
+          onMouseEnter={pause}
+          onMouseLeave={resume}
         >
-          <p className="text-lg font-semibold text-white">No categories found matching "{filterText}"</p>
+          <div ref={trackRef} className="flex w-max gap-10 px-3">
+            {loopList.map((cat, i) => (
+              <CategoryCard
+                key={`${cat.id}-${i}`}
+                cat={cat}
+                openCategory={openCategory}
+                accent={ACCENTS[i % 2]}
+                tilt={TILTS[i % TILTS.length]}
+              />
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="flex min-h-[200px] flex-col items-center justify-center border border-[#23262F] p-8 text-center">
+          <p className="text-base text-white">
+            No categories found matching "{filterText}"
+          </p>
           <button
             onClick={() => setFilterText("")}
-            className="mt-3 rounded-lg bg-[#FF7A45]/10 px-4 py-2 font-code text-xs font-bold text-[#FF7A45] transition-colors hover:bg-[#FF7A45]/20"
+            className="mt-4 font-code text-xs tracking-wider text-[#FF7A45] underline underline-offset-4"
           >
-            Reset Search
+            RESET SEARCH
           </button>
-        </motion.div>
+        </div>
       )}
     </div>
   );
