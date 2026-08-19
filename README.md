@@ -1,332 +1,148 @@
-# 🎨 MotionBlocks
+# MotionBlocks
 
-**MotionBlocks** is a modern React UI component library featuring beautifully crafted, reusable, and animated components built with **React**, **Tailwind CSS**, and **Framer Motion**.
+**MotionBlocks** is a modern React UI component library featuring production-ready, reusable, and animated components built with **React**, **Tailwind CSS**, and **Framer Motion**.
 
-Browse production-ready components, preview them live, and copy the source code directly into your projects—**no npm package required**.
+Browse components, preview them live, and copy the source code directly into your codebase — **no npm package required**.
 
 ---
 
-## ✨ Preview
+## Preview
 
 <!-- Add a screenshot or GIF here -->
+
 <!-- ![MotionBlocks Preview](./public/preview.png) -->
 
 ---
 
-## ✨ Features
+## Features
 
-- 🎭 **Beautiful Animated UI** – Smooth micro-interactions powered by Framer Motion.
-- 📋 **Copy & Paste Ready** – Simply copy the component code into your project.
-- 🎨 **Tailwind CSS Powered** – Easy to customize with utility-first styling.
-- ⚡ **No Package Required** – No installation or wrapper library needed.
-- 📱 **Responsive Design** – Optimized for mobile, tablet, and desktop.
-- ♿ **Accessible Components** – Built with accessibility in mind.
-- 🔍 **Live Component Preview** – See every component before using it.
-- 📖 **Usage Examples** – Includes dependencies, usage snippets, and source code.
-- 🗂️ **Organized Categories** – Quickly browse components by category.
+* **Animated UI:** Smooth micro-interactions built with Framer Motion.
+* **Copy & Paste:** Copy component source code directly into your project.
+* **Tailwind CSS:** Utility-first styling for easy customization.
+* **Responsive:** Optimized for mobile, tablet, and desktop viewports.
+* **Accessible:** Designed with web accessibility (a11y) best practices in mind.
+* **Live Previews & Snippets:** Interactive component previews with copyable source code and dependency information.
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
-| Technology | Usage |
-|------------|-------|
-| React | UI Library |
-| Vite | Build Tool |
-| Tailwind CSS | Styling |
-| Framer Motion | Animations |
-| React Router | Routing |
-| Lucide React | Icons |
-
----
-
-## 📂 Available Categories
-
-- 🔘 Buttons
-- 🃏 Cards
-- 🦸 Hero Sections
-- 🌄 Backgrounds
-- ⏳ Loaders
-- 📝 Forms
-- 🧭 Navigation
-- ✨ Text Effects
-- 📣 CTA Sections
-- 💬 Testimonials
-- 🖼️ Galleries
-- 🚫 404 Pages
-
-More categories coming soon.
+| Technology        | Role                |
+| ----------------- | ------------------- |
+| **React**         | UI Framework        |
+| **Vite**          | Build Tooling       |
+| **Tailwind CSS**  | Styling             |
+| **Framer Motion** | Animation           |
+| **React Router**  | Client-Side Routing |
+| **Lucide React**  | Icon Library        |
 
 ---
 
-# 🚀 Getting Started
+## Component Categories
 
-Clone the repository:
+* Backgrounds
+* Buttons
+* Cards
+* Call to Action (CTA)
+* Forms
+* Galleries
+* Hero Sections
+* Loaders
+* Navigation
+* Text Effects
+* Testimonials
+* 404 Pages
+
+---
+
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/your-username/motionblocks.git
-```
-
-Navigate into the project:
-
-```bash
 cd motionblocks
 ```
 
-Install dependencies:
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-Start the development server:
+### 3. Start the development server
 
 ```bash
 npm run dev
 ```
 
-Visit:
+### 4. Open the local environment
 
-```
-http://localhost:5173
-```
+Navigate to:
+
+`http://localhost:5173`
 
 ---
 
-# 📁 Project Structure
+## Project Structure
 
-```
-src
-│
-├── data
-│   ├── components.js
-│   └── categories.js
-│
-├── pages
-│
-├── ui
-│   ├── buttons
-│   ├── cards
-│   ├── loaders
-│   ├── forms
-│   ├── navigation
+```text
+src/
+├── data/
+│   ├── categories.js
+│   └── components.js
+├── pages/
+├── ui/
+│   ├── buttons/
+│   ├── cards/
+│   ├── forms/
+│   ├── loaders/
+│   ├── navigation/
 │   └── ...
-│
-└── components
+└── components/
 ```
 
 ---
 
-# 🤝 Contributing
+## Contributing
 
 Contributions are welcome!
 
-Adding a new component takes only **three simple steps**.
+To learn about component guidelines, pull request requirements, and how to submit new components, please refer to `CONTRIBUTING.md`.
 
 ---
 
-## 1️⃣ Create Your Component
+## Roadmap
 
-Create a new component inside the correct folder.
+### Completed
 
-Example:
+* [x] Component gallery and documentation
+* [x] Interactive live previews
+* [x] One-click code copying
 
-```
-src/ui/buttons/YourButton.jsx
-```
+### Planned
 
-```jsx
-const YourButton = () => {
-  return (
-    <button className="rounded-xl bg-[#FF7A45] px-6 py-3 font-semibold text-black transition-all duration-300 hover:scale-105">
-      Click Me
-    </button>
-  );
-};
-
-export default YourButton;
-```
-
-### Component Rules
-
-- ✅ Use Tailwind CSS
-- ✅ Use plain hex colors (`#FF7A45`)
-- ✅ Keep dependencies minimal
-- ✅ Prefer Framer Motion when animation is needed
-
-Avoid:
-
-- ❌ CSS variables (`--primary`)
-- ❌ shadcn/ui
-- ❌ Large UI libraries
+* [ ] Global search and component filtering
+* [ ] Curated component collections
+* [ ] Light/Dark theme toggle
+* [ ] Favorites system
+* [ ] Component tags and versioning
 
 ---
 
-## 2️⃣ Register It
+## Philosophy
 
-Open:
+MotionBlocks provides clean, lightweight UI components without package lock-in, unnecessary wrapper overhead, or excessive abstractions.
 
-```
-src/data/components.js
-```
-
-Import your component.
-
-```jsx
-import YourButton from "../ui/buttons/YourButton";
-```
-
-Then add a new object to the `components` array.
-
-```jsx
-{
-  id: 8,
-  slug: "your-button",
-  name: "Your Button",
-  category: "buttons",
-  description: "A short one-line description.",
-  preview: YourButton,
-  install: "npm install framer-motion",
-  usage: `<YourButton />`,
-  code: `const YourButton = () => {
-  return (
-    <button className="rounded-xl bg-[#FF7A45] px-6 py-3 font-semibold text-black transition-all duration-300 hover:scale-105">
-      Click Me
-    </button>
-  );
-};
-
-export default YourButton;`,
-}
-```
-
-This automatically makes the component available in:
-
-- Component Grid
-- Search
-- Category Pages
-- Documentation Page
-- Live Preview
-
-No additional routing is required.
+Simply copy the snippet, paste it into your project, and customize it however you like.
 
 ---
 
-## 3️⃣ Add a New Category (Optional)
-
-Only edit:
-
-```
-src/data/categories.js
-```
-
-if you're introducing a brand-new category.
-
-Example:
-
-```jsx
-{
-  id: "modals",
-  name: "Modals",
-  description: "Dialogs and overlays."
-}
-```
-
-If your component belongs to an existing category, skip this step.
-
----
-
-# 📌 Files You Shouldn't Modify
-
-Unless you're fixing a framework-level issue, avoid editing:
-
-```
-❌ Sidebar.jsx
-
-❌ ComponentGrid.jsx
-
-❌ ComponentDetails.jsx
-```
-
-These pages automatically render data from `components.js`.
-
-If your PR changes any of these files, please explain why.
-
----
-
-# ✅ Pull Request Checklist
-
-Before opening a PR, make sure:
-
-- [ ] Uses Tailwind utility classes only.
-- [ ] Uses plain hex colors.
-- [ ] No CSS variables.
-- [ ] No shadcn/ui.
-- [ ] `id` is unique.
-- [ ] `slug` is unique.
-- [ ] `category` exists.
-- [ ] `code` exactly matches the component source.
-- [ ] Component renders without warnings.
-- [ ] Live preview works correctly.
-
----
-
-# 📌 Roadmap
-
-## Completed
-
-- ✅ Component Gallery
-- ✅ Live Preview
-- ✅ Copy Code
-- ✅ Component Documentation
-
-## Planned
-
-- 🔍 Search & Filters
-- 📦 Component Collections
-- 🌙 Dark / Light Theme
-- ❤️ Favorites
-- 👤 Admin Dashboard
-- 🏷️ Tags
-- 📱 Better Mobile Experience
-- 🔄 Component Versioning
-
----
-
-# 💡 Philosophy
-
-MotionBlocks is designed around one simple idea:
-
-> **Copy the component. Paste it into your project. Customize it freely.**
-
-No package lock-in.
-
-No wrappers.
-
-No hidden abstractions.
-
-Just clean, reusable React components.
-
----
-
-# 📜 License
+## License
 
 This project is licensed under the **MIT License**.
 
-Feel free to use MotionBlocks in personal and commercial projects.
+Free for both personal and commercial use.
 
 ---
 
-# ⭐ Support
-
-If you find MotionBlocks useful:
-
-- ⭐ Star the repository
-- 🍴 Fork it
-- 🛠️ Contribute new components
-- 📢 Share it with other developers
-
-
-<!-- forced comment to commit  -->
-
-Happy building! 🚀
