@@ -42,6 +42,8 @@ export default function HorizontalScroll({
       });
     }, sectionRef);
 
+    // forced comment 
+
     // Recalculate once layout/fonts have settled, without deferring creation itself
     const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
 
