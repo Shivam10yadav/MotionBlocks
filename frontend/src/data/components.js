@@ -74,6 +74,9 @@ import WheelNavigation from "../ui/dock/WheelNavigation";
 import WheelNavigationCode from "../ui/dock/WheelNavigation.jsx?raw";
 import DeleteModal from "../ui/modals/DeleteModal";
 import DeleteModalCode from "../ui/modals/DeleteModal.jsx?raw";
+import FileUpload  from "../ui/input/FileUpload";
+import FileUploadCode  from "../ui/input/FileUpload.jsx?raw";
+
 
 
 
@@ -509,8 +512,23 @@ id: 37,
   install: "npm install framer-motion react-icons",
   usage: `<DeleteModal isOpen={isOpen} onClose={() => setIsOpen(false)} onDelete={handleDelete} itemName="Project Alpha" />`,
   code: DeleteModalCode
-}
+},
 
+{
+  id: 43,
+  slug: "file-upload",
+  name: "File Upload Dropzone",
+  category: "inputs",
+  description:
+    "A light-theme drag and drop file uploader with upload progress bars, file validation, and list removal animations.",
+
+  preview: FileUpload,
+
+  install: "npm install framer-motion react-icons",
+  usage: `<FileUploadDropzone onFilesSelected={(files) => console.log(files)} maxSizeBytes={10485760} />`,
+
+  code: FileUploadCode
+}
 
 
 
