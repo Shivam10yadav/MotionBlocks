@@ -1,6 +1,6 @@
-import { useState, useMemo, useRef, useLayoutEffect } from "react";
+import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import gsap from "gsap";
+import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import {
   MousePointerClick,
   LayoutTemplate,
@@ -9,7 +9,6 @@ import {
   Megaphone,
   Quote,
   HelpCircle,
-  Users,
   Type,
   Loader2,
   Images,
@@ -18,194 +17,107 @@ import {
   Layers,
   ArrowUpRight,
   Search,
-  ChevronLeft,
-  ChevronRight,
+  FormInput,
+  Compass,
+  Sliders,
+  PanelBottom,
+  Footprints,
+  Sparkles,
 } from "lucide-react";
 import { categories } from "../data/categories";
 import { components } from "../data/components";
 
-const CATEGORY_META = {
-  buttons: { icon: MousePointerClick, description: "Interactive triggers with micro-animations and loading states." },
-  hero: { icon: LayoutTemplate, description: "High-impact entry layouts built to capture attention." },
-  auth: { icon: KeyRound, description: "Sign-in, sign-up, and authentication flows." },
-  ecommerce: { icon: ShoppingCart, description: "Product cards, checkout, and shopping components." },
-  "cta-sections": { icon: Megaphone, description: "Conversion-focused call-to-action blocks." },
-  testimonials: { icon: Quote, description: "Social proof layouts and customer quotes." },
-  faq: { icon: HelpCircle, description: "Accordion and expandable question layouts." },
-  about: { icon: Users, description: "Team, mission, and story sections." },
-  "text-effects": { icon: Type, description: "Gradient shifts, typewriter styles, kinetic typography." },
-  loaders: { icon: Loader2, description: "Smooth progress indicators, skeletons, and spinners." },
-  galleries: { icon: Images, description: "Image grids, lightboxes, and carousels." },
-  pagination: { icon: ListOrdered, description: "Page controls and infinite-scroll patterns." },
-  "404-pages": { icon: Ghost, description: "Playful and minimal not-found pages." },
+// Icons lookup map by category ID
+const ICON_MAP = {
+  inputs: FormInput,
+  buttons: MousePointerClick,
+  auth: KeyRound,
+  navbars: LayoutTemplate,
+  "progress-bars": Sliders,
+  ecommerce: ShoppingCart,
+  docks: PanelBottom,
+  navigation: Compass,
+  marquees: Sparkles,
+  "cta-sections": Megaphone,
+  testimonials: Quote,
+  faq: HelpCircle,
+  footers: Footprints,
+  "text-effects": Type,
+  loaders: Loader2,
+  galleries: Images,
+  pagination: ListOrdered,
+  "404-pages": Ghost,
 };
 
-const FALLBACK_META = { icon: Layers, description: "Explore curated components in this category." };
-
-const ACCENTS = ["#FF7A45", "#5EEAD4"];
-const PAPER = "#F4F3F1";
-
-// Small, believable resting tilts — a printed strip that's been handled,
-// not thrown across the desk.
-const TILTS = [-2, 1.5, -1, 2, -1.5, 1];
-
-/**
- * A single ticket stub: main panel + perforated tear line + a narrow
- * stub carrying the component count, vertical-text style. A sheet of
- * paper sits just behind it, offset and rotated slightly, so every
- * ticket reads as mounted onto the same backing sheet — the "white
- * layer" that visually threads the whole strip together.
- */
-const CategoryCard = ({ cat, openCategory, accent, tilt }) => {
-  const Icon = cat.icon;
-  const wrapRef = useRef(null);
-  const paperRef = useRef(null);
-
-  useLayoutEffect(() => {
-    gsap.set(wrapRef.current, { rotation: tilt });
-  }, [tilt]);
-
-  const handleMouseEnter = () => {
-    gsap.to(wrapRef.current, {
-      rotation: 0,
-      y: -10,
-      scale: 1.04,
-      duration: 0.45,
-      ease: "power3.out",
-    });
-    gsap.to(paperRef.current, {
-      x: 10,
-      y: 12,
-      rotate: 4,
-      duration: 0.45,
-      ease: "power3.out",
-    });
-  };
-
-  const handleMouseLeave = () => {
-    gsap.to(wrapRef.current, {
-      rotation: tilt,
-      y: 0,
-      scale: 1,
-      duration: 0.5,
-      ease: "power3.out",
-    });
-    gsap.to(paperRef.current, {
-      x: 6,
-      y: 7,
-      rotate: 2.5,
-      duration: 0.5,
-      ease: "power3.out",
-    });
-  };
-
-  return (
-    <div ref={wrapRef} className="relative w-[300px] shrink-0 will-change-transform">
-      {/* backing sheet — the connecting white layer behind every ticket */}
-      <div
-        ref={paperRef}
-        className="absolute inset-0"
-        style={{
-          backgroundColor: PAPER,
-          borderRadius: 8,
-          transform: "translate(6px, 7px) rotate(2.5deg)",
-          boxShadow: "0 6px 14px -8px rgba(0,0,0,0.5)",
-        }}
-      />
-
-      <button
-        onClick={() => openCategory(cat.id)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        className="group relative block w-full text-left"
-      >
-        {/* perforation notches, cut into the ticket at the tear line */}
-        <span
-          className="absolute z-10 h-3 w-3 rounded-full"
-          style={{ backgroundColor: PAPER, top: -6, right: 52 }}
-        />
-        <span
-          className="absolute z-10 h-3 w-3 rounded-full"
-          style={{ backgroundColor: PAPER, bottom: -6, right: 52 }}
-        />
-
-        <div
-          className="relative flex overflow-hidden border border-[#23262F] bg-[#0D0E14]"
-          style={{ borderRadius: 8, boxShadow: "0 10px 22px -12px rgba(0,0,0,0.6)" }}
-        >
-          {/* accent edge */}
-          <span className="absolute left-0 top-0 h-full w-1" style={{ backgroundColor: accent }} />
-
-          {/* main panel */}
-          <div className="flex flex-1 flex-col justify-between border-r border-dashed border-[#23262F] p-6 pl-7">
-            <div className="flex h-10 w-10 items-center justify-center border border-[#23262F] text-[#8B8D98] transition-colors duration-300 group-hover:border-current"
-                 style={{ color: undefined }}
-            >
-              <Icon className="h-5 w-5" style={{ color: "#8B8D98" }} />
-            </div>
-
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold tracking-tight text-white">{cat.title}</h3>
-              <p className="mt-2 text-xs leading-relaxed text-[#8B8D98]">{cat.description}</p>
-            </div>
-
-            <div className="mt-6 font-code text-[10px] tracking-wider text-[#8B8D98]">
-              ADMIT ONE · {cat.id.toUpperCase()}
-            </div>
-          </div>
-
-          {/* stub */}
-          <div className="flex w-14 flex-col items-center justify-between py-6" style={{ backgroundColor: `${accent}12` }}>
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" style={{ color: accent }} />
-            <span
-              className="font-code text-[10px] font-semibold tracking-[0.2em] text-white"
-              style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-            >
-              {String(cat.count).padStart(2, "0")} COMPONENTS
-            </span>
-            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: accent }} />
-          </div>
-        </div>
-      </button>
-    </div>
-  );
+// UI Preview Images Map
+const IMAGE_MAP = {
+  inputs: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop",
+  buttons: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop",
+  auth: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=600&auto=format&fit=crop",
+  navbars: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=600&auto=format&fit=crop",
+  "progress-bars": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop",
+  ecommerce: "https://images.unsplash.com/photo-1556742049-0a67e5127393?q=80&w=600&auto=format&fit=crop",
+  docks: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=600&auto=format&fit=crop",
+  navigation: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop",
+  marquees: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop",
+  "cta-sections": "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=600&auto=format&fit=crop",
+  testimonials: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop",
+  faq: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=600&auto=format&fit=crop",
+  footers: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=600&auto=format&fit=crop",
+  "text-effects": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop",
+  loaders: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600&auto=format&fit=crop",
+  galleries: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=600&auto=format&fit=crop",
+  pagination: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop",
+  "404-pages": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?q=80&w=600&auto=format&fit=crop",
 };
 
 const CategoryLanding = () => {
   const [, setSearchParams] = useSearchParams();
   const [filterText, setFilterText] = useState("");
+  const [activeHoverId, setActiveHoverId] = useState(null);
+  const [isHoveringList, setIsHoveringList] = useState(false);
 
-  const trackRef = useRef(null);
-  const tweenRef = useRef(null);
+  // Mouse tracker for cursor-following preview card
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
 
-  const categoryCards = useMemo(() => {
+  const springX = useSpring(mouseX, { stiffness: 280, damping: 24 });
+  const springY = useSpring(mouseY, { stiffness: 280, damping: 24 });
+
+  const handleMouseMove = (e) => {
+    mouseX.set(e.clientX + 20);
+    mouseY.set(e.clientY + 20);
+  };
+
+  // Combine categories with images and component counts
+  const categoryList = useMemo(() => {
     return categories
       .filter((cat) => cat.id !== "all")
       .map((cat) => {
-        const meta = CATEGORY_META[cat.id] ?? FALLBACK_META;
+        const Icon = ICON_MAP[cat.id] || Layers;
+        const image = IMAGE_MAP[cat.id] || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop";
         const count = components.filter((c) => c.category === cat.id).length;
+
         return {
           id: cat.id,
           title: cat.name,
-          description: meta.description,
-          icon: meta.icon,
+          icon: Icon,
+          image,
           count,
         };
       });
   }, []);
 
   const filteredCategories = useMemo(() => {
-    if (!filterText.trim()) return categoryCards;
+    if (!filterText.trim()) return categoryList;
     const q = filterText.toLowerCase();
-    return categoryCards.filter(
-      (c) => c.title.toLowerCase().includes(q) || c.description.toLowerCase().includes(q)
-    );
-  }, [categoryCards, filterText]);
+    return categoryList.filter((c) => c.title.toLowerCase().includes(q));
+  }, [categoryList, filterText]);
 
-  const totalComponents = useMemo(
-    () => categoryCards.reduce((acc, curr) => acc + curr.count, 0),
-    [categoryCards]
-  );
+  const activeCategory = useMemo(() => {
+    if (!activeHoverId) return null;
+    return categoryList.find((c) => c.id === activeHoverId);
+  }, [activeHoverId, categoryList]);
 
   const openCategory = (id) => {
     const next = new URLSearchParams();
@@ -213,133 +125,128 @@ const CategoryLanding = () => {
     setSearchParams(next);
   };
 
-  const numCards = filteredCategories.length;
-  const loopList = numCards > 0 ? [...filteredCategories, ...filteredCategories] : [];
-
-  useLayoutEffect(() => {
-    if (numCards === 0 || !trackRef.current) return;
-
-    const tween = gsap.to(trackRef.current, {
-      xPercent: -50,
-      duration: numCards * 4.5,
-      ease: "none",
-      repeat: -1,
-    });
-    tweenRef.current = tween;
-
-    return () => tween.kill();
-  }, [numCards]);
-
-  const step = (direction) => {
-    const tween = tweenRef.current;
-    if (!tween || numCards === 0) return;
-    const fraction = 1 / numCards;
-    const target = gsap.utils.wrap(0, 1, tween.progress() + direction * fraction);
-
-    tween.pause();
-    gsap.to(tween, {
-      progress: target,
-      duration: 0.6,
-      ease: "power3.out",
-      onComplete: () => tween.play(),
-    });
-  };
-
-  const pause = () => tweenRef.current?.pause();
-  const resume = () => tweenRef.current?.play();
-
   return (
-    <div className="space-y-10 py-4">
-      {/* Header */}
-      <div className="border-b border-[#23262F] pb-10">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-xl">
-            <p className="font-code text-xs tracking-wider text-[#8B8D98]">
-              <span style={{ color: ACCENTS[0] }}>{categoryCards.length} CATEGORIES</span>
-              {" · "}
-              <span style={{ color: ACCENTS[1] }}>{totalComponents} COMPONENTS</span>
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-              Browse categories
-            </h1>
-            <p className="mt-4 text-base leading-relaxed text-[#8B8D98]">
-              Select a category to mount live previews on demand — the index
-              stays fast with zero canvas lag.
-            </p>
-          </div>
-
-          <div className="relative w-full max-w-sm">
-            <Search className="absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8B8D98]" />
-            <input
-              type="text"
-              placeholder="Search categories..."
-              value={filterText}
-              onChange={(e) => setFilterText(e.target.value)}
-              className="w-full border-b border-[#23262F] bg-transparent py-3 pl-7 text-sm text-[#F4F3F1] placeholder-[#8B8D98] transition-colors duration-300 focus:border-[#FF7A45] focus:outline-none"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Strip controls */}
-      <div className="flex items-center justify-between">
-        <p className="font-code text-xs tracking-wider text-[#8B8D98]">
-          AUTO-SCROLLING · HOVER TO PAUSE
-        </p>
-        <div className="flex gap-2">
-          <button
-            onClick={() => step(-1)}
-            aria-label="Previous"
-            className="flex h-9 w-9 items-center justify-center border border-[#23262F] text-[#8B8D98] transition-colors duration-300 hover:border-[#FF7A45]/50 hover:text-[#FF7A45]"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => step(1)}
-            aria-label="Next"
-            className="flex h-9 w-9 items-center justify-center border border-[#23262F] text-[#8B8D98] transition-colors duration-300 hover:border-[#5EEAD4]/50 hover:text-[#5EEAD4]"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Auto-scrolling strip, corkboard-style backdrop */}
-      {numCards > 0 ? (
-        <div
-          className="overflow-hidden py-8"
-          style={{
-            backgroundImage: "radial-gradient(rgba(139,141,152,0.15) 1px, transparent 1px)",
-            backgroundSize: "18px 18px",
-          }}
-          onMouseEnter={pause}
-          onMouseLeave={resume}
-        >
-          <div ref={trackRef} className="flex w-max gap-10 px-3">
-            {loopList.map((cat, i) => (
-              <CategoryCard
-                key={`${cat.id}-${i}`}
-                cat={cat}
-                openCategory={openCategory}
-                accent={ACCENTS[i % 2]}
-                tilt={TILTS[i % TILTS.length]}
+    <div
+      className="relative w-full space-y-8 py-6 text-[#F7F7F5]"
+      onMouseMove={handleMouseMove}
+    >
+      {/* Floating Image Preview Following Cursor */}
+      <motion.div
+        className="pointer-events-none fixed left-0 top-0 z-50 hidden h-48 w-72 overflow-hidden rounded-xl border border-[#3C4050] bg-[#12141B] shadow-2xl md:block"
+        style={{
+          x: springX,
+          y: springY,
+        }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{
+          opacity: isHoveringList && activeCategory ? 1 : 0,
+          scale: isHoveringList && activeCategory ? 1 : 0.8,
+        }}
+        transition={{ duration: 0.15 }}
+      >
+        <AnimatePresence mode="wait">
+          {activeCategory && (
+            <motion.div
+              key={activeCategory.id}
+              initial={{ opacity: 0, scale: 1.05 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="relative h-full w-full"
+            >
+              <img
+                src={activeCategory.image}
+                alt={activeCategory.title}
+                className="h-full w-full object-cover"
               />
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="flex min-h-[200px] flex-col items-center justify-center border border-[#23262F] p-8 text-center">
-          <p className="text-base text-white">
-            No categories found matching "{filterText}"
+              <div className="absolute inset-0 bg-gradient-to-t from-[#12141B] via-transparent to-transparent opacity-80" />
+              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                <p className="text-sm font-semibold text-[#F7F7F5]">
+                  {activeCategory.title}
+                </p>
+                <span className="text-xs text-[#8B8D98]">
+                  {activeCategory.count} items
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Header */}
+      <div className="flex flex-col gap-6 border-b border-[#2A2D38] pb-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p className="text-xs font-semibold tracking-wide text-[#8B8D98]">
+            {categoryList.length} CATEGORIES AVAILABLE
           </p>
-          <button
-            onClick={() => setFilterText("")}
-            className="mt-4 font-code text-xs tracking-wider text-[#FF7A45] underline underline-offset-4"
-          >
-            RESET SEARCH
-          </button>
+          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-[#F7F7F5] sm:text-4xl">
+            Component Index
+          </h1>
         </div>
-      )}
+
+        {/* Search */}
+        <div className="relative w-full max-w-xs">
+          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8B8D98]" aria-hidden="true" />
+          <input
+            type="text"
+            placeholder="Search categories..."
+            value={filterText}
+            onChange={(e) => setFilterText(e.target.value)}
+            className="w-full rounded-lg border border-[#2A2D38] bg-[#12141B] py-2.5 pl-10 pr-4 text-sm text-[#F7F7F5] placeholder-[#8B8D98] transition-colors focus:border-[#FF9466] focus:outline-none focus:ring-1 focus:ring-[#FF9466]"
+          />
+        </div>
+      </div>
+
+      {/* List Overview */}
+      <div
+        className="divide-y divide-[#2A2D38] border-b border-t border-[#2A2D38]"
+        onMouseEnter={() => setIsHoveringList(true)}
+        onMouseLeave={() => {
+          setIsHoveringList(false);
+          setActiveHoverId(null);
+        }}
+      >
+        {filteredCategories.map((cat) => {
+          const Icon = cat.icon;
+          const isHovered = activeHoverId === cat.id;
+
+          return (
+            <button
+              key={cat.id}
+              onClick={() => openCategory(cat.id)}
+              onMouseEnter={() => setActiveHoverId(cat.id)}
+              className="group flex w-full items-center justify-between rounded-lg px-2 py-4 text-left transition-colors hover:bg-[#12141B]/50"
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-lg border transition-colors ${
+                    isHovered
+                      ? "border-[#FF9466] bg-[#FF9466]/10 text-[#FF9466]"
+                      : "border-[#2A2D38] bg-[#12141B] text-[#8B8D98]"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                </div>
+
+                <h3
+                  className={`text-base font-medium transition-colors ${
+                    isHovered ? "text-[#FF9466]" : "text-[#F7F7F5]"
+                  }`}
+                >
+                  {cat.title}
+                </h3>
+              </div>
+
+              <div className="flex items-center gap-4 text-xs text-[#8B8D98]">
+                <span className="rounded-full border border-[#2A2D38] px-2.5 py-1 text-[#C7C9D1]">
+                  {cat.count} {cat.count === 1 ? "component" : "components"}
+                </span>
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#FF9466]" />
+              </div>
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 };
