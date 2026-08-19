@@ -72,6 +72,9 @@ import PromptInput from "../ui/input/PromptInput";
 import PromptInputCode from "../ui/input/PromptInput.jsx?raw";
 import WheelNavigation from "../ui/dock/WheelNavigation";
 import WheelNavigationCode from "../ui/dock/WheelNavigation.jsx?raw";
+import DeleteModal from "../ui/modals/DeleteModal";
+import DeleteModalCode from "../ui/modals/DeleteModal.jsx?raw";
+
 
 
 
@@ -494,6 +497,18 @@ id: 37,
     usage: `<WheelNavigation />`,
     code:  WheelNavigationCode
 
+},
+
+{
+  id: 42,
+  slug: "animated-delete-modal",
+  name: "Animated Delete Modal",
+  category: "modals",
+  description: "A pop-up delete box with smooth entrance animations, dark mode support, a backdrop blur, and a loading state for actions.",
+  preview: DeleteModal,
+  install: "npm install framer-motion react-icons",
+  usage: `<DeleteModal isOpen={isOpen} onClose={() => setIsOpen(false)} onDelete={handleDelete} itemName="Project Alpha" />`,
+  code: DeleteModalCode
 }
 
 
