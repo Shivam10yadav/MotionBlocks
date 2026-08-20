@@ -76,6 +76,9 @@ import DeleteModal from "../ui/modals/DeleteModal";
 import DeleteModalCode from "../ui/modals/DeleteModal.jsx?raw";
 import FileUpload  from "../ui/input/FileUpload";
 import FileUploadCode  from "../ui/input/FileUpload.jsx?raw";
+import  SkeletonLoader  from "../ui/loader/SkeletonLoader";
+import  SkeletonLoaderCode  from "../ui/loader/SkeletonLoader.jsx?raw";
+
 
 
 
@@ -525,9 +528,21 @@ id: 37,
   preview: FileUpload,
 
   install: "npm install framer-motion react-icons",
-  usage: `<FileUploadDropzone onFilesSelected={(files) => console.log(files)} maxSizeBytes={10485760} />`,
+  usage: `<FileUpload onFilesSelected={(files) => console.log(files)} maxSizeBytes={10485760} />`,
 
   code: FileUploadCode
+},
+{
+id: 44,
+  slug: "skeleton-card-loader",
+  name: "Skeleton Card Loader",
+  category: "loaders",
+  description: "A light-theme skeleton loader matching avatar, grid, and banner layouts with shimmer animations.",
+  preview: SkeletonLoader,
+  install: "npm install framer-motion react-icons",
+  usage: `<SkeletonLoader isLoading={isLoading} />`,
+    code: SkeletonLoaderCode
+
 }
 
 
