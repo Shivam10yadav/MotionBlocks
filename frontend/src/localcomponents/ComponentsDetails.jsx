@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft,
@@ -12,6 +12,7 @@ import {
   Smartphone,
   Tablet,
   Monitor,
+  RotateCw,
 } from "lucide-react";
 import { components } from "../data/components";
 import { getHighlighter } from "../lib/Highlighter";
@@ -52,6 +53,8 @@ const ComponentDetails = () => {
   const [fullscreen, setFullscreen] = useState(false);
   const [highlightedHtml, setHighlightedHtml] = useState("");
   const [device, setDevice] = useState("desktop");
+  const [previewKey, setPreviewKey] = useState(0);
+  const mainRef = useRef(null);
 
   const component = components.find(
     (item) => item.category === category && item.slug === slug
@@ -59,6 +62,11 @@ const ComponentDetails = () => {
 
   const serial = useMemo(() => `MB-${partNumber(slug)}`, [slug]);
 
+  const handleRefreshPreview = () => {
+    setPreviewKey((prev) => prev + 1);
+  };
+
+  // Handle Fullscreen escape key & scroll locking
   useEffect(() => {
     if (!fullscreen) return;
     const onKey = (e) => e.key === "Escape" && setFullscreen(false);
@@ -71,8 +79,28 @@ const ComponentDetails = () => {
     };
   }, [fullscreen]);
 
+  // Robust Scroll-to-Top Reset on route or component change
   useEffect(() => {
-    window.scrollTo(0, 0);
+    const resetScroll = () => {
+      if (mainRef.current) {
+        mainRef.current.scrollTop = 0;
+      }
+      window.scrollTo(0, 0);
+    };
+
+    resetScroll();
+
+    // Delayed frame reset to capture browser autofocus or initial layout expansion
+    const rafId = requestAnimationFrame(() => {
+      resetScroll();
+    });
+
+    const timeoutId = setTimeout(resetScroll, 50);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(timeoutId);
+    };
   }, [category, slug]);
 
   const panelContent = component
@@ -83,6 +111,7 @@ const ComponentDetails = () => {
       }[tab]
     : "";
 
+  // Highlight syntax & fix scroll jump caused by async DOM expansion
   useEffect(() => {
     if (!panelContent) return;
     let cancelled = false;
@@ -96,6 +125,12 @@ const ComponentDetails = () => {
         theme: "dracula",
       });
       setHighlightedHtml(html);
+
+      // Reset scroll again after code block layout stabilizes
+      requestAnimationFrame(() => {
+        if (mainRef.current) mainRef.current.scrollTop = 0;
+        window.scrollTo(0, 0);
+      });
     });
 
     return () => {
@@ -135,7 +170,11 @@ const ComponentDetails = () => {
   };
 
   return (
-    <main className="min-h-screen w-full overflow-y-auto overflow-x-hidden bg-[#08090D] text-[#F4F3F1] [--ember:#FF7A45] [--teal:#5EEAD4] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+    <main
+      key={`${category}-${slug}`}
+      ref={mainRef}
+      className="min-h-screen w-full overflow-y-auto overflow-x-hidden bg-[#08090D] text-[#F4F3F1] [--ember:#FF7A45] [--teal:#5EEAD4] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+    >
       {/* Google Fonts */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -277,6 +316,16 @@ const ComponentDetails = () => {
                   </div>
 
                   <button
+                    onClick={handleRefreshPreview}
+                    aria-label="Refresh Preview"
+                    title="Refresh Preview"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-[#23262F] bg-[#111319] px-3 py-1.5 normal-case tracking-normal text-[#8B8D98] transition hover:border-[--teal]/40 hover:text-[--teal] cursor-pointer"
+                  >
+                    <RotateCw size={14} />
+                    Refresh
+                  </button>
+
+                  <button
                     onClick={() => setFullscreen(true)}
                     className="inline-flex items-center gap-1.5 rounded-lg border border-[#23262F] bg-[#111319] px-3 py-1.5 normal-case tracking-normal text-[#8B8D98] transition hover:border-[--teal]/40 hover:text-[--teal] cursor-pointer"
                   >
@@ -303,6 +352,7 @@ const ComponentDetails = () => {
 
                   {PreviewComponent ? (
                     <div
+                      key={previewKey}
                       className="flex w-full min-w-0 items-center justify-center transition-[width] duration-300"
                       style={{
                         width: DEVICES.find((d) => d.key === device)?.width,
@@ -425,6 +475,16 @@ const ComponentDetails = () => {
                 </div>
 
                 <button
+                  onClick={handleRefreshPreview}
+                  aria-label="Refresh Preview"
+                  title="Refresh Preview"
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#23262F] bg-[#111319] px-3 py-1.5 font-code text-xs uppercase tracking-widest text-[#8B8D98] transition hover:border-[--teal]/40 hover:text-[--teal] cursor-pointer"
+                >
+                  <RotateCw size={14} />
+                  Refresh
+                </button>
+
+                <button
                   onClick={() => setFullscreen(false)}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-[#23262F] bg-[#111319] px-3 py-1.5 font-code text-xs uppercase tracking-widest text-[#8B8D98] transition hover:border-[--ember]/40 hover:text-[--ember] cursor-pointer"
                 >
@@ -442,6 +502,7 @@ const ComponentDetails = () => {
             >
               {PreviewComponent && (
                 <div
+                  key={previewKey}
                   className="flex w-full items-center justify-center transition-[width] duration-300"
                   style={{
                     width: DEVICES.find((d) => d.key === device)?.width,

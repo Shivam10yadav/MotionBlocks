@@ -82,6 +82,9 @@ import BentoGrid from "../ui/grids/BentoGrid";
 import BentoGridCode from "../ui/grids/BentoGrid.jsx?raw";
 import  PageTransitions  from "../ui/transitions/PageTransitions";
 import  PageTransitionsCode  from "../ui/transitions/PageTransitions";
+import StatsCard from "../ui/stats/StatsCard";
+import StatsCardCode from "../ui/stats/StatsCard.jsx?raw";
+
 
 
 
@@ -566,7 +569,7 @@ id: 44,
 },
 
 {
-  id: 14,
+  id: 46,
   slug: "experience-curtains-transition",
   name: "Experience Curtains Transition",
   category: "transitions",
@@ -576,6 +579,20 @@ id: 44,
   install: "npm install framer-motion react-icons",
   usage: `<PageTransitions />`,
   code: PageTransitionsCode
+
+},
+
+{
+  id: 47,
+  slug: "stats-section",
+  name: "Stats Section",
+  category: "stats",
+  description:
+    "A 4-card metric section featuring warm lighting ambient glow, skeleton shimmer loading states, and staggered entrance animations.",
+  preview: StatsCard,
+  install: "npm install framer-motion react-icons",
+  usage: `<StatsCard />`,
+   code: StatsCardCode
 
 }
 
