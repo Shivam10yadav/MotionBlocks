@@ -17,3 +17,50 @@ body {
   background-color: #09090b; /* zinc-950 */
   color: #f4f4f5; /* zinc-100 */
 }
+
+/* 5. HIDE MAIN PAGE SCROLLBAR COMPLETELY */
+:root::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none !important;
+}
+
+:root,
+html,
+body {
+  -ms-overflow-style: none !important; /* IE/Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
+
+/* 6. LIGHT SCROLLBAR FOR CODE SNIPPETS ONLY */
+pre,
+code,
+.shiki-wrapper {
+  -ms-overflow-style: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #71717a #18181b !important; /* Firefox: thumb / track */
+}
+
+pre::-webkit-scrollbar,
+code::-webkit-scrollbar,
+.shiki-wrapper::-webkit-scrollbar {
+  display: block !important;
+  width: 6px !important;
+  height: 6px !important;
+}
+
+pre::-webkit-scrollbar-track,
+.shiki-wrapper::-webkit-scrollbar-track {
+  background: #18181b !important; /* Dark track */
+}
+
+pre::-webkit-scrollbar-thumb,
+.shiki-wrapper::-webkit-scrollbar-thumb {
+  background: #71717a !important; /* Light zinc-500 thumb */
+  border-radius: 9999px !important;
+}
+
+pre::-webkit-scrollbar-thumb:hover,
+.shiki-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa !important; /* Brighter zinc-400 on hover */
+}

@@ -105,7 +105,7 @@ const ComponentDetails = () => {
 
   if (!component) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#08090D] px-6 text-center text-[#F4F3F1]">
+      <div className="flex min-h-screen items-center justify-center bg-[#08090D] px-6 text-center text-[#F4F3F1] ">
         <div>
           <p className="mb-3 font-mono text-xs uppercase tracking-[0.3em] text-[#8B8D98]">
             404 / no matching part
@@ -135,7 +135,7 @@ const ComponentDetails = () => {
   };
 
   return (
-    <main className="min-h-screen w-full overflow-x-hidden bg-[#08090D] text-[#F4F3F1] [--ember:#FF7A45] [--teal:#5EEAD4]">
+    <main className="min-h-screen w-full overflow-y-auto overflow-x-hidden bg-[#08090D] text-[#F4F3F1] [--ember:#FF7A45] [--teal:#5EEAD4] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
       {/* Google Fonts */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -287,7 +287,7 @@ const ComponentDetails = () => {
               </div>
 
               <div className="relative w-full min-w-0 rounded-2xl border border-[#23262F] bg-[#111319] p-2">
-                <div className="blueprint-grid relative flex min-h-[16rem] w-full min-w-0 items-center justify-center overflow-auto rounded-xl border border-dashed border-[#2A2E38] bg-[#0B0D12] p-4 sm:min-h-[22rem] sm:p-8">
+                <div className="blueprint-grid relative flex min-h-[16rem] w-full min-w-0 items-center justify-center overflow-auto rounded-xl border border-dashed border-[#2A2E38] bg-[#0B0D12] p-4 sm:min-h-[22rem] sm:p-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                   {/* corner brackets */}
                   {[
                     "left-3 top-3 border-l border-t",
@@ -330,7 +330,7 @@ const ComponentDetails = () => {
               className="mt-6 w-full min-w-0 scroll-mt-24 overflow-hidden rounded-2xl border border-[#23262F] bg-[#111319] sm:mt-8"
             >
               <div className="flex items-center justify-between gap-2 border-b border-[#23262F] px-3">
-                <div className="flex overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                   {TABS.map((t) => (
                     <button
                       key={t.key}
@@ -370,11 +370,11 @@ const ComponentDetails = () => {
 
               {highlightedHtml ? (
                 <div
-                  className="shiki-wrapper max-h-[24rem] overflow-auto px-4 py-4 font-code text-xs leading-relaxed sm:max-h-[32rem] sm:px-6 sm:py-6 sm:text-base sm:leading-loose"
+                  className="shiki-wrapper max-h-[24rem] overflow-auto px-4 py-4 font-code text-xs leading-relaxed sm:max-h-[32rem] sm:px-6 sm:py-6 sm:text-base sm:leading-loose [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
                   dangerouslySetInnerHTML={{ __html: highlightedHtml }}
                 />
               ) : (
-                <pre className="max-h-[24rem] overflow-auto px-4 py-4 font-code text-xs leading-relaxed text-[#C9CBD3] sm:max-h-[32rem] sm:px-6 sm:py-6 sm:text-base sm:leading-loose">
+                <pre className="max-h-[24rem] overflow-auto px-4 py-4 font-code text-xs leading-relaxed text-[#C9CBD3] sm:max-h-[32rem] sm:px-6 sm:py-6 sm:text-base sm:leading-loose [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                   <code>{panelContent}</code>
                 </pre>
               )}
@@ -438,7 +438,7 @@ const ComponentDetails = () => {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.05, duration: 0.25 }}
-              className="blueprint-grid flex flex-1 items-center justify-center overflow-auto p-4 sm:p-8"
+              className="blueprint-grid flex flex-1 items-center justify-center overflow-auto p-4 sm:p-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               {PreviewComponent && (
                 <div
