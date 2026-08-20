@@ -78,6 +78,10 @@ import FileUpload  from "../ui/input/FileUpload";
 import FileUploadCode  from "../ui/input/FileUpload.jsx?raw";
 import  SkeletonLoader  from "../ui/loader/SkeletonLoader";
 import  SkeletonLoaderCode  from "../ui/loader/SkeletonLoader.jsx?raw";
+import BentoGrid from "../ui/grids/BentoGrid";
+import BentoGridCode from "../ui/grids/BentoGrid.jsx?raw";
+
+
 
 
 
@@ -542,6 +546,19 @@ id: 44,
   install: "npm install framer-motion react-icons",
   usage: `<SkeletonLoader isLoading={isLoading} />`,
     code: SkeletonLoaderCode
+
+},
+
+{
+  id: 45,
+  slug: "bento-grid",
+  name: "Bento Grid with Expandable Modal",
+  category: "grids",
+  description: "A warm light bento grid layout with shared-layout pop-up modal transitions powered by Framer Motion.",
+  preview: BentoGrid,
+  install: "npm install framer-motion react-icons",
+  usage: `<BentoGrid />`,
+  code: BentoGridCode
 
 }
 

@@ -7,6 +7,7 @@ export const categories = [
   { id: "progress-bars", name: "Progress Bars" },
   { id: "ecommerce", name: "Ecommerce" },
   { id: "docks", name: "Docks" },
+    { id: "grids", name: "Grids Section" },
   { id: "modals", name: "Modals" },
   { id: "navigation", name: "Navigation" },
   { id: "marquees", name: "Marquee" },
