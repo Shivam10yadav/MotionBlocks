@@ -1,251 +1,354 @@
-import { useState, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
-import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
-import {
-  MousePointerClick,
-  LayoutTemplate,
-  KeyRound,
-  ShoppingCart,
-  Megaphone,
-  Quote,
-  HelpCircle,
-  Type,
-  Loader2,
-  Images,
-  ListOrdered,
-  Ghost,
-  Layers,
-  ArrowUpRight,
-  Search,
-  FormInput,
-  Compass,
-  Sliders,
-  PanelBottom,
-  Footprints,
-  Sparkles,
-} from "lucide-react";
+import { useState, useMemo, useRef, useLayoutEffect } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Search, ArrowUpRight } from "lucide-react";
 import { categories } from "../data/categories";
 import { components } from "../data/components";
 
-// Icons lookup map by category ID
-const ICON_MAP = {
-  inputs: FormInput,
-  buttons: MousePointerClick,
-  auth: KeyRound,
-  navbars: LayoutTemplate,
-  "progress-bars": Sliders,
-  ecommerce: ShoppingCart,
-  docks: PanelBottom,
-  navigation: Compass,
-  marquees: Sparkles,
-  "cta-sections": Megaphone,
-  testimonials: Quote,
-  faq: HelpCircle,
-  footers: Footprints,
-  "text-effects": Type,
-  loaders: Loader2,
-  galleries: Images,
-  pagination: ListOrdered,
-  "404-pages": Ghost,
+gsap.registerPlugin(ScrollTrigger);
+
+const ACCENTS = ["#FF7A45", "#5EEAD4"];
+const ACCENT_TEXT = ["#1A0A04", "#04201C"];
+
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Framer Motion variants for the header block
+const headerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09 } },
+};
+const headerItem = {
+  hidden: { opacity: 0, y: 22 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
 };
 
-// UI Preview Images Map
-const IMAGE_MAP = {
-  inputs: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop",
-  buttons: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop",
-  auth: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?q=80&w=600&auto=format&fit=crop",
-  navbars: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=600&auto=format&fit=crop",
-  "progress-bars": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=600&auto=format&fit=crop",
-  ecommerce: "https://images.unsplash.com/photo-1556742049-0a67e5127393?q=80&w=600&auto=format&fit=crop",
-  docks: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=600&auto=format&fit=crop",
-  navigation: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=600&auto=format&fit=crop",
-  marquees: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=600&auto=format&fit=crop",
-  "cta-sections": "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=600&auto=format&fit=crop",
-  testimonials: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop",
-  faq: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=600&auto=format&fit=crop",
-  footers: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=600&auto=format&fit=crop",
-  "text-effects": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=600&auto=format&fit=crop",
-  loaders: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=600&auto=format&fit=crop",
-  galleries: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?q=80&w=600&auto=format&fit=crop",
-  pagination: "https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=600&auto=format&fit=crop",
-  "404-pages": "https://images.unsplash.com/photo-1578328819058-b69f3a3b0f6b?q=80&w=600&auto=format&fit=crop",
-};
+/**
+ * One editorial row: giant index-cased typography, a color-wipe
+ * background that sweeps in on hover, and a second copy of the title
+ * clipped to reveal in sync with the sweep — so the text itself
+ * appears to change color as the wipe passes under it, not just fade.
+ */
+const CategoryRow = ({ cat, index, accent, accentText, openTo }) => {
+  const bgRef = useRef(null);
+  const overlayRef = useRef(null);
+  const arrowRef = useRef(null);
+  const tlRef = useRef(null);
 
-const CategoryLanding = () => {
-  const [, setSearchParams] = useSearchParams();
-  const [filterText, setFilterText] = useState("");
-  const [activeHoverId, setActiveHoverId] = useState(null);
-  const [isHoveringList, setIsHoveringList] = useState(false);
-
-  // Mouse tracker for cursor-following preview card
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const springX = useSpring(mouseX, { stiffness: 280, damping: 24 });
-  const springY = useSpring(mouseY, { stiffness: 280, damping: 24 });
-
-  const handleMouseMove = (e) => {
-    mouseX.set(e.clientX + 20);
-    mouseY.set(e.clientY + 20);
-  };
-
-  // Combine categories with images and component counts
-  const categoryList = useMemo(() => {
-    return categories
-      .filter((cat) => cat.id !== "all")
-      .map((cat) => {
-        const Icon = ICON_MAP[cat.id] || Layers;
-        const image = IMAGE_MAP[cat.id] || "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop";
-        const count = components.filter((c) => c.category === cat.id).length;
-
-        return {
-          id: cat.id,
-          title: cat.name,
-          icon: Icon,
-          image,
-          count,
-        };
-      });
+  useLayoutEffect(() => {
+    tlRef.current = gsap
+      .timeline({ paused: true })
+      .to(bgRef.current, { scaleX: 1, duration: 0.55, ease: "power3.out" }, 0)
+      .fromTo(
+        overlayRef.current,
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.55, ease: "power3.out" },
+        0
+      )
+      .to(arrowRef.current, { rotate: 45, x: 4, duration: 0.4, ease: "power3.out" }, 0);
+    return () => tlRef.current.kill();
   }, []);
 
-  const filteredCategories = useMemo(() => {
-    if (!filterText.trim()) return categoryList;
-    const q = filterText.toLowerCase();
-    return categoryList.filter((c) => c.title.toLowerCase().includes(q));
-  }, [categoryList, filterText]);
+  const enter = () => tlRef.current.play();
+  const leave = () => tlRef.current.reverse();
 
-  const activeCategory = useMemo(() => {
-    if (!activeHoverId) return null;
-    return categoryList.find((c) => c.id === activeHoverId);
-  }, [activeHoverId, categoryList]);
+  return (
+    <Link
+      to={openTo}
+      onMouseEnter={enter}
+      onMouseLeave={leave}
+      onFocus={enter}
+      onBlur={leave}
+      data-cursor-hover
+      className="group relative flex items-center gap-4 overflow-hidden border-b border-[#23262F] py-6 focus-visible:outline-none sm:gap-8 sm:py-8 lg:py-9"
+    >
+      {/* color wipe */}
+      <span
+        ref={bgRef}
+        className="pointer-events-none absolute inset-0 origin-left"
+        style={{ backgroundColor: accent, transform: "scaleX(0)" }}
+      />
 
-  const openCategory = (id) => {
-    const next = new URLSearchParams();
-    next.set("category", id);
-    setSearchParams(next);
+      {/* index */}
+      <span className="relative shrink-0 font-code text-xs text-[#5C5F6B] transition-colors duration-300 sm:text-sm">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+
+      {/* title, base layer + clipped overlay in the second color */}
+      <span className="relative flex-1 leading-[0.95]">
+        <span className="block font-display font-black uppercase tracking-tight text-[#8B8D98] text-[9vw] sm:text-[6vw] lg:text-[3.4vw]">
+          {cat.title}
+        </span>
+        <span
+          ref={overlayRef}
+          className="pointer-events-none absolute inset-0 block font-display font-black uppercase tracking-tight text-[9vw] sm:text-[6vw] lg:text-[3.4vw]"
+          style={{ color: accentText, clipPath: "inset(0 100% 0 0)" }}
+        >
+          {cat.title}
+        </span>
+      </span>
+
+      {/* count + arrow */}
+      <span className="relative flex shrink-0 items-center gap-3 font-code text-xs text-[#8B8D98] transition-colors duration-300 sm:text-sm">
+        <span className="hidden sm:inline">{cat.count} components</span>
+        <ArrowUpRight ref={arrowRef} className="h-5 w-5 sm:h-6 sm:w-6" />
+      </span>
+    </Link>
+  );
+};
+
+/**
+ * Magnetic CTA: a real navigable link (not a button with an onClick
+ * side-effect) that pulls itself toward the cursor while hovered,
+ * within a small radius, then snaps back on leave. React Router's
+ * <Link> forwards refs, so the same magnetic-tracking approach works
+ * unchanged.
+ */
+const MagneticButton = ({ children, to }) => {
+  const btnRef = useRef(null);
+  const quickX = useRef(null);
+  const quickY = useRef(null);
+
+  useLayoutEffect(() => {
+    if (!btnRef.current) return;
+    quickX.current = gsap.quickTo(btnRef.current, "x", { duration: 0.5, ease: "power3" });
+    quickY.current = gsap.quickTo(btnRef.current, "y", { duration: 0.5, ease: "power3" });
+  }, []);
+
+  const handleMove = (e) => {
+    if (prefersReducedMotion()) return;
+    const rect = btnRef.current.getBoundingClientRect();
+    const relX = e.clientX - (rect.left + rect.width / 2);
+    const relY = e.clientY - (rect.top + rect.height / 2);
+    quickX.current?.(relX * 0.35);
+    quickY.current?.(relY * 0.35);
+  };
+
+  const handleLeave = () => {
+    quickX.current?.(0);
+    quickY.current?.(0);
   };
 
   return (
-    <div
-      className="relative w-full space-y-8 py-6 text-[#F7F7F5]"
-      onMouseMove={handleMouseMove}
+    <Link
+      ref={btnRef}
+      to={to}
+      onMouseMove={handleMove}
+      onMouseLeave={handleLeave}
+      data-cursor-hover
+      className="group relative flex items-center gap-3 rounded-full border border-[#23262F] bg-[#111319] px-8 py-4 font-code text-xs uppercase tracking-widest text-white transition-colors duration-300 hover:border-[--ember] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--ember]"
     >
-      {/* Floating Image Preview Following Cursor */}
-      <motion.div
-        className="pointer-events-none fixed left-0 top-0 z-50 hidden h-48 w-72 overflow-hidden rounded-xl border border-[#3C4050] bg-[#12141B] shadow-2xl md:block"
+      {children}
+      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+    </Link>
+  );
+};
+
+const CategoryLanding = () => {
+  const [filterText, setFilterText] = useState("");
+  const [cursorActive, setCursorActive] = useState(false);
+
+  const rootRef = useRef(null);
+  const cursorRef = useRef(null);
+  const cursorX = useRef(null);
+  const cursorY = useRef(null);
+  const orbARef = useRef(null);
+  const orbBRef = useRef(null);
+
+  const categoryCards = useMemo(() => {
+    return categories
+      .filter((cat) => cat.id !== "all")
+      .map((cat) => ({
+        id: cat.id,
+        title: cat.name,
+        count: components.filter((c) => c.category === cat.id).length,
+      }));
+  }, []);
+
+  const filteredCategories = useMemo(() => {
+    if (!filterText.trim()) return categoryCards;
+    const q = filterText.toLowerCase();
+    return categoryCards.filter((c) => c.title.toLowerCase().includes(q));
+  }, [categoryCards, filterText]);
+
+  const totalComponents = useMemo(
+    () => categoryCards.reduce((acc, curr) => acc + curr.count, 0),
+    [categoryCards]
+  );
+
+  const openCategory = (id) => `/components?category=${id}`;
+
+  // Drifting background orbs + row scroll-reveal. Skipped for
+  // prefers-reduced-motion.
+  useLayoutEffect(() => {
+    const reduced = prefersReducedMotion();
+
+    const ctx = gsap.context(() => {
+      if (!reduced) {
+        gsap.to(orbARef.current, {
+          x: 60,
+          y: -40,
+          duration: 9,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+        gsap.to(orbBRef.current, {
+          x: -50,
+          y: 50,
+          duration: 11,
+          ease: "sine.inOut",
+          repeat: -1,
+          yoyo: true,
+        });
+      }
+
+      gsap.utils.toArray("[data-row]").forEach((row, i) => {
+        gsap.fromTo(
+          row,
+          { opacity: 0, y: reduced ? 0 : 26 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: reduced ? 0.01 : 0.7,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: row,
+              start: "top 92%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, [filteredCategories.length]);
+
+  // Custom cursor
+  useLayoutEffect(() => {
+    if (prefersReducedMotion() || !cursorRef.current) return;
+    cursorX.current = gsap.quickTo(cursorRef.current, "x", { duration: 0.35, ease: "power3" });
+    cursorY.current = gsap.quickTo(cursorRef.current, "y", { duration: 0.35, ease: "power3" });
+
+    const move = (e) => {
+      cursorX.current?.(e.clientX);
+      cursorY.current?.(e.clientY);
+      const hovering = e.target.closest("[data-cursor-hover]");
+      setCursorActive(Boolean(hovering));
+    };
+
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, []);
+
+  return (
+    <div
+      ref={rootRef}
+      className="[--ember:#FF7A45] [--teal:#5EEAD4] relative overflow-hidden py-4"
+    >
+      {/* drifting background orbs */}
+      <div
+        ref={orbARef}
+        className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[--ember]/10 blur-[110px]"
+      />
+      <div
+        ref={orbBRef}
+        className="pointer-events-none absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-[--teal]/8 blur-[110px]"
+      />
+
+      {/* custom cursor — desktop pointer only */}
+      <div
+        ref={cursorRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-50 hidden -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 transition-[width,height,background-color] duration-200 ease-out [@media(hover:hover)]:flex"
         style={{
-          x: springX,
-          y: springY,
+          width: cursorActive ? 64 : 14,
+          height: cursorActive ? 64 : 14,
+          backgroundColor: cursorActive ? "rgba(255,122,69,0.15)" : "transparent",
         }}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{
-          opacity: isHoveringList && activeCategory ? 1 : 0,
-          scale: isHoveringList && activeCategory ? 1 : 0.8,
-        }}
-        transition={{ duration: 0.15 }}
       >
-        <AnimatePresence mode="wait">
-          {activeCategory && (
-            <motion.div
-              key={activeCategory.id}
-              initial={{ opacity: 0, scale: 1.05 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="relative h-full w-full"
-            >
-              <img
-                src={activeCategory.image}
-                alt={activeCategory.title}
-                className="h-full w-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#12141B] via-transparent to-transparent opacity-80" />
-              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-                <p className="text-sm font-semibold text-[#F7F7F5]">
-                  {activeCategory.title}
-                </p>
-                <span className="text-xs text-[#8B8D98]">
-                  {activeCategory.count} items
-                </span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* Header */}
-      <div className="flex flex-col gap-6 border-b border-[#2A2D38] pb-6 md:flex-row md:items-end md:justify-between">
-        <div>
-          <p className="text-xs font-semibold tracking-wide text-[#8B8D98]">
-            {categoryList.length} CATEGORIES AVAILABLE
-          </p>
-          <h1 className="mt-1 text-3xl font-semibold tracking-tight text-[#F7F7F5] sm:text-4xl">
-            Component Index
-          </h1>
-        </div>
-
-        {/* Search */}
-        <div className="relative w-full max-w-xs">
-          <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8B8D98]" aria-hidden="true" />
-          <input
-            type="text"
-            placeholder="Search categories..."
-            value={filterText}
-            onChange={(e) => setFilterText(e.target.value)}
-            className="w-full rounded-lg border border-[#2A2D38] bg-[#12141B] py-2.5 pl-10 pr-4 text-sm text-[#F7F7F5] placeholder-[#8B8D98] transition-colors focus:border-[#FF9466] focus:outline-none focus:ring-1 focus:ring-[#FF9466]"
-          />
-        </div>
+        {cursorActive && (
+          <span className="font-code text-[9px] uppercase tracking-widest text-white">View</span>
+        )}
       </div>
 
-      {/* List Overview */}
-      <div
-        className="divide-y divide-[#2A2D38] border-b border-t border-[#2A2D38]"
-        onMouseEnter={() => setIsHoveringList(true)}
-        onMouseLeave={() => {
-          setIsHoveringList(false);
-          setActiveHoverId(null);
-        }}
-      >
-        {filteredCategories.map((cat) => {
-          const Icon = cat.icon;
-          const isHovered = activeHoverId === cat.id;
-
-          return (
-            <button
-              key={cat.id}
-              onClick={() => openCategory(cat.id)}
-              onMouseEnter={() => setActiveHoverId(cat.id)}
-              className="group flex w-full items-center justify-between rounded-lg px-2 py-4 text-left transition-colors hover:bg-[#12141B]/50"
+      <div className="relative z-10 space-y-14">
+        {/* Header */}
+        <motion.div
+          variants={headerContainer}
+          initial="hidden"
+          animate="show"
+          className="flex flex-col gap-8 border-b border-[#23262F] pb-10 lg:flex-row lg:items-end lg:justify-between"
+        >
+          <div className="max-w-2xl">
+            <motion.p
+              variants={headerItem}
+              className="font-code text-xs uppercase tracking-[0.3em] text-[--teal]"
             >
-              <div className="flex items-center gap-4">
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-lg border transition-colors ${
-                    isHovered
-                      ? "border-[#FF9466] bg-[#FF9466]/10 text-[#FF9466]"
-                      : "border-[#2A2D38] bg-[#12141B] text-[#8B8D98]"
-                  }`}
-                >
-                  <Icon className="h-5 w-5" />
-                </div>
+              {categoryCards.length} categories · {totalComponents} components
+            </motion.p>
+            <motion.h1
+              variants={headerItem}
+              className="mt-4 font-display text-5xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl"
+            >
+              Browse the
+              <br />
+              library
+            </motion.h1>
+          </div>
 
-                <h3
-                  className={`text-base font-medium transition-colors ${
-                    isHovered ? "text-[#FF9466]" : "text-[#F7F7F5]"
-                  }`}
-                >
-                  {cat.title}
-                </h3>
-              </div>
+          <motion.div variants={headerItem} className="relative w-full max-w-sm">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8B8D98]" />
+            <label htmlFor="category-search" className="sr-only">
+              Search categories
+            </label>
+            <input
+              id="category-search"
+              type="text"
+              placeholder="Search categories..."
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="w-full rounded-full border border-[#23262F] bg-[#111319] py-3.5 pl-11 pr-4 text-sm text-white placeholder:text-[#5C5F6B] outline-none transition-colors duration-300 focus:border-[--ember] focus:ring-1 focus:ring-[--ember]/30"
+            />
+          </motion.div>
+        </motion.div>
 
-              <div className="flex items-center gap-4 text-xs text-[#8B8D98]">
-                <span className="rounded-full border border-[#2A2D38] px-2.5 py-1 text-[#C7C9D1]">
-                  {cat.count} {cat.count === 1 ? "component" : "components"}
-                </span>
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#FF9466]" />
+        {/* Rows */}
+        {filteredCategories.length > 0 ? (
+          <div>
+            {filteredCategories.map((cat, i) => (
+              <div data-row key={cat.id}>
+                <CategoryRow
+                  cat={cat}
+                  index={i}
+                  accent={ACCENTS[i % 2]}
+                  accentText={ACCENT_TEXT[i % 2]}
+                  openTo={openCategory(cat.id)}
+                />
               </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex min-h-[240px] flex-col items-center justify-center rounded-3xl border border-dashed border-[#23262F] p-8 text-center">
+            <p className="text-lg font-semibold text-white">
+              No categories found matching "{filterText}"
+            </p>
+            <button
+              onClick={() => setFilterText("")}
+              className="mt-3 font-code text-xs font-bold uppercase tracking-wider text-[--ember] underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[--ember]"
+            >
+              Reset search
             </button>
-          );
-        })}
+          </div>
+        )}
+
+        {/* CTA */}
+        <div className="flex justify-center pt-6">
+          <MagneticButton to="/components">View everything</MagneticButton>
+        </div>
       </div>
     </div>
   );

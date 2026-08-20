@@ -80,6 +80,9 @@ import  SkeletonLoader  from "../ui/loader/SkeletonLoader";
 import  SkeletonLoaderCode  from "../ui/loader/SkeletonLoader.jsx?raw";
 import BentoGrid from "../ui/grids/BentoGrid";
 import BentoGridCode from "../ui/grids/BentoGrid.jsx?raw";
+import  PageTransitions  from "../ui/transitions/PageTransitions";
+import  PageTransitionsCode  from "../ui/transitions/PageTransitions";
+
 
 
 
@@ -559,6 +562,20 @@ id: 44,
   install: "npm install framer-motion react-icons",
   usage: `<BentoGrid />`,
   code: BentoGridCode
+
+},
+
+{
+  id: 14,
+  slug: "experience-curtains-transition",
+  name: "Experience Curtains Transition",
+  category: "transitions",
+  description:
+    "A portfolio curtain transition that wipes a black screen displaying Career, Projects, or Education section headers.",
+  preview: PageTransitions,
+  install: "npm install framer-motion react-icons",
+  usage: `<PageTransitions />`,
+  code: PageTransitionsCode
 
 }
 
