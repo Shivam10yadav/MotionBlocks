@@ -6,6 +6,7 @@ import DocsPage from "./pages/DocsPage";
 import ContributePage from "./pages/Contribute";
 import NotFound from "./localcomponents/NotFound";
 import ScrollToTop from "./localcomponents/ScrollToTop";
+import LogosPage from "./pages/LogosPage";
 
 function App() {
   return (
@@ -19,6 +20,10 @@ function App() {
         <Route
           path="/components/:category/:slug"
           element={<ComponentDetails />}
+        />
+        <Route
+          path="/logo"
+          element={<LogosPage />}
         />
         <Route path="*" element={<NotFound />} />
       </Routes>

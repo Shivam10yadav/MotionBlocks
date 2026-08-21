@@ -10,6 +10,8 @@ export default function HorizontalScroll({
 }) {
   const sectionRef = useRef(null);
   const textRef = useRef(null);
+  const shimmerRef = useRef(null);
+  const accentTextRef = useRef(null);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -17,8 +19,7 @@ export default function HorizontalScroll({
 
     if (!section || !textEl) return;
 
-    // Defensive: kill any stale ScrollTrigger still attached to this element
-    // (leftover from a fast-refresh / prior mount that wasn't captured by ctx)
+    // Kill stale triggers on hot-reload/remount
     ScrollTrigger.getAll()
       .filter((st) => st.trigger === section)
       .forEach((st) => st.kill());
@@ -26,6 +27,7 @@ export default function HorizontalScroll({
     const ctx = gsap.context(() => {
       const getScrollAmount = () => -(textEl.scrollWidth - window.innerWidth);
 
+      // Main horizontal track scroll animation
       gsap.to(textEl, {
         x: getScrollAmount,
         ease: "none",
@@ -40,14 +42,34 @@ export default function HorizontalScroll({
           anticipatePin: 1,
         },
       });
+
+      // Subtle, elegant shimmer loop on the main dark text
+      if (shimmerRef.current) {
+        gsap.to(shimmerRef.current, {
+          backgroundPosition: "200% center",
+          duration: 3.5,
+          repeat: -1,
+          ease: "linear",
+        });
+      }
+
+      // Dynamic depth pop on accent text as you scroll
+      if (accentTextRef.current) {
+        gsap.to(accentTextRef.current, {
+          scale: 1.05,
+          letterSpacing: "0.02em",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => `+=${textEl.scrollWidth - window.innerWidth}`,
+            scrub: true,
+          },
+        });
+      }
     }, sectionRef);
 
-    // forced comment 
-
-    // Recalculate once layout/fonts have settled, without deferring creation itself
     const raf = requestAnimationFrame(() => ScrollTrigger.refresh());
 
-    // Recalculate if container size changes (e.g. font loading or window resize)
     const resizeObserver = new ResizeObserver(() => {
       ScrollTrigger.refresh();
     });
@@ -56,7 +78,7 @@ export default function HorizontalScroll({
     return () => {
       cancelAnimationFrame(raf);
       resizeObserver.disconnect();
-      ctx.revert(); // kills the tween + ScrollTrigger + removes the pin-spacer
+      ctx.revert();
     };
   }, []);
 
@@ -65,30 +87,57 @@ export default function HorizontalScroll({
       ref={sectionRef}
       className="relative flex h-screen w-full items-center overflow-hidden bg-[#F5F5DC] font-sans antialiased"
     >
-      {/* Background Glows */}
+      {/* Background Soft Glows */}
       <div
-        className="pointer-events-none absolute -left-40 top-1/2 h-[400px] w-[400px] -translate-y-1/2 rounded-full opacity-[0.08] blur-[140px]"
+        className="pointer-events-none absolute -left-40 top-1/2 h-[450px] w-[450px] -translate-y-1/2 rounded-full opacity-[0.12] blur-[140px]"
         style={{ backgroundColor: accentHex }}
       />
       <div
-        className="pointer-events-none absolute -right-40 top-1/2 h-[400px] w-[400px] -translate-y-1/2 rounded-full opacity-[0.06] blur-[140px]"
+        className="pointer-events-none absolute -right-40 top-1/2 h-[450px] w-[450px] -translate-y-1/2 rounded-full opacity-[0.08] blur-[140px]"
         style={{ backgroundColor: accentHex }}
       />
 
       {/* Main Horizontal Text Track */}
-      <div className="flex w-full overflow-hidden select-none">
+      <div className="flex w-full overflow-hidden select-none py-4">
         <h2
           ref={textRef}
-          className="whitespace-nowrap font-black uppercase tracking-tighter text-[#2C241C] will-change-transform text-[25vw] sm:text-[22vw] leading-none"
+          className="whitespace-nowrap font-black uppercase tracking-tighter will-change-transform text-[30vw] sm:text-[26vw] leading-none"
         >
-          {text} • <span style={{ color: accentHex }}>COPY & PASTE</span> •
+          {/* Main Shimmering Text - Clean Minimalist Dark Metallic Shine */}
+          <span
+            ref={shimmerRef}
+            className="inline-block bg-clip-text text-transparent bg-[length:200%_auto]"
+            style={{
+              backgroundImage:
+                "linear-gradient(90deg, #2C241C 0%, #2C241C 35%, #7A6958 50%, #2C241C 65%, #2C241C 100%)",
+              filter: "drop-shadow(0px 15px 12px rgba(44, 36, 28, 0.15))",
+            }}
+          >
+            {text}
+          </span>
+
+          <span className="text-[#2C241C]/30 mx-[0.15em] inline-block">•</span>
+
+          {/* Accent Copy & Paste Section */}
+          <span
+            ref={accentTextRef}
+            className="inline-block transition-transform duration-300"
+            style={{
+              color: accentHex,
+              filter: "drop-shadow(0px 12px 10px rgba(140, 94, 50, 0.2))",
+            }}
+          >
+            COPY & PASTE
+          </span>
+
+          <span className="text-[#2C241C]/30 mx-[0.15em] inline-block">•</span>
         </h2>
       </div>
 
       {/* Minimal Scroll Indicator */}
-      <div className="absolute bottom-10 left-8 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-[#2C241C]/50 sm:left-12">
+      <div className="absolute bottom-10 left-8 flex items-center gap-3 font-mono text-xs uppercase tracking-widest text-[#2C241C]/60 sm:left-12">
         <span
-          className="h-2 w-2 rounded-full animate-pulse"
+          className="h-2 w-2 rounded-full animate-ping"
           style={{ backgroundColor: accentHex }}
         />
         <span>Scroll to Explore</span>
