@@ -1,63 +1,21 @@
-import { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import gsap from "gsap";
 import {
   Copy,
   Check,
-  FolderTree,
-  Palette,
-  Puzzle,
-  Terminal,
+  ArrowLeft,
   ArrowRight,
   BookOpen,
-  Sparkles,
+  Layers,
+  Palette,
+  FolderTree,
+  Terminal,
   Zap,
-  Code2,
-  ChevronRight,
-  ArrowLeft,
 } from "lucide-react";
 
-const steps = [
-  {
-    icon: Puzzle,
-    title: "Browse components",
-    text: "Explore buttons, cards, loaders, CTAs and more from the Components page. Every item has a live preview so you know exactly what you're getting.",
-  },
-  {
-    icon: Copy,
-    title: "Copy the code",
-    text: "Open any component's docs page, hit the Copy button on the code block, and paste it straight into your project. No CLI, no config wizard.",
-  },
-  {
-    icon: Terminal,
-    title: "Install dependencies",
-    text: "Each component lists the exact npm packages it needs (usually just lucide-react or framer-motion). Run the install command shown on that component's page.",
-  },
-  {
-    icon: Palette,
-    title: "Make it yours",
-    text: "Every component is plain Tailwind + React — no wrapper library, no theme provider. Edit classNames directly to match your brand.",
-  },
-];
-
-const principles = [
-  {
-    icon: Zap,
-    title: "No package to install",
-    text: "You're not adding a heavy dependency to your app bundle. You own the source code the moment you paste it — tweak, delete, or scale without constraints.",
-  },
-  {
-    icon: Code2,
-    title: "Tailwind Native",
-    text: "Every component is built purely with core Tailwind utility classes. No custom plugin, setup wizard, or config extension required to get started.",
-  },
-  {
-    icon: Sparkles,
-    title: "Composable by default",
-    text: "Components accept clean props for high-frequency variables (labels, state, links) without hiding styling details behind rigid abstraction layers.",
-  },
-];
-
-const CodeSnippet = ({ code, language = "bash" }) => {
+// Standard code block component
+const CodeBlock = ({ code, language = "bash" }) => {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -67,23 +25,17 @@ const CodeSnippet = ({ code, language = "bash" }) => {
   };
 
   return (
-    <div className="relative group overflow-hidden rounded-xl border border-zinc-800 bg-zinc-950/80 shadow-xl w-full">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between border-b border-zinc-800/80 bg-zinc-900/60 px-4 py-2.5">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-red-500/80" />
-          <span className="h-2.5 w-2.5 rounded-full bg-yellow-500/80" />
-          <span className="h-2.5 w-2.5 rounded-full bg-green-500/80" />
-          <span className="ml-2 font-mono text-xs text-zinc-500">{language}</span>
-        </div>
+    <div className="my-4 rounded-lg border border-zinc-800 bg-zinc-950 overflow-hidden shadow-sm">
+      <div className="flex items-center justify-between px-4 py-2 bg-zinc-900/80 border-b border-zinc-800">
+        <span className="text-xs font-mono text-zinc-400">{language}</span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 rounded-md bg-zinc-800/80 px-2.5 py-1 font-mono text-xs text-zinc-400 transition-colors hover:bg-zinc-700 hover:text-zinc-200"
+          className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors"
         >
           {copied ? (
             <>
               <Check size={13} className="text-emerald-400" />
-              <span className="text-emerald-400">Copied</span>
+              <span className="text-emerald-400 font-medium">Copied</span>
             </>
           ) : (
             <>
@@ -93,225 +45,240 @@ const CodeSnippet = ({ code, language = "bash" }) => {
           )}
         </button>
       </div>
-
-      {/* Code Body */}
-      <pre className="overflow-x-auto p-4 font-mono text-xs sm:text-sm leading-relaxed text-zinc-300">
+      <pre className="p-4 font-mono text-xs sm:text-sm text-zinc-200 overflow-x-auto leading-relaxed">
         <code>{code}</code>
       </pre>
     </div>
   );
 };
 
-const DocsPage = () => {
+export default function DocsPage() {
+  const pageRef = useRef(null);
+
+  // Smooth entry animation
+  useEffect(() => {
+    gsap.fromTo(
+      pageRef.current,
+      { opacity: 0, y: 8 },
+      { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }
+    );
+  }, []);
+
   return (
-    <div className="w-full min-h-screen px-4 py-10 sm:px-8 lg:px-12 text-zinc-100 [--ember:#FF7A45] [--teal:#5EEAD4]">
-      {/* Full-width Container */}
+    <div ref={pageRef} className="min-h-screen bg-[#08090D] text-zinc-100 antialiased font-sans">
+      
+      {/* Full-width Container using full viewport grid */}
+      <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-zinc-800">
 
-       
-      <div className="mx-auto max-w-7xl space-y-16">
-        
+        {/* LEFT COLUMN: Sticky Navigation Sidebar (3 columns) */}
+        <aside className="lg:col-span-3 border-r border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-zinc-950/50">
           <Link
-                  to="/components"
-                  className="mt-6 inline-flex items-center gap-2 text-base text-[#dadada] hover:text-[#f4f1f0]"
-                >
-                  <ArrowLeft size={16} /> Back to components
-                </Link>
-        {/* Hero Header Section */}
-        <div className="relative border-b border-zinc-800/80 pb-12">
-          <div className="pointer-events-none absolute -left-20 -top-20 -z-10 h-72 w-96 rounded-full bg-[--teal]/5 blur-3xl" />
-          
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[--teal]/20 bg-[--teal]/10 px-3.5 py-1 font-mono text-xs font-medium uppercase tracking-widest text-[--teal]">
-                <BookOpen size={13} />
+            to="/components"
+            className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors mb-8"
+          >
+            <ArrowLeft size={14} /> Back to components
+          </Link>
+
+          <div className="space-y-6">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">
                 Documentation
-              </div>
-              <h1 className="mt-4 font-sans text-4xl font-extrabold tracking-tight text-white sm:text-6xl">
-                How it works
-              </h1>
-              <p className="mt-4 text-base sm:text-lg leading-relaxed text-zinc-400 max-w-2xl">
-                This isn't a third-party package you install into `node_modules` — it's an expansive collection of copy-paste React + Tailwind components. Own your code, direct from day one.
               </p>
+              <nav className="space-y-1">
+                <a href="#overview" className="block px-3 py-2 text-sm text-white font-medium rounded-md bg-zinc-900 border border-zinc-800">
+                  Overview
+                </a>
+                <a href="#getting-started" className="block px-3 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">
+                  Getting Started
+                </a>
+                <a href="#logos-archive" className="block px-3 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">
+                  Logos & Vector Assets
+                </a>
+                <a href="#directory-structure" className="block px-3 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">
+                  Project Structure
+                </a>
+              </nav>
             </div>
 
-            <Link
-              to="/components"
-              className="group inline-flex items-center gap-2 rounded-xl bg-[--ember] px-5 py-3 text-sm font-semibold text-zinc-950 transition-all duration-200 hover:bg-orange-400 active:scale-95 shrink-0"
-            >
-              <span>Explore All Components</span>
-              <ArrowRight
-                size={16}
-                className="transition-transform duration-200 group-hover:translate-x-1"
-              />
-            </Link>
+            <div className="pt-6 border-t border-zinc-800/80">
+              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">
+                Quick Links
+              </p>
+              <div className="space-y-2">
+                <Link to="/components" className="flex items-center justify-between px-3 py-2 text-xs text-zinc-300 hover:text-white border border-zinc-800 rounded-md bg-zinc-900/30">
+                  <span>UI Components</span>
+                  <ArrowRight size={12} />
+                </Link>
+                <Link to="/logo" className="flex items-center justify-between px-3 py-2 text-xs text-zinc-300 hover:text-white border border-zinc-800 rounded-md bg-zinc-900/30">
+                  <span>Logo Collection</span>
+                  <ArrowRight size={12} />
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
+        </aside>
 
-        {/* Workflow Horizontal Progression Rows */}
-        <div className="space-y-6">
-          <h2 className="font-mono text-xs font-semibold uppercase tracking-widest text-zinc-500">
-            Integration Steps
-          </h2>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <div
-                  key={step.title}
-                  className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-6 backdrop-blur-md transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900/60"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-950 text-[--teal] shadow-inner">
-                        <Icon size={18} />
-                      </div>
-                      <span className="font-mono text-xs font-bold text-[--ember] bg-[--ember]/10 border border-[--ember]/20 px-2.5 py-0.5 rounded-full">
-                        0{i + 1}
-                      </span>
-                    </div>
-
-                    <h3 className="mt-5 text-lg font-bold text-zinc-100">
-                      {step.title}
-                    </h3>
-                    <p className="mt-2 text-xs sm:text-sm leading-relaxed text-zinc-400">
-                      {step.text}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Wide Split Section: Code Example & Directory Structure */}
-        <div className="grid gap-8 lg:grid-cols-12">
+        {/* MIDDLE COLUMN: Main Content Area (6 columns) */}
+        <main className="lg:col-span-6 p-6 sm:p-10 lg:p-12 space-y-12">
           
-          {/* Quick Example - Left 7 columns */}
-          <div className="lg:col-span-7 space-y-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 p-6 sm:p-8 backdrop-blur-md">
-            <div>
-              <h2 className="font-mono text-xs font-semibold uppercase tracking-widest text-[--teal]">
-                Quick Code Setup
-              </h2>
-              <p className="mt-1 text-sm text-zinc-400">
-                Copy the packages and component code directly into your app.
-              </p>
-            </div>
+          {/* Header */}
+          <header className="border-b border-zinc-800 pb-8">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8C5E32] font-semibold">
+              Documentation
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1">
+              How It Works
+            </h1>
+            <p className="mt-3 text-base text-zinc-400 leading-relaxed">
+              Copy components and editable vector logos directly into your repository. No external NPM packages or rigid setup constraints.
+            </p>
+          </header>
 
-            <div className="space-y-4">
-              <div>
-                <span className="mb-2 block text-xs font-medium text-zinc-400">
-                  1. Install required dependencies:
-                </span>
-                <CodeSnippet code="npm install framer-motion lucide-react" language="bash" />
+          {/* Overview Section */}
+          <section id="overview" className="space-y-4">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2">
+              Overview
+            </h2>
+            <p className="text-zinc-300 text-sm leading-relaxed">
+              This library provides pure source code built with React and Tailwind CSS. Instead of importing a heavy third-party UI library into <code className="text-zinc-200 bg-zinc-900 px-1 py-0.5 rounded text-xs font-mono">node_modules</code>, you copy the component source code straight into your project.
+            </p>
+          </section>
+
+          {/* Getting Started Section */}
+          <section id="getting-started" className="space-y-6">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2">
+              Getting Started
+            </h2>
+
+            <div className="space-y-6">
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white">1. Select an Asset</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Browse the component gallery or logo collection. Every asset includes an interactive live preview.
+                </p>
               </div>
 
-              <div>
-                <span className="mb-2 block text-xs font-medium text-zinc-400">
-                  2. Import into your page:
-                </span>
-                <CodeSnippet
-                  code={`import MotionBlock from "./components/ui/MotionBlock";\n\nexport default function App() {\n  return (\n    <main className="p-8">\n      <MotionBlock />\n    </main>\n  );\n}`}
-                  language="jsx"
-                />
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white">2. Copy Code</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Click <strong>Copy Code</strong> or <strong>Copy SVG</strong> to place the raw snippet directly onto your clipboard.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-base font-semibold text-white">3. Install Dependencies</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Install standard helper libraries required for animations and icons:
+                </p>
+                <CodeBlock code="npm install framer-motion lucide-react gsap" language="bash" />
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white">4. Customize Directly</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  You own the code once copied. Edit Tailwind classes, state logic, or structural markup inside your editor freely.
+                </p>
               </div>
             </div>
-          </div>
+          </section>
 
-          {/* Directory Architecture - Right 5 columns */}
-          <div className="lg:col-span-5 space-y-6 rounded-3xl border border-zinc-800/80 bg-zinc-900/30 p-6 sm:p-8 backdrop-blur-md flex flex-col justify-between">
-            <div>
-              <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-widest text-zinc-500">
-                <FolderTree size={15} className="text-[--ember]" />
-                Recommended Folder Layout
-              </div>
-              <p className="mt-1 text-sm text-zinc-400">
-                Keep your UI components organized inside clean directories:
-              </p>
-            </div>
+          {/* Logos Archive Section */}
+          <section id="logos-archive" className="space-y-4">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2">
+              Logos & Vector Assets
+            </h2>
+            <p className="text-zinc-300 text-sm leading-relaxed">
+              The logo archive provides vector SVG marks with live color customization:
+            </p>
+            <ul className="list-disc list-inside space-y-2 text-sm text-zinc-300 pt-1">
+              <li>
+                <strong className="text-white">Color Pickers:</strong> Click any logo to open color options and change primary, secondary, and accent colors live.
+              </li>
+              <li>
+                <strong className="text-white">Copy Inline SVG:</strong> Grab inline vector code directly for React components or HTML files.
+              </li>
+              <li>
+                <strong className="text-white">Export SVG Files:</strong> Click download to export standalone <code className="text-zinc-200 bg-zinc-900 px-1 py-0.5 rounded text-xs font-mono">.svg</code> vector files for Figma or Illustrator.
+              </li>
+            </ul>
+          </section>
 
-            <div className="mt-4 flex-1 flex">
-              <CodeSnippet
-                language="structure"
-                code={`src/
+          {/* Directory Structure Section */}
+          <section id="directory-structure" className="space-y-4">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2">
+              Recommended Directory Structure
+            </h2>
+            <p className="text-sm text-zinc-400">
+              Keep your components organized inside a clean directory structure:
+            </p>
+            <CodeBlock
+              language="structure"
+              code={`src/
 ├── components/
+│   ├── Navbar.jsx
 │   └── ui/
 │       ├── buttons/
-│       │   └── GlowButton.jsx
 │       ├── cta/
-│       │   └── CTASection.jsx
 │       └── motion/
-│           └── MotionBlock.jsx
-├── data/
-│   └── components.js
-└── pages/
-    ├── ComponentsPage.jsx
-    └── DocsPage.jsx`}
-              />
-            </div>
-          </div>
+├── pages/
+│   ├── ComponentsPage.jsx
+│   ├── LogosPage.jsx
+│   └── DocsPage.jsx`}
+            />
+          </section>
 
-        </div>
+        </main>
 
-        {/* Full-width Guiding Principles Horizontal Bar */}
-        <div className="space-y-6 border-t border-zinc-800/80 pt-12">
-          <h2 className="font-mono text-xs font-semibold uppercase tracking-widest text-zinc-500">
-            Guiding Principles
-          </h2>
-
-          <div className="grid gap-4 md:grid-cols-3">
-            {principles.map((p) => {
-              const Icon = p.icon;
-              return (
-                <div
-                  key={p.title}
-                  className="flex items-start gap-4 rounded-2xl border border-zinc-800/80 bg-zinc-900/30 p-6 backdrop-blur-md transition-all hover:border-zinc-700 hover:bg-zinc-900/60"
-                >
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-950 text-[--ember]">
-                    <Icon size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-zinc-200">{p.title}</h3>
-                    <p className="mt-1 text-xs leading-relaxed text-zinc-400">
-                      {p.text}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Bottom Wide CTA Banner */}
-        <div className="relative overflow-hidden rounded-3xl border border-zinc-800 bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-zinc-950 p-8 sm:p-12 shadow-2xl">
-          <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 h-64 w-64 rounded-full bg-[--ember]/10 blur-3xl" />
-
-          <div className="relative z-10 flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-xl">
-              <h3 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                Ready to start building?
+        {/* RIGHT COLUMN: Info / On-Page Specs Sidebar (3 columns) */}
+        <aside className="lg:col-span-3 border-l border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-zinc-950/50">
+          <div className="space-y-6">
+            
+            {/* Tech Stack Summary */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-2">
+                <Terminal size={14} className="text-[#8C5E32]" />
+                Tech Stack
               </h3>
-              <p className="mt-2 text-sm sm:text-base text-zinc-400">
-                Browse our complete set of interactive Tailwind components and build beautiful interfaces faster.
-              </p>
+              <ul className="space-y-2 text-xs text-zinc-300 font-mono">
+                <li className="flex justify-between border-b border-zinc-800/60 pb-1.5">
+                  <span className="text-zinc-500">Framework</span>
+                  <span>React 18+</span>
+                </li>
+                <li className="flex justify-between border-b border-zinc-800/60 pb-1.5">
+                  <span className="text-zinc-500">Styling</span>
+                  <span>Tailwind CSS</span>
+                </li>
+                <li className="flex justify-between border-b border-zinc-800/60 pb-1.5">
+                  <span className="text-zinc-500">Icons</span>
+                  <span>Lucide React</span>
+                </li>
+                <li className="flex justify-between">
+                  <span className="text-zinc-500">Animation</span>
+                  <span>Framer / GSAP</span>
+                </li>
+              </ul>
             </div>
 
-            <Link
-              to="/components"
-              className="group inline-flex shrink-0 items-center gap-2.5 rounded-full bg-[--ember] px-7 py-4 text-base font-semibold text-zinc-950 shadow-lg shadow-[--ember]/20 transition-all duration-300 hover:scale-[1.02] hover:bg-orange-400 hover:shadow-orange-500/25 active:scale-[0.98]"
-            >
-              Browse Components
-              <ArrowRight
-                size={18}
-                className="transition-transform duration-200 group-hover:translate-x-1"
-              />
-            </Link>
+            {/* Principles Box */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 space-y-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2">
+                <Zap size={14} className="text-[#8C5E32]" />
+                Key Benefits
+              </h3>
+              <div className="space-y-2 text-xs text-zinc-400 leading-relaxed">
+                <p>
+                  <strong className="text-zinc-200">Zero Dependencies:</strong> No heavy bundle sizes or forced themes.
+                </p>
+                <p>
+                  <strong className="text-zinc-200">100% Owned:</strong> Edit code directly inside your project repository.
+                </p>
+              </div>
+            </div>
+
           </div>
-        </div>
+        </aside>
 
       </div>
     </div>
   );
-};
-
-export default DocsPage;
+}

@@ -7,6 +7,7 @@ import ContributePage from "./pages/Contribute";
 import NotFound from "./localcomponents/NotFound";
 import ScrollToTop from "./localcomponents/ScrollToTop";
 import LogosPage from "./pages/LogosPage";
+import { Popup } from "./localcomponents/Popup";
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
         />
         <Route path="*" element={<NotFound />} />
       </Routes>
+              <Popup githubUrl="https://github.com/Shivam10yadav/Motion-blocks" />
+
     </BrowserRouter>
   );
 }

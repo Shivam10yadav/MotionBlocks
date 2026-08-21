@@ -14,6 +14,26 @@ export const INITIAL_LOGOS = [
     </svg>`,
   },
   {
+  id: "motions-block",
+  name: "Motions Block",
+  category: "Tech & Media",
+  number: "28",
+  desc: "Stacked dynamic geometric blocks with speed trails representing motion.",
+  defaultColors: { primary: "#8C5E32", secondary: "#D9822B", accent: "#2C241C" },
+  renderSvg: (c) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M35 125L75 45H105L65 125H35Z" fill="${c.accent}" opacity="0.4"/>
+    <path d="M50 145L90 65H120L80 145H50Z" fill="${c.secondary}" opacity="0.7"/>
+    
+    <path d="M100 40L145 65L100 90L55 65L100 40Z" fill="${c.secondary}"/>
+    <path d="M55 65L100 90V120L55 95V65Z" fill="${c.primary}"/>
+    <path d="M100 90L145 65V95L100 120V90Z" fill="${c.accent}"/>
+
+    <path d="M115 85L160 110L115 135L70 110L115 85Z" fill="${c.secondary}"/>
+    <path d="M70 110L115 135V165L70 140V110Z" fill="${c.primary}"/>
+    <path d="M115 135L160 110V140L115 165V135Z" fill="${c.accent}"/>
+  </svg>`,
+},
+  {
     id: "horizon-works",
     name: "Horizon",
     category: "Architecture",

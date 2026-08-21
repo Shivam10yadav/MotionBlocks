@@ -1,263 +1,346 @@
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import gsap from "gsap";
 import {
-  FilePlus2,
-  FileJson2,
-  GitPullRequest,
+  Copy,
+  Check,
+  ArrowLeft,
   ArrowRight,
-  CheckCircle2,
-  AlertTriangle,
-  ShieldAlert,
-  ListChecks,
+  FolderTree,
+  HeartHandshake,
+  PlusCircle,
+  FolderPlus,
 } from "lucide-react";
 
-const steps = [
-  {
-    icon: FilePlus2,
-    number: "01",
-    title: "Create your component",
-    text: "Build your component as a normal .jsx file inside the right folder under src/ui/ (e.g. src/ui/buttons/YourButton.jsx). Use plain Tailwind utility classes with real hex colors only — no CSS variables like --ember, no shadcn, no external UI kits. If it needs a package, keep it minimal (framer-motion, lucide-react, gsap, etc).",
-    code: `src/ui/buttons/YourButton.jsx
+// Standard code snippet block
+const CodeBlock = ({ code, language = "jsx" }) => {
+  const [copied, setCopied] = useState(false);
 
-const YourButton = () => {
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <button className="rounded-xl bg-[#FF7A45] px-6 py-3 font-semibold text-black transition-all duration-300 hover:scale-105">
-      Click Me
-    </button>
-  );
-};
-
-export default YourButton;`,
-  },
-  {
-    icon: FileJson2,
-    number: "02",
-    title: "Register it in components.js",
-    text: "Open src/data/components.js. Import your component AND its raw code file at the top, then add ONE new object to the components array. The code field now references the imported raw file (using the ?raw Vite suffix) instead of an inline template string. This is the only file that connects your component to the grid, search, and docs page.",
-    code: `// at the top of the file
-import YourButton from "../ui/buttons/YourButton";
-import YourButtonCode from "../ui/buttons/YourButton.jsx?raw";
-
-// inside the components array, add:
-{
-  id: 4, // next available id
-  slug: "your-button",         // unique, lowercase, dash-separated
-  name: "Your Button",
-  category: "buttons",         // must match an existing category id
-  description: "A short one-line description of what it does.",
-  preview: YourButton,          // the imported component (live preview)
-  install: "npm install framer-motion", // or omit if no deps
-  usage: \`<YourButton />\`,
-  code: YourButtonCode           // the imported raw code (not inline)
-},`,
-  },
-  {
-    icon: GitPullRequest,
-    number: "03",
-    title: "Only touch categories.js if it's a new category",
-    text: "If your component fits an existing category (buttons, cards, loaders, 404-pages, etc), skip this step entirely. Only edit src/data/categories.js if you're introducing a category that doesn't exist yet.",
-    code: `// src/data/categories.js
-// only add this if the category truly doesn't exist:
-{
-  id: "modals",
-  name: "Modals",
-  description: "Dialogs and overlays.",
-},`,
-  },
-];
-
-const dontTouch = [
-  "Sidebar.jsx",
-  "ComponentGrid.jsx",
-  "ComponentDetails.jsx (docs page)",
-];
-
-const Contribute = () => {
-  return (
-    <div className="w-full min-h-screen bg-[#08090D] px-4 py-8 sm:px-8 lg:px-12 [--ember:#FF7A45] [--teal:#5EEAD4]">
-      <div className="mx-auto max-w-[1600px] space-y-8">
-        
-        {/* Full-Width Hero Section */}
-        <header className="relative overflow-hidden rounded-3xl border border-[#23262F] bg-[#111319] p-8 sm:p-12">
-          {/* Subtle Background Glow */}
-          <div className="pointer-events-none absolute -right-20 -top-20 h-96 w-96 rounded-full bg-[--ember] opacity-10 blur-[120px]" />
-          <div className="pointer-events-none absolute -bottom-20 -left-20 h-96 w-96 rounded-full bg-[--teal] opacity-10 blur-[120px]" />
-
-          <div className="relative z-10 flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
-            <div className="max-w-3xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[--teal]/20 bg-[--teal]/10 px-3.5 py-1.5 font-code text-xs font-medium uppercase tracking-wider text-[--teal]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[--teal] shadow-[0_0_8px_#5EEAD4]" />
-                Contributing Guide
-              </span>
-              <h1 className="mt-4 font-display text-4xl font-bold tracking-tight text-[#F4F3F1] sm:text-5xl lg:text-6xl">
-                Add your component
-              </h1>
-              <p className="mt-4 text-base sm:text-lg leading-relaxed text-[#8B8D98]">
-                Three quick steps to get your component live in the library. No routing
-                changes, no page rebuilds — just a new component file and one registry entry.
-              </p>
-            </div>
-
-            {/* Quick Action CTA Box */}
-            <div className="flex w-full shrink-0 flex-col gap-3 rounded-2xl border border-[#23262F] bg-[#0B0D12] p-5 sm:w-auto sm:min-w-[280px]">
-              <div className="flex items-center justify-between font-code text-xs text-[#8B8D98]">
-                <span>Status</span>
-                <span className="text-[--teal]">Open for PRs</span>
-              </div>
-              <div className="h-px bg-[#23262F]" />
-              <Link
-                to="/components"
-                className="group flex w-full items-center justify-center gap-2 rounded-xl bg-[--ember] px-5 py-3 text-sm font-semibold text-[#08090D] transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-              >
-                View Components
-                <ArrowRight
-                  size={16}
-                  className="transition-transform duration-200 group-hover:translate-x-1"
-                />
-              </Link>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Full-Width Widescreen Layout (2-Column Desktop Grid) */}
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          
-          {/* Left Column: 3 Steps (8 Cols) */}
-          <main className="space-y-6 lg:col-span-7 xl:col-span-8">
-            <div className="flex items-center justify-between px-1">
-              <h2 className="font-display text-xl font-semibold text-[#F4F3F1]">
-                Step-by-Step Workflow
-              </h2>
-              <span className="font-code text-xs text-[#5C5F6B]">03 Steps Total</span>
-            </div>
-
-            {steps.map((step) => {
-              const Icon = step.icon;
-              return (
-                <article
-                  key={step.number}
-                  className="group relative overflow-hidden rounded-2xl border border-[#23262F] bg-[#111319] p-6 transition-colors duration-200 hover:border-[#323644] sm:p-8"
-                >
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-[#23262F] bg-[#0B0D12] font-code text-sm font-bold text-[--ember]">
-                        {step.number}
-                      </span>
-                      <div className="flex items-center gap-2.5">
-                        <Icon size={20} className="text-[--teal]" />
-                        <h3 className="text-xl font-semibold text-[#F4F3F1]">
-                          {step.title}
-                        </h3>
-                      </div>
-                    </div>
-                  </div>
-
-                  <p className="mt-4 text-sm leading-relaxed text-[#8B8D98]">
-                    {step.text}
-                  </p>
-
-                  <div className="relative mt-5 overflow-hidden rounded-xl border border-[#23262F] bg-[#0B0D12]">
-                    <div className="flex items-center justify-between border-b border-[#23262F] px-4 py-2 font-code text-xs text-[#5C5F6B]">
-                      <span>Code Example</span>
-                      <span>JSX / JS</span>
-                    </div>
-                    <pre className="overflow-x-auto p-4 font-code text-xs sm:text-sm leading-relaxed text-[#D4D4D8]">
-                      <code>{step.code}</code>
-                    </pre>
-                  </div>
-                </article>
-              );
-            })}
-          </main>
-
-          {/* Right Column: Guidelines, Warnings & Pre-PR Checklist (4 or 5 Cols) */}
-          <aside className="space-y-6 lg:col-span-5 xl:col-span-4">
-            
-            {/* What NOT to Touch Card */}
-            <section className="rounded-2xl border border-[#23262F] bg-[#111319] p-6 sm:p-7">
-              <div className="flex items-center gap-2.5 text-[--ember]">
-                <AlertTriangle size={18} className="shrink-0 text-[--ember]" />
-                <h3 className="font-semibold text-[#F4F3F1]">
-                  Files you should never need to edit
-                </h3>
-              </div>
-
-              <div className="mt-4 rounded-xl border border-[#23262F]/80 bg-[#0B0D12] p-4">
-                <ul className="space-y-3">
-                  {dontTouch.map((file) => (
-                    <li
-                      key={file}
-                      className="flex items-center gap-2.5 font-code text-xs sm:text-sm text-[#8B8D98]"
-                    >
-                      <ShieldAlert size={14} className="shrink-0 text-[--ember]" />
-                      <span>{file}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <p className="mt-4 text-xs sm:text-sm leading-relaxed text-[#8B8D98]">
-                These pages are generic and read entirely from{" "}
-                <span className="font-code font-medium text-[#F4F3F1]">components.js</span> and{" "}
-                <span className="font-code font-medium text-[#F4F3F1]">categories.js</span>. If your PR
-                modifies any of them, explain why in the PR description.
-              </p>
-            </section>
-
-            {/* Checklist Before PR Card */}
-            <section className="rounded-2xl border border-[#23262F] bg-[#111319] p-6 sm:p-7">
-              <div className="flex items-center gap-2 text-[--teal]">
-                <ListChecks size={18} className="shrink-0 text-[--teal]" />
-                <h3 className="font-semibold text-[#F4F3F1]">
-                  Before opening a PR
-                </h3>
-              </div>
-
-              <div className="mt-5 space-y-3">
-                {[
-                  "Component uses plain hex colors, not CSS variables (--ember, --teal)",
-                  "No shadcn/ui or other external UI kit dependencies",
-                  "id, slug, and category are correct and unique in components.js",
-                  "Both component and code imports added at the top of components.js",
-                  "code field references the imported ?raw file, not an inline string",
-                  "Preview renders correctly with no console errors",
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-3 rounded-xl border border-[#23262F]/40 bg-[#0B0D12]/60 p-3">
-                    <CheckCircle2
-                      size={16}
-                      className="mt-0.5 shrink-0 text-[--teal]"
-                    />
-                    <span className="text-xs sm:text-sm leading-snug text-[#8B8D98]">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Bottom Floating CTA Banner */}
-            <div className="relative overflow-hidden rounded-2xl border border-[#23262F] bg-[linear-gradient(135deg,#111319_0%,#181B24_100%)] p-6">
-              <h3 className="text-lg font-semibold text-[#F4F3F1]">
-                Ready to submit?
-              </h3>
-              <p className="mt-1 text-xs sm:text-sm text-[#8B8D98]">
-                Fork the repo, add your component, and open a pull request.
-              </p>
-              <Link
-                to="/components"
-                className="group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[--ember] px-5 py-3 text-sm font-semibold text-[#08090D] transition-all duration-200 hover:scale-[1.01]"
-              >
-                Browse Component Library
-                <ArrowRight
-                  size={16}
-                  className="transition-transform duration-200 group-hover:translate-x-1"
-                />
-              </Link>
-            </div>
-
-          </aside>
-        </div>
-
+    <div className="my-4 rounded-lg border border-zinc-800 bg-zinc-950 overflow-hidden shadow-sm">
+      <div className="flex items-center justify-between px-4 py-2 bg-zinc-900/80 border-b border-zinc-800">
+        <span className="text-xs font-mono text-zinc-400">{language}</span>
+        <button
+          onClick={handleCopy}
+          className="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-white transition-colors"
+        >
+          {copied ? (
+            <>
+              <Check size={13} className="text-emerald-400" />
+              <span className="text-emerald-400 font-medium">Copied</span>
+            </>
+          ) : (
+            <>
+              <Copy size={13} />
+              <span>Copy</span>
+            </>
+          )}
+        </button>
       </div>
+      <pre className="p-4 font-mono text-xs sm:text-sm text-zinc-200 overflow-x-auto leading-relaxed">
+        <code>{code}</code>
+      </pre>
     </div>
   );
 };
 
-export default Contribute;
+export default function Contribute() {
+  const pageRef = useRef(null);
+
+  // Smooth entrance animation
+  useEffect(() => {
+    gsap.fromTo(
+      pageRef.current,
+      { opacity: 0, y: 8 },
+      { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }
+    );
+  }, []);
+
+  return (
+    <div ref={pageRef} className="min-h-screen bg-[#08090D] text-zinc-100 antialiased font-sans">
+      
+      {/* 3-Column Full-Viewport Grid Layout */}
+      <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-zinc-800">
+
+        {/* LEFT COLUMN: Sticky Navigation Sidebar (3 columns) */}
+        <aside className="lg:col-span-3 border-r border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-zinc-950/50">
+          <Link
+            to="/components"
+            className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors mb-8"
+          >
+            <ArrowLeft size={14} /> Back to components
+          </Link>
+
+          <div className="space-y-6">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">
+                Contribution Guide
+              </p>
+              <nav className="space-y-1">
+                <a href="#welcome" className="block px-3 py-2 text-sm text-white font-medium rounded-md bg-zinc-900 border border-zinc-800">
+                  Welcome
+                </a>
+                <a href="#component-contribution" className="block px-3 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">
+                  Add UI Component
+                </a>
+                <a href="#new-category" className="block px-3 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">
+                  Add New Category
+                </a>
+                <a href="#logo-contribution" className="block px-3 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">
+                  Add Vector Logo
+                </a>
+                <a href="#pull-request" className="block px-3 py-2 text-sm text-zinc-400 hover:text-white hover:bg-zinc-900/50 rounded-md transition-colors">
+                  Submit PR
+                </a>
+              </nav>
+            </div>
+
+            <div className="pt-6 border-t border-zinc-800/80">
+              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">
+                Quick Links
+              </p>
+              <div className="space-y-2">
+                <Link to="/docs" className="flex items-center justify-between px-3 py-2 text-xs text-zinc-300 hover:text-white border border-zinc-800 rounded-md bg-zinc-900/30">
+                  <span>Documentation</span>
+                  <ArrowRight size={12} />
+                </Link>
+                <Link to="/logos" className="flex items-center justify-between px-3 py-2 text-xs text-zinc-300 hover:text-white border border-zinc-800 rounded-md bg-zinc-900/30">
+                  <span>Logo Collection</span>
+                  <ArrowRight size={12} />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        {/* MIDDLE COLUMN: Main Documentation Area (6 columns) */}
+        <main className="lg:col-span-6 p-6 sm:p-10 lg:p-12 space-y-12">
+          
+          {/* Header */}
+          <header className="border-b border-zinc-800 pb-8">
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8C5E32] font-semibold">
+              Community
+            </span>
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1">
+              Contribute Assets
+            </h1>
+            <p className="mt-3 text-base text-zinc-400 leading-relaxed">
+              Help grow this open-source library by contributing standard React UI components or customizable vector logos.
+            </p>
+          </header>
+
+          {/* Welcome Section */}
+          <section id="welcome" className="space-y-4">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2">
+              Welcome Contributors
+            </h2>
+            <p className="text-zinc-300 text-sm leading-relaxed">
+              Contributing a component or logo is completely modular. You add your React component file under its corresponding category folder, register its metadata, and push a pull request.
+            </p>
+          </section>
+
+          {/* Step 1: UI Component Contribution */}
+          <section id="component-contribution" className="space-y-6">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2">
+              1. Adding a UI Component
+            </h2>
+
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white">Step A: Create Your Component File</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Place your component inside its relevant category folder under <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">src/ui/[category]/</code> (for example: <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">src/ui/buttons/GlowButton.jsx</code>).
+                </p>
+                <CodeBlock
+                  language="jsx"
+                  code={`// src/ui/buttons/GlowButton.jsx
+import React from "react";
+
+export default function GlowButton({ label = "Click Me" }) {
+  return (
+    <button className="px-5 py-2.5 rounded-lg bg-zinc-900 text-white border border-zinc-700 hover:border-[#8C5E32] transition-colors">
+      {label}
+    </button>
+  );
+}`}
+                />
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white">Step B: Register Component Data</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Register your component inside <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">src/data/components.js</code> so it renders in the UI gallery:
+                </p>
+                <CodeBlock
+                  language="javascript"
+                  code={`{
+  id: "glow-button",
+  name: "Glow Button",
+  category: "Buttons",
+  description: "A button component with standard hover states.",
+  code: \`// Paste source code string here\`,
+}`}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Step 2: Creating a New Category */}
+          <section id="new-category" className="space-y-6">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2 flex items-center gap-2">
+              <FolderPlus size={18} className="text-[#8C5E32]" />
+              2. Creating a New Category
+            </h2>
+
+            <div className="space-y-4">
+              <p className="text-sm text-zinc-400 leading-relaxed">
+                If your component belongs to a category that doesn't exist yet, follow these two quick steps:
+              </p>
+
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white">Step A: Add New Directory</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Create a new subfolder inside <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">src/ui/</code> matching your category name (e.g. <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">src/ui/modals/</code>).
+                </p>
+              </div>
+
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white">Step B: Register in category.js</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Open <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">src/data/category.js</code> and add your new category entry:
+                </p>
+                <CodeBlock
+                  language="javascript"
+                  code={`// Inside src/data/category.js
+export const categories = [
+  "Buttons",
+  "Cards",
+  "Modals", // <-- Add your new category here
+];`}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Step 3: Vector Logo Contribution */}
+          <section id="logo-contribution" className="space-y-6">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2">
+              3. Adding a Vector Logo
+            </h2>
+
+            <div className="space-y-4">
+              <p className="text-sm text-zinc-400 leading-relaxed">
+                Logos live in <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">src/data/logo.js</code>.
+              </p>
+
+              <div className="space-y-1">
+                <h3 className="text-base font-semibold text-white">Step A: Append Logo Entry</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed">
+                  Add your logo data object to <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">logo.js</code>. Use dynamic color strings <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">(c)</code> inside <code className="text-zinc-200 bg-zinc-900 px-1.5 py-0.5 rounded text-xs font-mono">renderSvg</code> so live color pickers work:
+                </p>
+                <CodeBlock
+                  language="javascript"
+                  code={`// Inside src/data/logo.js
+{
+  id: "tech-emblem",
+  name: "Tech Emblem",
+  category: "Tech",
+  number: "12",
+  desc: "Clean geometric icon with customizable fills.",
+  defaultColors: { 
+    primary: "#8C5E32", 
+    secondary: "#D9822B", 
+    accent: "#18181B" 
+  },
+  renderSvg: (c) => \`<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="100" r="60" stroke="\${c.primary}" stroke-width="12"/>
+    <path d="M70 100 L130 100" stroke="\${c.secondary}" stroke-width="8" stroke-linecap="round"/>
+  </svg>\`,
+},`}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Submitting PR */}
+          <section id="pull-request" className="space-y-4">
+            <h2 className="text-xl font-bold text-white tracking-tight border-b border-zinc-800/80 pb-2">
+              4. Submit a Pull Request
+            </h2>
+            <div className="space-y-2 text-sm text-zinc-300">
+              <p className="text-zinc-400 leading-relaxed">
+                Commit your files and push your feature branch to submit a PR:
+              </p>
+              <CodeBlock
+                language="bash"
+                code={`# Create feature branch
+git checkout -b feat/add-glow-button
+
+# Stage and commit
+git add .
+git commit -m "feat: added GlowButton component and registered Modals category"
+
+# Push branch
+git push origin feat/add-glow-button`}
+              />
+            </div>
+          </section>
+
+        </main>
+
+        {/* RIGHT COLUMN: Info / Specs Sidebar (3 columns) */}
+        <aside className="lg:col-span-3 border-l border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-zinc-950/50">
+          <div className="space-y-6">
+            
+            {/* Folder Layout Quick Reference */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-2">
+                <FolderTree size={14} className="text-[#8C5E32]" />
+                Directory Structure
+              </h3>
+              <pre className="text-[11px] font-mono text-zinc-400 leading-relaxed">
+{`src/
+├── ui/
+│   ├── buttons/
+│   │   └── GlowButton.jsx
+│   └── [category]/
+│       └── [Component].jsx
+└── data/
+    ├── category.js
+    ├── components.js
+    └── logo.js`}
+              </pre>
+            </div>
+
+            {/* Quality Checklist Box */}
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 p-4 space-y-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-zinc-400 flex items-center gap-2">
+                <HeartHandshake size={14} className="text-[#8C5E32]" />
+                Guidelines
+              </h3>
+              <div className="space-y-2 text-xs text-zinc-400 leading-relaxed">
+                <p>
+                  <strong className="text-zinc-200">Tailwind Native:</strong> Stick strictly to Tailwind CSS utility classes.
+                </p>
+                <p>
+                  <strong className="text-zinc-200">Category Sync:</strong> Ensure category names match in both <code className="text-zinc-300 font-mono">category.js</code> and <code className="text-zinc-300 font-mono">components.js</code>.
+                </p>
+                <p>
+                  <strong className="text-zinc-200">Clean Imports:</strong> Use standard imports and exports.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  );
+}

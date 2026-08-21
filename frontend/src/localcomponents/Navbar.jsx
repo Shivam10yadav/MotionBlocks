@@ -68,7 +68,7 @@ export function Navbar({ githubUrl = "https://github.com/Shivam10yadav/MotionBlo
 
                   {/* Apple-style Dark Gray Badge */}
                   {link.isNew && (
-                    <span className="inline-flex items-center rounded-full border border-white/15 bg-[#1D1D1F] px-1.5 py-0.5 text-[9px] font-medium leading-none text-[#86868B] shadow-inner transition-colors duration-200 group-hover:border-white/25 group-hover:bg-[#2D2D2E] group-hover:text-[#F5F5F7]">
+                    <span className="inline-flex items-center rounded-full border border-white/15 bg-[#1D1D1F] px-1.5 py-0.5 text-[9px] font-medium leading-none text-[#FFFF00] shadow-inner transition-colors duration-200 group-hover:border-white/25 group-hover:bg-[#2D2D2E] group-hover:text-[#F5F5F7]">
                       New
                     </span>
                   )}
