@@ -27,6 +27,8 @@ const Landing = () => {
 
       <WhyMotions />
       <Footer />
+          
+
     </div>
   )
 }

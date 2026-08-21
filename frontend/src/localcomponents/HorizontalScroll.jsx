@@ -19,31 +19,32 @@ export default function HorizontalScroll({
 
     if (!section || !textEl) return;
 
-    // Kill stale triggers on hot-reload/remount
     ScrollTrigger.getAll()
       .filter((st) => st.trigger === section)
       .forEach((st) => st.kill());
 
     const ctx = gsap.context(() => {
-      const getScrollAmount = () => -(textEl.scrollWidth - window.innerWidth);
+      const getScrollDistance = () => textEl.scrollWidth - window.innerWidth;
 
-      // Main horizontal track scroll animation
+      // 1. HORIZONTAL TRACK WITH END HOLD BUFFER
       gsap.to(textEl, {
-        x: getScrollAmount,
-        ease: "none",
+        x: () => -getScrollDistance(),
+        ease: "power1.out", // Decelerates toward the end for a smooth catch
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${textEl.scrollWidth - window.innerWidth}`,
+          // ADDED 1.5x MULTIPLIER: Creates extra scroll weight so it holds firmly before unpinning
+          end: () => `+=${getScrollDistance() * 1.5}`,
           pin: true,
           pinSpacing: true,
-          scrub: 1,
+          // Tightened scrub response to prevent momentum overshooting
+          scrub: 0.5,
           invalidateOnRefresh: true,
           anticipatePin: 1,
         },
       });
 
-      // Subtle, elegant shimmer loop on the main dark text
+      // 2. SHIMMER LOOP
       if (shimmerRef.current) {
         gsap.to(shimmerRef.current, {
           backgroundPosition: "200% center",
@@ -53,7 +54,7 @@ export default function HorizontalScroll({
         });
       }
 
-      // Dynamic depth pop on accent text as you scroll
+      // 3. ACCENT SCALE
       if (accentTextRef.current) {
         gsap.to(accentTextRef.current, {
           scale: 1.05,
@@ -61,8 +62,8 @@ export default function HorizontalScroll({
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: () => `+=${textEl.scrollWidth - window.innerWidth}`,
-            scrub: true,
+            end: () => `+=${getScrollDistance() * 1.5}`,
+            scrub: 0.5,
           },
         });
       }
@@ -103,7 +104,6 @@ export default function HorizontalScroll({
           ref={textRef}
           className="whitespace-nowrap font-black uppercase tracking-tighter will-change-transform text-[30vw] sm:text-[26vw] leading-none"
         >
-          {/* Main Shimmering Text - Clean Minimalist Dark Metallic Shine */}
           <span
             ref={shimmerRef}
             className="inline-block bg-clip-text text-transparent bg-[length:200%_auto]"
@@ -118,7 +118,6 @@ export default function HorizontalScroll({
 
           <span className="text-[#2C241C]/30 mx-[0.15em] inline-block">•</span>
 
-          {/* Accent Copy & Paste Section */}
           <span
             ref={accentTextRef}
             className="inline-block transition-transform duration-300"

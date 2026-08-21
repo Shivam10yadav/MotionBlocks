@@ -1,124 +1,120 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+
+const BANNER_TEXT = 'Kuchu Puchu tum kaha hoo';
 
 export default function PlaneAnimation() {
-  const containerRef = useRef(null);
+  const letters = BANNER_TEXT.split('');
+  const groupRef = useRef(null);
+  const lettersRef = useRef([]);
+  const stringRef = useRef(null);
 
-  // Track scroll progress within the container
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Continuous left -> right flight loop
+      gsap.fromTo(
+        groupRef.current,
+        { x: '-30vw' },
+        {
+          x: '130vw',
+          duration: 9,
+          repeat: -1,
+          ease: 'none',
+        }
+      );
 
-  // Smooth physics-based interpolation
-  const smoothProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  });
+      // Gentle up/down bob, independent timing from the flight
+      gsap.to(groupRef.current, {
+        y: -10,
+        duration: 1.5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+      });
 
-  // Transform scroll progress to plane path coordinates (X, Y) and rotation
-  const planeX = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], ['5%', '25%', '50%', '75%', '90%']);
-  const planeY = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], ['80%', '35%', '60%', '20%', '50%']);
-  const planeRotate = useTransform(smoothProgress, [0, 0.25, 0.5, 0.75, 1], [-20, 25, -15, 30, 0]);
+      // String sway
+      gsap.to(stringRef.current, {
+        rotate: 2,
+        duration: 1,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        transformOrigin: '0% 50%',
+      });
+
+      // Banner letters ripple like fabric, staggered back-to-front
+      gsap.to(lettersRef.current, {
+        y: -5,
+        rotate: -8,
+        duration: 0.7,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: {
+          each: 0.07,
+          from: 'end',
+        },
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div ref={containerRef} className="relative h-[300vh] bg-slate-950 text-white font-sans">
-      
-      {/* Fixed Viewport */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between p-8">
-        
-        {/* Header */}
-        <header className="z-10 text-center mt-12">
-          <motion.h1 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-4xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-500 bg-clip-text text-transparent"
-          >
-            Motion Block refresh
-          </motion.h1>
-          <p className="text-slate-400 mt-2 text-sm md:text-base">
-            Scroll down to launch the flight path
-          </p>
-        </header>
+    <div className="relative w-full h-64">
+      <div ref={groupRef} className="absolute flex items-center" style={{ top: '70%' }}>
 
-        {/* Path SVG */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none stroke-slate-800" strokeWidth="2">
-          <path
-            d="M 5% 80% Q 25% 35%, 50% 60% T 90% 50%"
-            fill="none"
-            strokeDasharray="8 8"
-          />
+        {/* Waving banner — trails behind the plane */}
+        <div className="flex items-center gap-[2px] whitespace-nowrap mr-[-2px]">
+          {letters.map((char, i) => (
+            <span
+              key={i}
+              ref={(el) => (lettersRef.current[i] = el)}
+              className="inline-block text-white font-bold text-lg tracking-wide"
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </span>
+          ))}
+        </div>
+
+        {/* String connecting banner to the plane's tail */}
+        <svg
+          ref={stringRef}
+          width="50"
+          height="14"
+          viewBox="0 0 50 14"
+          className="shrink-0"
+        >
+          <path d="M0 7 Q 25 12 50 7" fill="none" stroke="#64748b" strokeWidth="1.5" />
         </svg>
 
-        {/* Animated Flying SVG Plane */}
-        <motion.div
-          style={{
-            left: planeX,
-            top: planeY,
-            rotate: planeRotate,
-          }}
-          className="absolute z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer"
+        {/* Plane — leads the way, nose pointing right */}
+        <svg
+          width="90"
+          height="34"
+          viewBox="0 0 90 34"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="shrink-0"
         >
-          <div className="relative group">
-            {/* Ambient Glow */}
-            <div className="absolute -inset-3 bg-cyan-500/30 rounded-full blur-xl group-hover:bg-cyan-400/50 transition duration-300"></div>
-
-            {/* Custom SVG Paper Plane */}
-            <svg
-              width="50"
-              height="50"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="relative drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] transform -rotate-45"
-            >
-              <defs>
-                <linearGradient id="planeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22d3ee" />
-                  <stop offset="100%" stopColor="#3b82f6" />
-                </linearGradient>
-                <linearGradient id="planeShadow" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#1d4ed8" />
-                  <stop offset="100%" stopColor="#0f172a" />
-                </linearGradient>
-              </defs>
-
-              {/* Main Body / Right Wing */}
-              <path
-                d="M22 2L11 13"
-                stroke="#67e8f9"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M22 2L15 22L11 13L2 9L22 2Z"
-                fill="url(#planeGradient)"
-                stroke="#22d3ee"
-                strokeWidth="1"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              {/* Fold / Inner Shadow wing */}
-              <path
-                d="M11 13L15 22L22 2"
-                fill="url(#planeShadow)"
-                opacity="0.4"
-              />
-            </svg>
-          </div>
-        </motion.div>
-
-        {/* Footer Status */}
-        <footer className="z-10 text-center mb-6">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-slate-800 bg-slate-900/50 backdrop-blur-md text-xs text-slate-400">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-            Interactive Flight Active
-          </div>
-        </footer>
-
+          <path
+            d="M2 17 C2 14 8 12 18 12 L68 12 C74 12 78 14.5 84 16.2 C86 16.8 86 17.2 84 17.8 C78 19.5 74 22 68 22 L18 22 C8 22 2 20 2 17 Z"
+            fill="#e2e8f0"
+            stroke="#94a3b8"
+            strokeWidth="0.8"
+          />
+          <path d="M78 15.2 C81 15.8 83.5 16.5 84 17 C83.5 17.5 81 18.2 78 18.8 Z" fill="#38bdf8" />
+          <path d="M38 12 L20 1 L28 1 L46 12 Z" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="0.6" />
+          <path d="M38 22 L20 33 L28 33 L46 22 Z" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="0.6" />
+          <path d="M8 12 L4 4 L12 12 Z" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="0.6" />
+          <path d="M8 22 L4 30 L12 22 Z" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="0.6" />
+          <circle cx="30" cy="17" r="1.2" fill="#64748b" />
+          <circle cx="36" cy="17" r="1.2" fill="#64748b" />
+          <circle cx="42" cy="17" r="1.2" fill="#64748b" />
+          <circle cx="48" cy="17" r="1.2" fill="#64748b" />
+          <circle cx="54" cy="17" r="1.2" fill="#64748b" />
+          <circle cx="60" cy="17" r="1.2" fill="#64748b" />
+        </svg>
       </div>
     </div>
   );

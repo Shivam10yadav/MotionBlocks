@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import PlaneAnimation from "./PlaneAnimation";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -343,6 +344,11 @@ export function Hero({
             {watermarkText.repeat(4)}
           </div>
         </div>
+
+          <div className="absolute inset-0 z-[5] pointer-events-none">
+    <PlaneAnimation />
+  </div>
+
 
         {/* Phase 1 Main Hero */}
         <div
