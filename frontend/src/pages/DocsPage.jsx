@@ -6,13 +6,10 @@ import {
   Check,
   ArrowLeft,
   ArrowRight,
-  BookOpen,
-  Layers,
-  Palette,
-  FolderTree,
   Terminal,
   Zap,
 } from "lucide-react";
+import { Navbar } from "../localcomponents/Navbar";
 
 // Standard code block component
 const CodeBlock = ({ code, language = "bash" }) => {
@@ -67,11 +64,14 @@ export default function DocsPage() {
   return (
     <div ref={pageRef} className="min-h-screen bg-[#08090D] text-zinc-100 antialiased font-sans">
       
-      {/* Full-width Container using full viewport grid */}
-      <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-zinc-800">
+      {/* Fixed Navbar */}
+      <Navbar />
+      
+      {/* Container with explicit pt-32 clearance so content renders BELOW the floating navbar */}
+      <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-zinc-800 pt-28 sm:pt-36">
 
-        {/* LEFT COLUMN: Sticky Navigation Sidebar (3 columns) */}
-        <aside className="lg:col-span-3 border-r border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-zinc-950/50">
+        {/* LEFT COLUMN: Sticky Navigation Sidebar */}
+        <aside className="lg:col-span-3 border-r border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-28 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto bg-zinc-950/50">
           <Link
             to="/components"
             className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors mb-8"
@@ -118,13 +118,13 @@ export default function DocsPage() {
           </div>
         </aside>
 
-        {/* MIDDLE COLUMN: Main Content Area (6 columns) */}
+        {/* MIDDLE COLUMN: Main Content Area */}
         <main className="lg:col-span-6 p-6 sm:p-10 lg:p-12 space-y-12">
           
           {/* Header */}
           <header className="border-b border-zinc-800 pb-8">
             <span className="text-xs font-mono uppercase tracking-widest text-[#8C5E32] font-semibold">
-              Documentation
+              DOCUMENTATION
             </span>
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-1">
               How It Works
@@ -229,8 +229,8 @@ export default function DocsPage() {
 
         </main>
 
-        {/* RIGHT COLUMN: Info / On-Page Specs Sidebar (3 columns) */}
-        <aside className="lg:col-span-3 border-l border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-zinc-950/50">
+        {/* RIGHT COLUMN: Info Sidebar */}
+        <aside className="lg:col-span-3 border-l border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-28 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto bg-zinc-950/50">
           <div className="space-y-6">
             
             {/* Tech Stack Summary */}

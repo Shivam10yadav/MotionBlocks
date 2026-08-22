@@ -8,9 +8,9 @@ import {
   ArrowRight,
   FolderTree,
   HeartHandshake,
-  PlusCircle,
   FolderPlus,
 } from "lucide-react";
+import { Navbar } from "../localcomponents/Navbar";
 
 // Standard code snippet block
 const CodeBlock = ({ code, language = "jsx" }) => {
@@ -65,11 +65,14 @@ export default function Contribute() {
   return (
     <div ref={pageRef} className="min-h-screen bg-[#08090D] text-zinc-100 antialiased font-sans">
       
-      {/* 3-Column Full-Viewport Grid Layout */}
-      <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-zinc-800">
+      {/* Fixed Navbar */}
+      <Navbar />
+
+      {/* 3-Column Full-Viewport Grid Layout with pt-28 sm:pt-36 clearance */}
+      <div className="w-full min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-0 border-b border-zinc-800 pt-28 sm:pt-36">
 
         {/* LEFT COLUMN: Sticky Navigation Sidebar (3 columns) */}
-        <aside className="lg:col-span-3 border-r border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-zinc-950/50">
+        <aside className="lg:col-span-3 border-r border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-28 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto bg-zinc-950/50">
           <Link
             to="/components"
             className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors mb-8"
@@ -295,7 +298,7 @@ git push origin feat/add-glow-button`}
         </main>
 
         {/* RIGHT COLUMN: Info / Specs Sidebar (3 columns) */}
-        <aside className="lg:col-span-3 border-l border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-zinc-950/50">
+        <aside className="lg:col-span-3 border-l border-zinc-800/80 p-6 lg:p-8 lg:sticky lg:top-28 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto bg-zinc-950/50">
           <div className="space-y-6">
             
             {/* Folder Layout Quick Reference */}
