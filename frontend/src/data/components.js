@@ -84,6 +84,9 @@ import  PageTransitions  from "../ui/transitions/PageTransitions";
 import  PageTransitionsCode  from "../ui/transitions/PageTransitions";
 import StatsCard from "../ui/stats/StatsCard";
 import StatsCardCode from "../ui/stats/StatsCard.jsx?raw";
+import TeamSection from "../ui/teams/TeamSection";
+import TeamSectionCode from "../ui/teams/TeamSection.jsx?raw";
+
 
 
 
@@ -594,6 +597,19 @@ id: 44,
   usage: `<StatsCard />`,
    code: StatsCardCode
 
+},
+
+{
+  id: 48,
+  slug: "warm-team-section",
+  name: "Warm Editorial Team Section",
+  category: "team",
+  description:
+    "A light-themed, warm-toned team grid featuring interactive category filtering, Framer Motion transitions, and GSAP scroll-triggered entrance animations.",
+  preview: TeamSection,
+  install: "npm install framer-motion gsap react-icons",
+  usage: `<TeamSection />`,
+  code: TeamSectionCode
 }
 
 

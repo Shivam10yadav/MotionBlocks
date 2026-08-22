@@ -66,20 +66,23 @@ const ComponentDetails = () => {
     setPreviewKey((prev) => prev + 1);
   };
 
-  // Handle Fullscreen escape key & scroll locking
+  // Lock body scroll when in fullscreen mode
   useEffect(() => {
     if (!fullscreen) return;
+
     const onKey = (e) => e.key === "Escape" && setFullscreen(false);
     window.addEventListener("keydown", onKey);
-    const prevOverflow = document.body.style.overflow;
+
+    const prevBodyOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
+      document.body.style.overflow = prevBodyOverflow;
     };
   }, [fullscreen]);
 
-  // Robust Scroll-to-Top Reset on route or component change
+  // Scroll-to-Top Reset on route or component change
   useEffect(() => {
     const resetScroll = () => {
       if (mainRef.current) {
@@ -90,7 +93,6 @@ const ComponentDetails = () => {
 
     resetScroll();
 
-    // Delayed frame reset to capture browser autofocus or initial layout expansion
     const rafId = requestAnimationFrame(() => {
       resetScroll();
     });
@@ -111,7 +113,7 @@ const ComponentDetails = () => {
       }[tab]
     : "";
 
-  // Highlight syntax & fix scroll jump caused by async DOM expansion
+  // Highlight syntax
   useEffect(() => {
     if (!panelContent) return;
     let cancelled = false;
@@ -126,7 +128,6 @@ const ComponentDetails = () => {
       });
       setHighlightedHtml(html);
 
-      // Reset scroll again after code block layout stabilizes
       requestAnimationFrame(() => {
         if (mainRef.current) mainRef.current.scrollTop = 0;
         window.scrollTo(0, 0);
@@ -433,17 +434,18 @@ const ComponentDetails = () => {
         </div>
       </div>
 
-      {/* ================= Fullscreen preview overlay ================= */}
+      {/* ================= Fixed Fullscreen preview overlay ================= */}
       <AnimatePresence>
         {fullscreen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex flex-col bg-[#08090D]/98 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] flex h-screen w-screen flex-col overflow-hidden bg-[#08090D]"
             onClick={(e) => e.target === e.currentTarget && setFullscreen(false)}
           >
-            <div className="flex flex-col gap-3 border-b border-[#23262F] px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
+            {/* Header Toolbar */}
+            <div className="sticky top-0 z-50 flex shrink-0 flex-col gap-3 border-b border-[#23262F] bg-[#08090D]/95 px-4 py-3 backdrop-blur-md sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-4">
               <div className="flex min-w-0 items-center gap-2 font-code text-xs uppercase tracking-widest text-[--teal] sm:text-sm">
                 <span className="h-2 w-2 shrink-0 rounded-full bg-[--teal] shadow-[0_0_8px_#5EEAD4]" />
                 <span className="truncate">{component.name} · {serial}</span>
@@ -494,24 +496,27 @@ const ComponentDetails = () => {
               </div>
             </div>
 
+            {/* Scrollable Viewport Canvas Container */}
             <motion.div
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.05, duration: 0.25 }}
-              className="blueprint-grid flex flex-1 items-center justify-center overflow-auto p-4 sm:p-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="blueprint-grid relative flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-8"
             >
-              {PreviewComponent && (
-                <div
-                  key={previewKey}
-                  className="flex w-full items-center justify-center transition-[width] duration-300"
-                  style={{
-                    width: DEVICES.find((d) => d.key === device)?.width,
-                    maxWidth: "100%",
-                  }}
-                >
-                  <PreviewComponent />
-                </div>
-              )}
+              <div className="flex min-h-full w-full items-start justify-center py-4 sm:py-8">
+                {PreviewComponent && (
+                  <div
+                    key={previewKey}
+                    className="w-full transition-[width] duration-300"
+                    style={{
+                      width: DEVICES.find((d) => d.key === device)?.width,
+                      maxWidth: "100%",
+                    }}
+                  >
+                    <PreviewComponent />
+                  </div>
+                )}
+              </div>
             </motion.div>
           </motion.div>
         )}
