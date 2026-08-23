@@ -13,7 +13,6 @@ const LogoIcon = () => (
 
 const navLinks = [
   { name: "Components", href: "/components" },
-  { name: "Categories", href: "/#categories" },
   { name: "Docs", href: "/docs" },
   { name: "Contribute", href: "/contribute" },
   { name: "Logos", href: "/logo", isNew: true },

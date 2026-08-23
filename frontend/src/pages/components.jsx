@@ -53,17 +53,7 @@ const Components = () => {
           custom={0}
           className="flex flex-wrap items-end justify-between gap-4 border-b border-[#23262F] px-4 py-6 sm:px-8"
         >
-          <div>
-            <div className="mb-2 flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-[--teal] shadow-[0_0_8px_#5EEAD4]" />
-              <span className="font-code text-xs uppercase tracking-[0.2em] text-[--teal]">
-                Catalog
-              </span>
-            </div>
-            <h1 className="font-display text-3xl font-semibold leading-tight sm:text-4xl">
-              Components
-            </h1>
-          </div>
+        
         
         </motion.div>
 

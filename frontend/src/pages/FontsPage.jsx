@@ -11,12 +11,9 @@ import {
   Code2,
   X,
   Maximize2,
-  FileCode,
-  Terminal,
-  Atom,
-  Braces
 } from "lucide-react";
 import { Navbar } from "../localcomponents/Navbar";
+import { FORMAT_TABS, CATALOG } from "../data/fonts";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,36 +25,6 @@ const TEXT_MUTED = "rgba(18, 15, 13, 0.65)";
 const BORDER_WARM = "rgba(115, 74, 38, 0.15)";
 const ACCENT_BROWN = "#6B4226";
 const ACCENT_SOFT = "rgba(107, 66, 38, 0.08)";
-
-// Code export modes
-const FORMAT_TABS = [
-  { id: "ReactImport", label: "React @import", icon: Atom, desc: "Place at top of index.css or App.css" },
-  { id: "ReactStyle", label: "React Style Tag", icon: Braces, desc: "Inline style object for React JSX" },
-  { id: "Link", label: "HTML Link", icon: Code2, desc: "Paste in public/index.html <head>" },
-  { id: "Tailwind", label: "Tailwind Config", icon: Terminal, desc: "Extend font-family in tailwind.config.js" },
-  { id: "CSS", label: "Raw CSS Rule", icon: FileCode, desc: "Standard CSS font-family declaration" },
-];
-
-const CATALOG = [
-  { id: "plus-jakarta-sans", name: "Plus Jakarta Sans", category: "Sans", weights: [400, 500, 600, 700, 800], fallback: "sans-serif", desc: "Ultra-crisp geometric sans crafted for modern tech interfaces.", tagline: "Crisp & Precise" },
-  { id: "sora", name: "Sora", category: "Display", weights: [400, 600, 700, 800], fallback: "sans-serif", desc: "Futuristic display typeface with high legibility at micro scales.", tagline: "Futuristic Tech" },
-  { id: "dm-sans", name: "DM Sans", category: "Sans", weights: [400, 500, 700], fallback: "sans-serif", desc: "Low-contrast geometric sans built for clean digital body copy.", tagline: "Minimalist Workhorse" },
-  { id: "outfit", name: "Outfit", category: "Sans", weights: [400, 500, 600, 700, 800], fallback: "sans-serif", desc: "Sharp geometric font with balanced proportion and clean curves.", tagline: "Modern Geometric" },
-  { id: "space-grotesk", name: "Space Grotesk", category: "Sans", weights: [400, 500, 700], fallback: "sans-serif", desc: "Proportional grotesk with a technical, confident developer feel.", tagline: "Tech & Geometric" },
-  { id: "urbanist", name: "Urbanist", category: "Sans", weights: [400, 500, 600, 700], fallback: "sans-serif", desc: "Low-contrast, highly geometric non-directional display font.", tagline: "Contemporary Elegance" },
-  { id: "syne", name: "Syne", category: "Display", weights: [400, 600, 700, 800], fallback: "sans-serif", desc: "Extravagant wide display face designed for avant-garde layouts.", tagline: "Bold Editorial" },
-  { id: "inter", name: "Inter", category: "Sans", weights: [400, 500, 600, 700], fallback: "sans-serif", desc: "The definitive open-source interface font with micro-metrics.", tagline: "Digital Standard" },
-  { id: "fraunces", name: "Fraunces", category: "Serif", weights: [400, 500, 600, 700], fallback: "serif", desc: "A wonky, warm variable serif built for expressive display type.", tagline: "Warm & Expressive" },
-  { id: "playfair", name: "Playfair Display", category: "Serif", weights: [400, 600, 700], fallback: "serif", desc: "Classic transitional serif with sharp, dramatic contrast.", tagline: "Editorial Luxe" },
-  { id: "bricolage-grotesque", name: "Bricolage Grotesque", category: "Display", weights: [400, 600, 700, 800], fallback: "sans-serif", desc: "Eccentric grotesk combining historical and modern expressive quirks.", tagline: "Expressive Display" },
-  { id: "manrope", name: "Manrope", category: "Sans", weights: [400, 500, 700, 800], fallback: "sans-serif", desc: "Modern geometric sans with semi-condensed terminals.", tagline: "Clean UI" },
-  { id: "jetbrains-mono", name: "JetBrains Mono", category: "Mono", weights: [400, 500, 700], fallback: "monospace", desc: "Developer-focused monospace with clear character distinction.", tagline: "Code First" },
-  { id: "ibm-plex-mono", name: "IBM Plex Mono", category: "Mono", weights: [400, 500, 600], fallback: "monospace", desc: "Corporate monospace with humanist warmth and technical precision.", tagline: "Developer Preferred" },
-  { id: "lora", name: "Lora", category: "Serif", weights: [400, 500, 600], fallback: "serif", desc: "Balanced serif with brushed curves, optimized for reading.", tagline: "Modern Literature" },
-  { id: "unbounded", name: "Unbounded", category: "Display", weights: [400, 600, 800], fallback: "sans-serif", desc: "Ultra-wide geometric variable face for headline impact.", tagline: "Futuristic Display" },
-  { id: "bebas-neue", name: "Bebas Neue", category: "Display", weights: [400], fallback: "sans-serif", desc: "Tall, condensed all-caps display face for bold headlines.", tagline: "Impact Headlines" },
-  { id: "caveat", name: "Caveat", category: "Handwritten", weights: [400, 600, 700], fallback: "cursive", desc: "Casual handwriting style with a natural, penned feel.", tagline: "Human Touch" },
-];
 
 function familyParam(f) {
   return `${f.name.replace(/\s+/g, "+")}:wght@${f.weights.join(";")}`;

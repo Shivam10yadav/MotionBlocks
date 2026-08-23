@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PlaneAnimation from "./PlaneAnimation";
+import { Link } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -406,19 +407,21 @@ export function Hero({
             ref={ctaRef}
             className="mt-8 flex flex-wrap items-center justify-center gap-4"
           >
-            <button
-              type="button"
+            <Link
+              to="/components"
               className="rounded-full px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-black transition-transform hover:scale-105 active:scale-95 shadow-xl"
               style={{ backgroundColor: accentHex }}
             >
+
               Get Started
-            </button>
-            <button
-              type="button"
+              </Link>
+            
+            <Link
+            to="/docs"
               className="rounded-full border border-white/20 bg-white/5 px-8 py-3.5 text-xs font-bold uppercase tracking-wider text-white backdrop-blur-sm transition-all hover:bg-white/10 active:scale-95"
             >
               Documentation
-            </button>
+            </Link>
           </div>
         </div>
 
