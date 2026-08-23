@@ -602,34 +602,7 @@ export default function FontsPage() {
         </AnimatePresence>
       </main>
 
-      {/* FLOATING FORMAT TOGGLE TOOLBAR */}
-      <div
-        className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1.5 sm:gap-2 rounded-full border p-1.5 sm:p-2 shadow-2xl backdrop-blur-md max-w-[92vw] overflow-x-auto no-scrollbar"
-        style={{ backgroundColor: "rgba(255, 255, 255, 0.92)", borderColor: BORDER_WARM }}
-      >
-        <div className="flex items-center gap-1 pl-2 sm:pl-3 pr-1 font-mono text-[11px] sm:text-xs font-bold shrink-0" style={{ color: ACCENT_BROWN }}>
-          <Code2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          <span className="hidden xs:inline">Mode:</span>
-        </div>
-        {FORMAT_TABS.map((f) => {
-          const isActive = format === f.id;
-          const Icon = f.icon;
-          return (
-            <button
-              key={f.id}
-              onClick={() => setFormat(f.id)}
-              className="flex items-center gap-1.5 rounded-full px-3 sm:px-4 py-1.5 font-mono text-xs font-bold transition-all shrink-0"
-              style={{
-                backgroundColor: isActive ? ACCENT_BROWN : "transparent",
-                color: isActive ? "#FFFFFF" : TEXT_DARK,
-              }}
-            >
-              <Icon className="h-3.5 w-3.5" />
-              <span>{f.label}</span>
-            </button>
-          );
-        })}
-      </div>
+      
 
       <AnimatePresence>
         {selectedFontModal && (

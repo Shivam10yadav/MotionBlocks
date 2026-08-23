@@ -88,8 +88,10 @@ import TeamSection from "../ui/teams/TeamSection";
 import TeamSectionCode from "../ui/teams/TeamSection.jsx?raw";
 import PlaneText from "../ui/text-effect/PlaneText";
 import PlaneTextCode from "../ui/text-effect/PlaneText.jsx?raw";
-import AnimatedCalendar from "../ui/calender/AnimatedCalender";
-import AnimatedCalendarCode from "../ui/calender/AnimatedCalender.jsx?raw";
+import AnimatedCalendar from "../ui/calender/AnimatedCalendar";
+import AnimatedCalendarCode from "../ui/calender/AnimatedCalendar.jsx?raw";
+import MiniCalendar from "../ui/calender/MiniCalendar";
+import MiniCalendarCode from "../ui/calender/MiniCalendar.jsx?raw";
 
 
 
@@ -632,13 +634,26 @@ id: 44,
   id: 50,
   slug: "animated-light-calendar",
   name: "Animated Light Calendar",
-  category: "calender", // or "calendars" if you added the new category
+  category: "calendar", // or "calendars" if you added the new category
   description:
     "An interactive, light-themed workspace calendar featuring animated month transitions, event category filters, and an integrated daily agenda panel.",
   preview: AnimatedCalendar,
   install: "npm install framer-motion gsap react-icons",
   usage: `<AnimatedCalendar />`,
   code: AnimatedCalendarCode
+},
+
+{
+  id: 50,
+  slug: "mini-dark-calendar",
+  name: "Mini Dark Calendar",
+  category: "calendar",
+  description:
+    "A compact dark-grey sidebar calendar component with event indicators, date selection, and mini agenda previews.",
+  preview: MiniCalendar,
+  install: "npm install framer-motion react-icons",
+  usage: `<MiniCalendar />`,
+  code: MiniCalendarCode
 }
 
 
