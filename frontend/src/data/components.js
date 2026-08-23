@@ -92,7 +92,9 @@ import AnimatedCalendar from "../ui/calender/AnimatedCalendar";
 import AnimatedCalendarCode from "../ui/calender/AnimatedCalendar.jsx?raw";
 import MiniCalendar from "../ui/calender/MiniCalendar";
 import MiniCalendarCode from "../ui/calender/MiniCalendar.jsx?raw";
-
+import ScratchCard from "../ui/ecommerce/ScratchCard";
+// ✅ Imports ScratchCard.jsx as raw string code
+import ScratchCardCode from "../ui/ecommerce/ScratchCard.jsx?raw";
 
 
 
@@ -654,7 +656,19 @@ id: 44,
   install: "npm install framer-motion react-icons",
   usage: `<MiniCalendar />`,
   code: MiniCalendarCode
-}
+},
+
+ {
+    id: 21,
+    slug: "light-Scratch Card",
+    name: "Minimal Scratch Card",
+    category: "ecommerce",
+    description: "Clean light-theme e-commerce card with interactive color swatches, instant add-to-cart state animations, and subtle elevation on hover.",
+    preview: ScratchCard,
+    install: "npm install react-icons framer-motion gsap clsx",
+    usage: `<ScratchCard />`,
+    code: ScratchCardCode
+  },
 
 
 
