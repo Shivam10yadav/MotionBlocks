@@ -86,6 +86,8 @@ import StatsCard from "../ui/stats/StatsCard";
 import StatsCardCode from "../ui/stats/StatsCard.jsx?raw";
 import TeamSection from "../ui/teams/TeamSection";
 import TeamSectionCode from "../ui/teams/TeamSection.jsx?raw";
+import PlaneText from "../ui/text-effect/PlaneText";
+import PlaneTextCode from "../ui/text-effect/PlaneText.jsx?raw";
 
 
 
@@ -610,6 +612,19 @@ id: 44,
   install: "npm install framer-motion gsap react-icons",
   usage: `<TeamSection />`,
   code: TeamSectionCode
+},
+
+{
+  id: 49,
+  slug: "airplane text-animation",
+  name: "Airplane text",
+  category: "text-effects",
+  description:
+    "A Airplane like text effect moving around the screen like a string .",
+  preview: PlaneText,
+  install: "npm install framer-motion gsap react-icons",
+  usage: `<PlaneText />`,
+  code: PlaneTextCode
 }
 
 

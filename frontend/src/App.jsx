@@ -16,6 +16,7 @@ import ScrollToTop from "./localcomponents/ScrollToTop";
 import LogosPage from "./pages/LogosPage";
 import { Popup } from "./localcomponents/Popup";
 import PageTransition from "./localcomponents/PageTransition";
+import FontsPage from "./pages/FontsPage";
 
 function AppContent() {
   const navigate = useNavigate();
@@ -125,6 +126,11 @@ function AppContent() {
         <Route
           path="/logo"
           element={<LogosPage />}
+        />
+
+                <Route
+          path="/fonts"
+          element={<FontsPage />}
         />
 
         <Route
