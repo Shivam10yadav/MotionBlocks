@@ -88,6 +88,8 @@ import TeamSection from "../ui/teams/TeamSection";
 import TeamSectionCode from "../ui/teams/TeamSection.jsx?raw";
 import PlaneText from "../ui/text-effect/PlaneText";
 import PlaneTextCode from "../ui/text-effect/PlaneText.jsx?raw";
+import AnimatedCalendar from "../ui/calender/AnimatedCalender";
+import AnimatedCalendarCode from "../ui/calender/AnimatedCalender.jsx?raw";
 
 
 
@@ -625,6 +627,18 @@ id: 44,
   install: "npm install framer-motion gsap react-icons",
   usage: `<PlaneText />`,
   code: PlaneTextCode
+},
+{
+  id: 50,
+  slug: "animated-light-calendar",
+  name: "Animated Light Calendar",
+  category: "calender", // or "calendars" if you added the new category
+  description:
+    "An interactive, light-themed workspace calendar featuring animated month transitions, event category filters, and an integrated daily agenda panel.",
+  preview: AnimatedCalendar,
+  install: "npm install framer-motion gsap react-icons",
+  usage: `<AnimatedCalendar />`,
+  code: AnimatedCalendarCode
 }
 
 
