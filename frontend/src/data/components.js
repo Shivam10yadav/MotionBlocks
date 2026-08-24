@@ -96,6 +96,9 @@ import ScratchCard from "../ui/ecommerce/ScratchCard";
 import ScratchCardCode from "../ui/ecommerce/ScratchCard.jsx?raw";
 import AnimatedAuth from "../ui/auth/AnimatedAuth";
 import AnimatedAuthCode from "../ui/auth/AnimatedAuth.jsx?raw";
+import AnimatedFaq from "../ui/faq/AnimatedFaq";
+import AnimatedFaqCode from "../ui/faq/AnimatedFaq.jsx?raw";
+
 
 
 
@@ -682,6 +685,18 @@ id: 44,
     install: "npm install react-icons framer-motion",
     usage: `<AnimatedAuth />`,
     code: AnimatedAuthCode
+  },
+
+    {
+    id: 53,
+    slug: "animated-faq",
+    name: "Animated  FAQ",
+    category: "faq",
+    description: "A clean, dark accordion-style FAQ section with smooth height expansion.",
+    preview: AnimatedFaq,
+    install: "npm install framer-motion react-icons gsap",
+    usage: `<AnimatedFaq />`,
+    code: AnimatedFaqCode
   },
 
 
