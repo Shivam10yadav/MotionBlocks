@@ -93,8 +93,10 @@ import AnimatedCalendarCode from "../ui/calender/AnimatedCalendar.jsx?raw";
 import MiniCalendar from "../ui/calender/MiniCalendar";
 import MiniCalendarCode from "../ui/calender/MiniCalendar.jsx?raw";
 import ScratchCard from "../ui/ecommerce/ScratchCard";
-// ✅ Imports ScratchCard.jsx as raw string code
 import ScratchCardCode from "../ui/ecommerce/ScratchCard.jsx?raw";
+import AnimatedAuth from "../ui/auth/AnimatedAuth";
+import AnimatedAuthCode from "../ui/auth/AnimatedAuth.jsx?raw";
+
 
 
 
@@ -659,7 +661,7 @@ id: 44,
 },
 
  {
-    id: 21,
+    id: 51,
     slug: "light-Scratch Card",
     name: "Minimal Scratch Card",
     category: "ecommerce",
@@ -670,6 +672,17 @@ id: 44,
     code: ScratchCardCode
   },
 
+    {
+    id: 52,
+    slug: "Animated-auth",
+    name: "Animated Auth Page",
+    category: "auth",
+    description: "A premium, minimal light-mode login and sign-up experience driven by smooth GSAP physics, ambient blurred lighting, interactive form states, and modern showcase elements.",
+    preview: AnimatedAuth,
+    install: "npm install react-icons framer-motion",
+    usage: `<AnimatedAuth />`,
+    code: AnimatedAuthCode
+  },
 
 
 
