@@ -100,6 +100,9 @@ import AnimatedFaq from "../ui/faq/AnimatedFaq";
 import AnimatedFaqCode from "../ui/faq/AnimatedFaq.jsx?raw";
 import AnimatedCta from "../ui/cta/AnimatedCta";
 import AnimatedCtaCode from "../ui/cta/AnimatedCta.jsx?raw";
+import ClaymorphismCta from "../ui/cta/ClayMorphismCta";
+import ClaymorphismCtaCode from "../ui/cta/ClayMorphismCta.jsx?raw";
+
 
 
 
@@ -711,6 +714,18 @@ id: 44,
   install: "npm install framer-motion gsap",
   usage: `<AnimatedCta />`,
   code: AnimatedCtaCode
+},
+
+{
+  id: 55,
+  slug: "claymorphism-cta-section",
+  name: "Claymorphism CTA Section",
+  category: "cta-sections",
+  description: "A playful, full-width call-to-action section featuring tactile 3D claymorphic landscape illustrations, multi-layered GSAP mouse-tracking parallax, dual buttons, and Framer Motion micro-interactions.",
+  preview: ClaymorphismCta,
+  install: "npm install framer-motion gsap lucide-react",
+  usage: `<ClaymorphismCta />`,
+  code: ClaymorphismCtaCode
 }
 
 
