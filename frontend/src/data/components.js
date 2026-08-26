@@ -98,6 +98,9 @@ import AnimatedAuth from "../ui/auth/AnimatedAuth";
 import AnimatedAuthCode from "../ui/auth/AnimatedAuth.jsx?raw";
 import AnimatedFaq from "../ui/faq/AnimatedFaq";
 import AnimatedFaqCode from "../ui/faq/AnimatedFaq.jsx?raw";
+import AnimatedCta from "../ui/cta/AnimatedCta";
+import AnimatedCtaCode from "../ui/cta/AnimatedCta.jsx?raw";
+
 
 
 
@@ -698,7 +701,17 @@ id: 44,
     usage: `<AnimatedFaq />`,
     code: AnimatedFaqCode
   },
-
+{
+  id: 54,
+  slug: "glow-cta-section",
+  name: "Glow CTA Section",
+  category: "cta-sections",
+  description: "An eye-catching call-to-action block featuring a smooth GSAP radial mouse-tracking glow background, bold centered typography, and a Framer Motion animated badge-style button.",
+  preview: AnimatedCta,
+  install: "npm install framer-motion gsap",
+  usage: `<AnimatedCta />`,
+  code: AnimatedCtaCode
+}
 
 
 
