@@ -17,6 +17,9 @@ const navLinks = [
   { name: "Contribute", href: "/contribute" },
   { name: "Logos", href: "/logo", isNew: true },
   { name: "Fonts", href: "/fonts", isNew: true },
+{ name: "Colors", href: "/colors", isNew: true },
+{ name: "Gradients", href: "/gradients", isNew: true },
+
 ];
 
 export function Navbar({ githubUrl = "https://github.com/Shivam10yadav/MotionBlocks", onBrowseClick }) {

@@ -1,0 +1,51 @@
+// Clean preset data structure matching simple palette naming conventions
+export const GRADIENT_PRESETS = [
+  {
+    id: "preset-1",
+    name: "Golden Hour",
+    category: "Warm",
+    type: "linear",
+    angle: 135,
+    colors: ["#FF7E5F", "#FEB47B"],
+  },
+  {
+    id: "preset-2",
+    name: "Deep Ocean",
+    category: "Cool",
+    type: "linear",
+    angle: 90,
+    colors: ["#2B5876", "#4E4376"],
+  },
+  {
+    id: "preset-3",
+    name: "Nordic Mist",
+    category: "Minimal",
+    type: "linear",
+    angle: 180,
+    colors: ["#E0EAFC", "#CFDEF3"],
+  },
+  {
+    id: "preset-4",
+    name: "Desert Clay",
+    category: "Warm",
+    type: "linear",
+    angle: 45,
+    colors: ["#D4A373", "#FAEDCD"],
+  },
+  {
+    id: "preset-5",
+    name: "Forest Glow",
+    category: "Nature",
+    type: "radial",
+    angle: 0,
+    colors: ["#0B6623", "#9DC183"],
+  },
+  {
+    id: "preset-6",
+    name: "Velvet Night",
+    category: "Dark",
+    type: "linear",
+    angle: 120,
+    colors: ["#8E2DE2", "#4A00E0"],
+  },
+];

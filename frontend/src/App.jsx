@@ -18,6 +18,7 @@ import { Popup } from "./localcomponents/Popup";
 import PageTransition from "./localcomponents/PageTransition";
 import FontsPage from "./pages/FontsPage";
 import ColorPalettesPage from "./pages/ColorPalletesPage";
+import BackgroundGraidentGenerator from "./pages/BackgroundGradientGenerator";
 
 function AppContent() {
   const navigate = useNavigate();
@@ -132,6 +133,13 @@ function AppContent() {
                 <Route
           path="/fonts"
           element={<FontsPage />}
+
+          
+        />
+
+                <Route
+          path="/gradients"
+          element={<BackgroundGraidentGenerator />}
 
           
         />
