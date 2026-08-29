@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef, useLayoutEffect, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -7,7 +8,6 @@ import {
   TbCopy,
   TbCheck,
   TbCode,
-  TbAdjustmentsHorizontal,
   TbX,
   TbWaveSquare,
   TbCursorText,
@@ -17,30 +17,56 @@ import {
   TbSparkles,
   TbTrash,
   TbLock,
+  TbDiamond,
   TbTrophy,
   TbSwipe,
   TbPointer,
   TbBell,
+  TbBellRinging,
   TbCamera,
   TbLayoutSidebarRightExpand,
   TbDroplet,
   TbBrandReact,
   TbSearch,
-  TbSparkles as TbSparklesIcon
+  TbZoomIn,
+  TbMessageCircle,
+  TbAt,
+  TbMail,
+  TbCalendarEvent,
+  TbArrowBackUp,
+  TbArrowForwardUp,
+  TbRefresh,
+  TbUpload,
+  TbDownload,
+  TbDeviceFloppy,
+  TbStar,
+  TbShare2,
+  TbLayoutColumns,
+  TbAdjustmentsHorizontal,
+  TbCoin,
+  TbFlame,
+  TbMoodSad,
+  TbPower,
+  TbPlugOff,
+  TbPlugConnected,
+  TbPlugConnectedX,
+  TbRotate,
+  TbAlertOctagon,
+  TbArrowUpRight
 } from "react-icons/tb";
 
 import { Navbar } from "../localcomponents/Navbar";
-import { INITIAL_SOUNDS, playSoundEffect, getJsCodeSnippet } from "../data/sounds";
+import { INITIAL_SOUNDS, CATEGORY_ORDER, playSoundEffect, getJsCodeSnippet } from "../data/sounds";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const LIGHT_BG = "#F9F6F0";
 const CARD_BG = "#FFFDF9";
 const TEXT_DARK = "#1C1611";
-const TEXT_MUTED = "rgba(28, 22, 17, 0.75)";
+const TEXT_MUTED = "rgba(28, 22, 17, 0.65)";
 const BORDER_WARM = "rgba(140, 94, 50, 0.25)";
-const ACCENT_BROWN = "#734A26";
-const ACCENT_SOFT = "rgba(115, 74, 38, 0.08)";
+const ACCENTS = ["#734A26", "#C16E38"];
+const ACCENT_TEXT = ["#FFFDF9", "#FFFDF9"];
 
 const ICON_MAP = {
   click: TbCursorText,
@@ -50,316 +76,263 @@ const ICON_MAP = {
   pop: TbSparkles,
   delete: TbTrash,
   lock: TbLock,
-  glass: TbSparklesIcon,
+  glass: TbDiamond,
   levelup: TbTrophy,
   swipe: TbSwipe,
   hover: TbPointer,
   bell: TbBell,
   shutter: TbCamera,
   expand: TbLayoutSidebarRightExpand,
-  drop: TbDroplet
+  drop: TbDroplet,
+  message: TbMessageCircle,
+  mention: TbAt,
+  mail: TbMail,
+  reminder: TbCalendarEvent,
+  undo: TbArrowBackUp,
+  redo: TbArrowForwardUp,
+  refresh: TbRefresh,
+  upload: TbUpload,
+  download: TbDownload,
+  save: TbDeviceFloppy,
+  search: TbZoomIn,
+  favorite: TbStar,
+  share: TbShare2,
+  tabswitch: TbLayoutColumns,
+  slider: TbAdjustmentsHorizontal,
+  coin: TbCoin,
+  combo: TbFlame,
+  fail: TbMoodSad,
+  poweron: TbPower,
+  poweroff: TbPlugOff,
+  connect: TbPlugConnected,
+  disconnect: TbPlugConnectedX,
+  sync: TbRotate,
+  warning: TbAlertOctagon,
+  ding: TbBellRinging
 };
 
-// --- CATEGORY FILTER PILL (GSAP magnetic-lift + fill effect, same pattern as CategoriesSection cards) ---
-const CategoryPill = ({ cat, isActive, onClick, setBtnRef }) => {
-  const btnRef = useRef(null);
+const prefersReducedMotion = () =>
+  typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  const attachRef = (el) => {
-    btnRef.current = el;
-    if (setBtnRef) setBtnRef(el);
-  };
-
-  const handleEnter = () => {
-    if (isActive) return;
-    gsap.to(btnRef.current, {
-      borderColor: ACCENT_BROWN,
-      backgroundColor: ACCENT_SOFT,
-      y: -3,
-      scale: 1.05,
-      boxShadow: "0 10px 22px -8px rgba(115, 74, 38, 0.3)",
-      duration: 0.3,
-      ease: "power2.out"
-    });
-  };
-
-  const handleLeave = () => {
-    if (isActive) return;
-    gsap.to(btnRef.current, {
-      borderColor: BORDER_WARM,
-      backgroundColor: CARD_BG,
-      y: 0,
-      scale: 1,
-      boxShadow: "0 0px 0px rgba(0,0,0,0)",
-      duration: 0.3,
-      ease: "power2.out"
-    });
-  };
-
-  const handleClick = () => {
-    gsap.fromTo(
-      btnRef.current,
-      { scale: 0.94 },
-      { scale: isActive ? 1 : 1.05, duration: 0.35, ease: "back.out(2)" }
-    );
-    onClick();
-  };
-
-  return (
-    <button
-      ref={attachRef}
-      onClick={handleClick}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      className="whitespace-nowrap rounded-full px-4 py-2 font-mono text-xs font-bold uppercase border"
-      style={{
-        backgroundColor: isActive ? ACCENT_BROWN : CARD_BG,
-        color: isActive ? "#FFFDF9" : TEXT_DARK,
-        borderColor: isActive ? ACCENT_BROWN : BORDER_WARM
-      }}
-    >
-      {cat}
-    </button>
-  );
+// Header entrance animation setup
+const headerContainer = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+const headerItem = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
 };
 
-// --- INTERACTIVE TACTILE SOUND ROW MODULE (WITH PROGRESS FILL HOVER EFFECT) ---
-const SoundRowModule = ({ item, isPlaying, isCopied, onPlay, onCopy, onSelect, index }) => {
-  const IconComponent = ICON_MAP[item.iconKey] || TbWaveSquare;
+/**
+ * Editorial Sound Row Component featuring magnetic mouse skewing, 
+ * index scaling & liquid-wipe dual text clipping.
+ */
+const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPlay, onCopy, onSelect }) => {
   const rowRef = useRef(null);
-  const progressRef = useRef(null);
-  const iconRef = useRef(null);
+  const bgRef = useRef(null);
+  const overlayRef = useRef(null);
+  const indexRef = useRef(null);
+  const playBtnRef = useRef(null);
+  const tlRef = useRef(null);
+  const quickX = useRef(null);
+  const quickY = useRef(null);
 
-  // Magnetic Hover Physics & Warm Progress Fill Expansion
-  const handleMouseEnter = () => {
-    // Fill progress sweep from left to right
-    gsap.to(progressRef.current, {
-      scaleX: 1,
-      duration: 0.45,
-      ease: "power2.out"
-    });
-  };
+  const IconComponent = ICON_MAP[sound.iconKey] || TbWaveSquare;
+
+  useLayoutEffect(() => {
+    // Magnetic Row Tracking GSAP quickTo setup
+    if (rowRef.current && !prefersReducedMotion()) {
+      quickX.current = gsap.quickTo(rowRef.current, "x", { duration: 0.4, ease: "power3.out" });
+      quickY.current = gsap.quickTo(rowRef.current, "y", { duration: 0.4, ease: "power3.out" });
+    }
+
+    // Color Wipe Timeline
+    tlRef.current = gsap
+      .timeline({ paused: true })
+      .to(bgRef.current, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 0)
+      .fromTo(
+        overlayRef.current,
+        { clipPath: "inset(0 100% 0 0)" },
+        { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "power3.out" },
+        0
+      )
+      .to(indexRef.current, { x: 6, scale: 1.1, color: "#FFFDF9", duration: 0.3, ease: "power3.out" }, 0)
+      .to(playBtnRef.current, { rotate: 15, scale: 1.08, duration: 0.3, ease: "power3.out" }, 0);
+
+    return () => tlRef.current && tlRef.current.kill();
+  }, []);
 
   const handleMouseMove = (e) => {
-    if (!rowRef.current) return;
+    if (prefersReducedMotion() || !rowRef.current) return;
     const rect = rowRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-
-    gsap.to(rowRef.current, {
-      x: x * 0.05,
-      y: y * 0.05,
-      rotationX: -y * 0.03,
-      rotationY: x * 0.03,
-      duration: 0.3,
-      ease: "power2.out"
-    });
-
-    gsap.to(iconRef.current, {
-      scale: 1.1,
-      rotation: 5,
-      duration: 0.2
-    });
+    const relX = e.clientX - (rect.left + rect.width / 2);
+    const relY = e.clientY - (rect.top + rect.height / 2);
+    quickX.current?.(relX * 0.04);
+    quickY.current?.(relY * 0.08);
   };
+
+  const handleMouseEnter = () => tlRef.current?.play();
 
   const handleMouseLeave = () => {
-    if (!rowRef.current) return;
-
-    // Retract warm progress fill back to left
-    gsap.to(progressRef.current, {
-      scaleX: 0,
-      duration: 0.35,
-      ease: "power2.in"
-    });
-
-    gsap.to(rowRef.current, {
-      x: 0,
-      y: 0,
-      rotationX: 0,
-      rotationY: 0,
-      duration: 0.5,
-      ease: "elastic.out(1, 0.4)"
-    });
-
-    gsap.to(iconRef.current, { scale: 1, rotation: 0, duration: 0.3 });
+    quickX.current?.(0);
+    quickY.current?.(0);
+    tlRef.current?.reverse();
   };
 
-  const handleTrigger = (e) => {
+  const handleRowClick = (e) => {
     e.stopPropagation();
-    gsap.fromTo(
-      rowRef.current,
-      { scale: 0.98 },
-      { scale: 1, duration: 0.4, ease: "back.out(2)" }
-    );
-    onPlay(item.type);
+    onPlay(sound.type);
   };
 
   return (
-    <motion.div
+    <div
       ref={rowRef}
-      onMouseEnter={handleMouseEnter}
+      onClick={handleRowClick}
       onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={handleTrigger}
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3, delay: index * 0.02 }}
-      className="group relative flex flex-col md:flex-row items-start md:items-center justify-between gap-4 rounded-2xl border p-5 transition-all duration-300 shadow-sm hover:shadow-xl cursor-pointer select-none overflow-hidden"
-      style={{
-        backgroundColor: isPlaying ? "rgba(244, 218, 193, 0.5)" : CARD_BG,
-        borderColor: isPlaying ? ACCENT_BROWN : BORDER_WARM,
-        transformStyle: "preserve-3d",
-        perspective: 1000
-      }}
+      data-cursor-hover
+      className="group relative flex items-center justify-between gap-4 overflow-hidden border-b py-5 sm:py-7 lg:py-8 cursor-pointer select-none transition-colors"
+      style={{ borderColor: BORDER_WARM }}
     >
-      {/* PROGRESS BAR FILL BACKGROUND (Beige Cream -> Light Orange Warm Gradient) */}
-      <div
-        ref={progressRef}
-        className="absolute inset-0 pointer-events-none origin-left transform scale-x-0 transition-opacity"
-        style={{
-          background: "linear-[#FFF8F0] linear-gradient(90deg, #FBEFE4 0%, #F8E2CF 50%, #F5D5BA 100%)",
-          opacity: 0.9
-        }}
+      {/* Background sweep wipe */}
+      <span
+        ref={bgRef}
+        className="pointer-events-none absolute inset-0 origin-left"
+        style={{ backgroundColor: accent, transform: "scaleX(0)" }}
       />
 
-      {/* Sound Info & Wave Spec */}
-      <div className="relative z-10 flex items-center gap-4">
-        <div
-          ref={iconRef}
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border transition-colors group-hover:bg-[#734A26] group-hover:text-[#FFFDF9]"
-          style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: ACCENT_BROWN }}
+      {/* Left Details: Index Number, Icon & Clipped Typography */}
+      <div className="relative z-10 flex items-center gap-4 sm:gap-8 flex-1 min-w-0">
+        <span
+          ref={indexRef}
+          className="shrink-0 font-mono text-xs font-bold transition-colors duration-300"
+          style={{ color: TEXT_MUTED }}
         >
-          <IconComponent className="h-6 w-6" />
+          {String(index + 1).padStart(2, "0")}
+        </span>
+
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 group-hover:bg-[#FFFDF9] group-hover:text-[#734A26]"
+          style={{ borderColor: BORDER_WARM, backgroundColor: LIGHT_BG, color: ACCENTS[0] }}
+        >
+          <IconComponent className="h-5 w-5" />
         </div>
 
-        <div>
-          <div className="flex items-center gap-2.5">
-            <h3 className="font-display text-lg font-bold uppercase text-[#1C1611] tracking-wide">
-              {item.name}
-            </h3>
-            <span
-              className="font-mono text-[10px] font-bold uppercase px-2 py-0.5 rounded-md border"
-              style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: ACCENT_BROWN }}
-            >
-              {item.category}
-            </span>
-          </div>
-          <p className="mt-1 text-xs font-medium max-w-xl line-clamp-1" style={{ color: TEXT_MUTED }}>
-            {item.desc}
-          </p>
+        {/* Title layer with twin clipped reveal layer */}
+        <div className="relative flex-1 leading-none truncate">
+          <span
+            className="block font-display font-black uppercase tracking-tight text-[6vw] sm:text-[4.2vw] lg:text-[2.6vw] truncate"
+            style={{ color: TEXT_DARK }}
+          >
+            {sound.name}
+          </span>
+          <span
+            ref={overlayRef}
+            className="pointer-events-none absolute inset-0 block font-display font-black uppercase tracking-tight text-[6vw] sm:text-[4.2vw] lg:text-[2.6vw] truncate"
+            style={{ color: accentText, clipPath: "inset(0 100% 0 0)" }}
+          >
+            {sound.name}
+          </span>
         </div>
       </div>
 
-      {/* Trigger & Actions Controls */}
-      <div className="relative z-10 flex items-center gap-3 w-full md:w-auto justify-between md:justify-end border-t md:border-t-0 pt-3 md:pt-0" style={{ borderColor: BORDER_WARM }}>
-        <div className="flex items-center gap-2 font-mono text-xs font-semibold" style={{ color: TEXT_MUTED }}>
-          <span className="px-2 py-1 rounded bg-black/5">{item.wave}</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-black/20" />
-          <span>{item.duration}</span>
-        </div>
+      {/* Right Details: Metadata Tags & Interactive Action Buttons */}
+      <div className="relative z-10 flex items-center gap-2 sm:gap-4 shrink-0">
+        <span
+          className="hidden md:inline-block font-mono text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-md border transition-colors group-hover:text-white group-hover:border-white/40"
+          style={{ borderColor: BORDER_WARM, color: TEXT_MUTED }}
+        >
+          {sound.wave} &middot; {sound.duration}
+        </span>
 
-        <div className="flex items-center gap-2">
-          {/* Inspect Code Drawer Trigger */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onSelect(item);
-            }}
-            className="flex h-9 px-3 items-center gap-1.5 rounded-xl border font-mono text-xs font-bold transition-all hover:bg-black/5"
-            style={{ borderColor: BORDER_WARM, color: TEXT_DARK }}
-          >
-            <TbCode className="h-4 w-4" />
-            <span className="hidden sm:inline">Code</span>
-          </button>
+        <button
+          ref={playBtnRef}
+          onClick={handleRowClick}
+          className="flex h-10 w-10 items-center justify-center rounded-xl border transition-all group-hover:border-white group-hover:bg-white group-hover:text-[#734A26]"
+          style={{ borderColor: BORDER_WARM, backgroundColor: CARD_BG, color: TEXT_DARK }}
+          title="Play Sound"
+        >
+          <TbPlayerPlay className={`h-4 w-4 ${isPlaying ? "animate-spin text-[#734A26]" : ""}`} />
+        </button>
 
-          {/* Quick Copy Snippet */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onCopy(item.id, item.type);
-            }}
-            className="flex h-9 px-3 items-center gap-1.5 rounded-xl border font-mono text-xs font-bold transition-all hover:border-[#734A26]"
-            style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: TEXT_DARK }}
-          >
-            {isCopied ? (
-              <>
-                <TbCheck className="h-4 w-4" style={{ color: ACCENT_BROWN }} />
-                <span style={{ color: ACCENT_BROWN }}>Copied</span>
-              </>
-            ) : (
-              <>
-                <TbCopy className="h-4 w-4" style={{ color: TEXT_MUTED }} />
-                <span>Copy</span>
-              </>
-            )}
-          </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect(sound);
+          }}
+          className="flex h-10 w-10 items-center justify-center rounded-xl border transition-colors group-hover:border-white/50 group-hover:text-white"
+          style={{ borderColor: BORDER_WARM, backgroundColor: CARD_BG, color: TEXT_DARK }}
+          title="View Code Snippet"
+        >
+          <TbCode className="h-4 w-4" />
+        </button>
 
-          {/* Play Pulse Button */}
-          <button
-            onClick={handleTrigger}
-            className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-sm transition-transform active:scale-90"
-            style={{ backgroundColor: ACCENT_BROWN }}
-          >
-            <TbPlayerPlay className={`h-4 w-4 ${isPlaying ? "animate-spin" : ""}`} />
-          </button>
-        </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onCopy(sound.id, sound.type);
+          }}
+          className="flex h-10 w-10 items-center justify-center rounded-xl border transition-colors group-hover:border-white/50 group-hover:text-white"
+          style={{ borderColor: BORDER_WARM, backgroundColor: CARD_BG, color: isCopied ? ACCENTS[0] : TEXT_DARK }}
+          title="Copy Code"
+        >
+          {isCopied ? <TbCheck className="h-4 w-4" /> : <TbCopy className="h-4 w-4" />}
+        </button>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
 export default function UiSoundsPage() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filterText, setFilterText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [activeDrawerSound, setActiveDrawerSound] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const [playingType, setPlayingType] = useState(null);
+  const [cursorActive, setCursorActive] = useState(false);
 
-  // Audio Engine Parameters
+  // Synthesizer parameters
   const [pitchShift, setPitchShift] = useState(1);
   const [volume, setVolume] = useState(0.2);
 
-  const containerRef = useRef(null);
+  const rootRef = useRef(null);
+  const cursorRef = useRef(null);
+  const cursorX = useRef(null);
+  const cursorY = useRef(null);
+  const orbARef = useRef(null);
+  const orbBRef = useRef(null);
   const canvasVisualizerRef = useRef([]);
-  const categoryPillRefs = useRef([]);
 
-  const categories = useMemo(() => {
-    return ["All", ...Array.from(new Set(INITIAL_SOUNDS.map((item) => item.category)))];
-  }, []);
+  const categoryOptions = useMemo(() => ["All", ...CATEGORY_ORDER], []);
 
   const filteredSounds = useMemo(() => {
     return INITIAL_SOUNDS.filter((item) => {
       const matchesCategory = selectedCategory === "All" || item.category === selectedCategory;
       const matchesSearch =
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.desc.toLowerCase().includes(searchQuery.toLowerCase());
+        item.name.toLowerCase().includes(filterText.toLowerCase()) ||
+        item.desc.toLowerCase().includes(filterText.toLowerCase());
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [selectedCategory, filterText]);
 
-  // Entrance stagger for category pills (same reveal pattern used for the category cards)
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(categoryPillRefs.current.filter(Boolean), {
-        opacity: 0,
-        y: 14,
-        duration: 0.5,
-        stagger: 0.05,
-        ease: "power2.out"
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [categories.length]);
-
-  // Dynamic GSAP Waveform Pulse Animation
+  // Audio trigger + Equalizer animation
   const triggerVisualizerBounce = () => {
     if (!canvasVisualizerRef.current.length) return;
     gsap.to(canvasVisualizerRef.current, {
-      scaleY: () => Math.random() * 3 + 0.4,
+      scaleY: () => Math.random() * 3.2 + 0.4,
       duration: 0.15,
       stagger: { amount: 0.1, from: "center" },
+      yoyo: true,
+      repeat: 1,
+      ease: "power2.out"
+    });
+
+    // Expand background audio glow orb when audio triggers
+    gsap.to(orbARef.current, {
+      scale: 1.35,
+      duration: 0.25,
       yoyo: true,
       repeat: 1,
       ease: "power2.out"
@@ -380,52 +353,144 @@ export default function UiSoundsPage() {
     setTimeout(() => setCopiedId(null), 1800);
   };
 
+  // Drifting ambient warmth orbs animation
+  useLayoutEffect(() => {
+    if (prefersReducedMotion()) return;
+    const ctx = gsap.context(() => {
+      gsap.to(orbARef.current, {
+        x: 50,
+        y: -35,
+        duration: 8,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true
+      });
+      gsap.to(orbBRef.current, {
+        x: -45,
+        y: 45,
+        duration: 10,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true
+      });
+
+      // Row reveal trigger
+      gsap.utils.toArray("[data-row]").forEach((row) => {
+        gsap.fromTo(
+          row,
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: row,
+              start: "top 92%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, [filteredSounds]);
+
+  // Custom magnetic cursor motion
+  useLayoutEffect(() => {
+    if (prefersReducedMotion() || !cursorRef.current) return;
+    cursorX.current = gsap.quickTo(cursorRef.current, "x", { duration: 0.35, ease: "power3" });
+    cursorY.current = gsap.quickTo(cursorRef.current, "y", { duration: 0.35, ease: "power3" });
+
+    const move = (e) => {
+      cursorX.current?.(e.clientX);
+      cursorY.current?.(e.clientY);
+      const hovering = e.target.closest("[data-cursor-hover]");
+      setCursorActive(Boolean(hovering));
+    };
+
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
+  }, []);
+
   return (
-    <div ref={containerRef} className="min-h-screen font-sans antialiased overflow-x-hidden" style={{ backgroundColor: LIGHT_BG, color: TEXT_DARK }}>
+    <div
+      ref={rootRef}
+      className="relative min-h-screen font-sans antialiased overflow-x-hidden"
+      style={{ backgroundColor: LIGHT_BG, color: TEXT_DARK }}
+    >
       <Navbar />
 
-      <main className="mx-auto max-w-7xl px-6 pt-24 sm:pt-32 pb-32 sm:px-12">
+      {/* Drifting Ambient Background Glow Orbs */}
+      <div
+        ref={orbARef}
+        className="pointer-events-none absolute -left-32 -top-32 h-[450px] w-[450px] rounded-full blur-[130px] opacity-25"
+        style={{ backgroundColor: ACCENTS[0] }}
+      />
+      <div
+        ref={orbBRef}
+        className="pointer-events-none absolute -right-32 top-1/3 h-[450px] w-[450px] rounded-full blur-[130px] opacity-20"
+        style={{ backgroundColor: ACCENTS[1] }}
+      />
 
-        {/* HERO AUDIO STAGE & LIVE DOCK */}
-        <div className="relative rounded-3xl border p-8 sm:p-12 shadow-sm overflow-hidden" style={{ backgroundColor: CARD_BG, borderColor: BORDER_WARM }}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+      {/* Floating Dynamic Disc Cursor */}
+      <div
+        ref={cursorRef}
+        aria-hidden="true"
+        className="pointer-events-none fixed left-0 top-0 z-50 hidden -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-[#734A26]/40 transition-[width,height,background-color] duration-200 ease-out [@media(hover:hover)]:flex"
+        style={{
+          width: cursorActive ? 64 : 14,
+          height: cursorActive ? 64 : 14,
+          backgroundColor: cursorActive ? "rgba(115,74,38,0.15)" : "transparent",
+        }}
+      >
+        {cursorActive && (
+          <span className="font-mono text-[9px] uppercase font-bold tracking-widest text-[#734A26]">Play</span>
+        )}
+      </div>
+
+      <main className="relative z-10 mx-auto max-w-7xl px-6 pt-24 sm:pt-32 pb-32 sm:px-12">
+
+        {/* HERO AUDIO STAGE */}
+        <div className="rounded-3xl border p-8 sm:p-12 shadow-sm" style={{ backgroundColor: CARD_BG, borderColor: BORDER_WARM }}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
             <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1 font-mono text-xs font-bold uppercase mb-4" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: ACCENT_BROWN }}>
+              <div className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1 font-mono text-xs font-bold uppercase mb-4" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: ACCENTS[0] }}>
                 <TbWaveSquare className="h-4 w-4 animate-spin" />
-                <span>Web Audio Synthesizer Matrix</span>
+                <span>40 Zero-Latency Audio Synthesizers</span>
               </div>
 
-              <h1 className="font-display text-4xl sm:text-6xl font-black uppercase tracking-tight text-[#1C1611] leading-none">
-                Interactive <span style={{ color: ACCENT_BROWN }}>UI Audio Canvas</span>
+              <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.95]" style={{ color: TEXT_DARK }}>
+                Interactive <br />
+                <span style={{ color: ACCENTS[0] }}>Audio Canvas</span>
               </h1>
 
               <p className="mt-4 text-sm sm:text-base font-medium leading-relaxed max-w-xl" style={{ color: TEXT_MUTED }}>
-                No bulky external audio files. Tap any micro-module below to hear pure, zero-latency browser synthesized sound design.
+                Native browser Web Audio API sounds. Zero external audio downloads. Hover and play editorial sound matrix below.
               </p>
             </div>
 
-            {/* LIVE CANVAS AUDIO DOCK */}
+            {/* SYNTHESIZER OSCILLATOR CONTROLS */}
             <div className="lg:col-span-5 rounded-2xl border p-6" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM }}>
               <div className="flex items-center justify-between border-b pb-4 mb-4" style={{ borderColor: BORDER_WARM }}>
-                <span className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: ACCENT_BROWN }}>
-                  Realtime Oscillator Engine
+                <span className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: ACCENTS[0] }}>
+                  Synthesizer Oscillators
                 </span>
 
-                {/* 12-Bar Interactive Frequency Canvas */}
                 <div className="flex items-center gap-1.5 h-8">
                   {[12, 28, 16, 32, 22, 38, 18, 26, 30, 14, 24, 10].map((h, i) => (
                     <span
                       key={i}
                       ref={(el) => (canvasVisualizerRef.current[i] = el)}
-                      className="w-1.5 rounded-full bg-[#734A26] inline-block origin-bottom"
-                      style={{ height: `${h}px` }}
+                      className="w-1.5 rounded-full inline-block origin-bottom"
+                      style={{ height: `${h}px`, backgroundColor: ACCENTS[0] }}
                     />
                   ))}
                 </div>
               </div>
 
-              {/* Engine Tuning Controls */}
               <div className="space-y-4 font-mono text-xs">
                 <div>
                   <div className="flex justify-between font-bold mb-1">
@@ -445,7 +510,7 @@ export default function UiSoundsPage() {
 
                 <div>
                   <div className="flex justify-between font-bold mb-1">
-                    <span style={{ color: TEXT_MUTED }}>Master Gain</span>
+                    <span style={{ color: TEXT_MUTED }}>Master Volume</span>
                     <span>{Math.round(volume * 200)}%</span>
                   </div>
                   <input
@@ -464,80 +529,110 @@ export default function UiSoundsPage() {
           </div>
         </div>
 
-        {/* SEARCH & FILTER CONTROLS */}
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 no-scrollbar">
-            {categories.map((cat, i) => {
+        {/* CONTROLS BAR: CATEGORY PILLS & SEARCH */}
+        <motion.div
+          variants={headerContainer}
+          initial="hidden"
+          animate="show"
+          className="mt-12 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6 pb-6 border-b"
+          style={{ borderColor: BORDER_WARM }}
+        >
+          <motion.div variants={headerItem} className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+            {categoryOptions.map((cat) => {
               const isActive = selectedCategory === cat;
               return (
-                <CategoryPill
+                <button
                   key={cat}
-                  cat={cat}
-                  isActive={isActive}
                   onClick={() => setSelectedCategory(cat)}
-                  setBtnRef={(el) => (categoryPillRefs.current[i] = el)}
-                />
+                  className="whitespace-nowrap rounded-full px-4 py-2 font-mono text-xs font-bold uppercase border transition-all duration-200"
+                  style={{
+                    backgroundColor: isActive ? ACCENTS[0] : CARD_BG,
+                    color: isActive ? "#FFFDF9" : TEXT_DARK,
+                    borderColor: isActive ? ACCENTS[0] : BORDER_WARM,
+                  }}
+                >
+                  {cat}
+                </button>
               );
             })}
-          </div>
+          </motion.div>
 
-          <div className="relative w-full sm:w-80">
-            <TbSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: TEXT_MUTED }} />
+          <motion.div variants={headerItem} className="relative w-full md:w-80 shrink-0">
+            <TbSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: TEXT_MUTED }} />
             <input
               type="text"
-              placeholder="Search sounds, waveforms..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-2xl border pl-10 pr-4 py-2.5 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-[#734A26]"
+              placeholder="Search sounds or oscillators..."
+              value={filterText}
+              onChange={(e) => setFilterText(e.target.value)}
+              className="w-full rounded-full border py-3 pl-11 pr-4 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-[#734A26]"
               style={{ backgroundColor: CARD_BG, borderColor: BORDER_WARM, color: TEXT_DARK }}
             />
-          </div>
+          </motion.div>
+        </motion.div>
+
+        {/* EDITORIAL ROWS LIST */}
+        <div className="mt-4">
+          {filteredSounds.length > 0 ? (
+            filteredSounds.map((sound, i) => (
+              <div data-row key={sound.id}>
+                <SoundRow
+                  sound={sound}
+                  index={i}
+                  accent={ACCENTS[i % ACCENTS.length]}
+                  accentText={ACCENT_TEXT[i % ACCENT_TEXT.length]}
+                  isPlaying={playingType === sound.type}
+                  isCopied={copiedId === sound.id}
+                  onPlay={handlePlaySound}
+                  onCopy={handleCopyCode}
+                  onSelect={setActiveDrawerSound}
+                />
+              </div>
+            ))
+          ) : (
+            <div className="flex min-h-[260px] flex-col items-center justify-center rounded-3xl border border-dashed p-8 text-center" style={{ borderColor: BORDER_WARM }}>
+              <p className="text-base font-bold uppercase tracking-wide" style={{ color: TEXT_DARK }}>
+                No UI sounds matching &ldquo;{filterText}&rdquo;
+              </p>
+              <button
+                onClick={() => {
+                  setFilterText("");
+                  setSelectedCategory("All");
+                }}
+                className="mt-3 font-mono text-xs font-bold uppercase tracking-wider underline underline-offset-4"
+                style={{ color: ACCENTS[0] }}
+              >
+                Clear search criteria
+              </button>
+            </div>
+          )}
         </div>
 
-        {/* INTERACTIVE VERTICAL SOUND LIST MATRIX */}
-        <div className="mt-8 space-y-3">
-          <AnimatePresence>
-            {filteredSounds.map((item, index) => (
-              <SoundRowModule
-                key={item.id}
-                index={index}
-                item={item}
-                isPlaying={playingType === item.type}
-                isCopied={copiedId === item.id}
-                onPlay={handlePlaySound}
-                onCopy={handleCopyCode}
-                onSelect={setActiveDrawerSound}
-              />
-            ))}
-          </AnimatePresence>
-        </div>
       </main>
 
-      {/* SLIDE-OUT CODE CANVAS DRAWER */}
+      {/* CODE CANVAS DRAWER */}
       <AnimatePresence>
         {activeDrawerSound && (
-          <div className="fixed inset-0 z-50 flex justify-end bg-black/30 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex justify-end bg-black/20 backdrop-blur-sm">
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-xl h-full border-l p-8 shadow-2xl flex flex-col justify-between"
+              className="relative w-full max-w-xl h-full border-l p-8 shadow-2xl flex flex-col justify-between overflow-y-auto"
               style={{ backgroundColor: CARD_BG, borderColor: BORDER_WARM }}
             >
               <div>
-                {/* Header */}
                 <div className="flex items-center justify-between border-b pb-4" style={{ borderColor: BORDER_WARM }}>
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: ACCENT_BROWN }}>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: ACCENTS[0] }}>
                       <TbBrandReact className="h-6 w-6" />
                     </div>
                     <div>
-                      <h2 className="font-display text-xl font-bold uppercase text-[#1C1611]">
+                      <h2 className="font-display text-xl font-bold uppercase" style={{ color: TEXT_DARK }}>
                         {activeDrawerSound.name}
                       </h2>
-                      <span className="font-mono text-xs uppercase font-bold" style={{ color: ACCENT_BROWN }}>
-                        {activeDrawerSound.wave} Synthesis
+                      <span className="font-mono text-xs uppercase font-bold" style={{ color: ACCENTS[0] }}>
+                        {activeDrawerSound.wave} Synthesis &middot; {activeDrawerSound.category}
                       </span>
                     </div>
                   </div>
@@ -551,32 +646,29 @@ export default function UiSoundsPage() {
                   </button>
                 </div>
 
-                {/* Description */}
                 <p className="mt-4 text-xs font-medium leading-relaxed" style={{ color: TEXT_MUTED }}>
                   {activeDrawerSound.desc}
                 </p>
 
-                {/* Live Code Block */}
-                <div className="my-6 rounded-2xl border p-5 bg-[#1C1611] text-[#F9F6F0] font-mono text-xs overflow-x-auto max-h-[50vh] no-scrollbar shadow-inner">
+                <div className="my-6 rounded-2xl border p-5 font-mono text-xs overflow-x-auto max-h-[50vh] no-scrollbar shadow-inner" style={{ backgroundColor: TEXT_DARK, color: LIGHT_BG, borderColor: BORDER_WARM }}>
                   <pre>{getJsCodeSnippet(activeDrawerSound.type)}</pre>
                 </div>
               </div>
 
-              {/* Drawer Action Bar */}
               <div className="flex items-center justify-between gap-3 pt-4 border-t" style={{ borderColor: BORDER_WARM }}>
                 <button
                   onClick={() => handlePlaySound(activeDrawerSound.type)}
                   className="flex items-center gap-2 rounded-xl border px-5 py-3 font-mono text-xs uppercase font-bold transition-all hover:bg-black/5"
                   style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: TEXT_DARK }}
                 >
-                  <TbPlayerPlay className="h-4 w-4" style={{ color: ACCENT_BROWN }} />
+                  <TbPlayerPlay className="h-4 w-4" style={{ color: ACCENTS[0] }} />
                   <span>Test Audio</span>
                 </button>
 
                 <button
                   onClick={() => handleCopyCode(activeDrawerSound.id, activeDrawerSound.type)}
                   className="flex items-center gap-2 rounded-xl px-6 py-3 font-mono text-xs uppercase font-bold text-white shadow-md transition-all active:scale-95"
-                  style={{ backgroundColor: ACCENT_BROWN }}
+                  style={{ backgroundColor: ACCENTS[0] }}
                 >
                   {copiedId === activeDrawerSound.id ? <TbCheck className="h-4 w-4" /> : <TbCopy className="h-4 w-4" />}
                   <span>{copiedId === activeDrawerSound.id ? "Copied Snippet!" : "Copy Code"}</span>
