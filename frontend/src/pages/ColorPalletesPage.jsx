@@ -22,6 +22,7 @@ import { TbSparkles } from "react-icons/tb";
 
 // External Data File
 import { FORMAT_TABS, PALETTES_CATALOG } from "../data/Palettes";
+import { Navbar } from "../localcomponents/Navbar";
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -539,6 +540,7 @@ export default function ColorPalettesPage() {
 
   return (
     <div className="min-h-screen font-sans antialiased pb-32" style={{ backgroundColor: LIGHT_BG, color: TEXT_DARK }}>
+      <Navbar/>
       
       {/* Header */}
       <section className="mx-auto max-w-7xl px-4 sm:px-8 pt-12 sm:pt-20">

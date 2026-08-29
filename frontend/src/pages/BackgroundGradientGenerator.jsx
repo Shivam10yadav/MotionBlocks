@@ -12,6 +12,7 @@ import {
 
 // Imported Preset Data
 import { GRADIENT_PRESETS } from "../data/gradients";
+import { Navbar } from "../localcomponents/Navbar";
 
 // Light Design System Tokens
 const CANVAS_BG = "#FAF8F5";
@@ -43,7 +44,7 @@ async function executeCopy(text) {
   }
 }
 
-export default function BackgroundGraidentGenerator() {
+export default function BackgroundGradientGenerator() {
   // Generator State
   const [bgType, setBgType] = useState("linear"); // "linear" | "radial" | "solid"
   const [colors, setColors] = useState(GRADIENT_PRESETS[0].colors);
@@ -110,15 +111,14 @@ export default function BackgroundGraidentGenerator() {
 
   return (
     <div className="min-h-screen font-sans antialiased pb-32" style={{ backgroundColor: CANVAS_BG, color: TEXT_DARK }}>
+
+      <Navbar/>
       
       {/* Header */}
       <section className="mx-auto max-w-7xl px-4 sm:px-8 pt-12 sm:pt-20">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-8 border-b" style={{ borderColor: BORDER_WARM }}>
           <div>
-            <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest font-extrabold text-[#8C522B]">
-              <RiPaletteLine className="h-4 w-4" />
-              <span>Background Studio</span>
-            </div>
+         
             <h1 className="mt-3 font-display text-5xl sm:text-7xl font-black uppercase tracking-tight text-[#191715]">
               Gradient <span className="text-[#8C522B]">Lab</span>
             </h1>
