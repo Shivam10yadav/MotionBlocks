@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useLayoutEffect, useEffect } from "react";
+import React, { useState, useMemo, useRef, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -51,8 +51,7 @@ import {
   TbPlugConnected,
   TbPlugConnectedX,
   TbRotate,
-  TbAlertOctagon,
-  TbArrowUpRight
+  TbAlertOctagon
 } from "react-icons/tb";
 
 import { Navbar } from "../localcomponents/Navbar";
@@ -124,11 +123,86 @@ const headerItem = {
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
 };
 
+// Helper: Convert AudioBuffer to 16-bit PCM WAV Blob
+const bufferToWav = (buffer) => {
+  const numChannels = buffer.numberOfChannels;
+  const sampleRate = buffer.sampleRate;
+  const format = 1; // PCM
+  const bitDepth = 16;
+  const bytesPerSample = bitDepth / 8;
+  const blockAlign = numChannels * bytesPerSample;
+  const dataSize = buffer.length * blockAlign;
+  const headerSize = 44;
+  const arrayBuffer = new ArrayBuffer(headerSize + dataSize);
+  const view = new DataView(arrayBuffer);
+
+  const writeString = (offset, string) => {
+    for (let i = 0; i < string.length; i++) {
+      view.setUint8(offset + i, string.charCodeAt(i));
+    }
+  };
+
+  writeString(0, 'RIFF');
+  view.setUint32(4, 36 + dataSize, true);
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, format, true);
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * blockAlign, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bitDepth, true);
+  writeString(36, 'data');
+  view.setUint32(40, dataSize, true);
+
+  let offset = 44;
+  for (let i = 0; i < buffer.length; i++) {
+    for (let channel = 0; channel < numChannels; channel++) {
+      let sample = buffer.getChannelData(channel)[i];
+      sample = Math.max(-1, Math.min(1, sample));
+      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+      offset += 2;
+    }
+  }
+
+  return new Blob([arrayBuffer], { type: 'audio/wav' });
+};
+
+// Render audio offline and download as WAV
+const exportSoundAsWav = async (soundType) => {
+  try {
+    const sound = INITIAL_SOUNDS.find((s) => s.type === soundType);
+    if (!sound) return;
+
+    const sampleRate = 44100;
+    const duration = 0.5; // Audio buffer length padding
+    const offlineCtx = new OfflineAudioContext(1, Math.ceil(sampleRate * duration), sampleRate);
+
+    // Play synthesized sound into offline context
+    playSoundEffect(soundType, 1, 0.2, offlineCtx);
+
+    const renderedBuffer = await offlineCtx.startRendering();
+    const wavBlob = bufferToWav(renderedBuffer);
+
+    const url = URL.createObjectURL(wavBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${sound.type || sound.id}.wav`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error("Failed to render WAV audio:", err);
+  }
+};
+
 /**
  * Editorial Sound Row Component featuring magnetic mouse skewing, 
  * index scaling & liquid-wipe dual text clipping.
  */
-const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPlay, onCopy, onSelect }) => {
+const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPlay, onCopy, onSelect, onDownload }) => {
   const rowRef = useRef(null);
   const bgRef = useRef(null);
   const overlayRef = useRef(null);
@@ -141,13 +215,11 @@ const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPla
   const IconComponent = ICON_MAP[sound.iconKey] || TbWaveSquare;
 
   useLayoutEffect(() => {
-    // Magnetic Row Tracking GSAP quickTo setup
     if (rowRef.current && !prefersReducedMotion()) {
       quickX.current = gsap.quickTo(rowRef.current, "x", { duration: 0.4, ease: "power3.out" });
       quickY.current = gsap.quickTo(rowRef.current, "y", { duration: 0.4, ease: "power3.out" });
     }
 
-    // Color Wipe Timeline
     tlRef.current = gsap
       .timeline({ paused: true })
       .to(bgRef.current, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 0)
@@ -193,7 +265,7 @@ const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPla
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       data-cursor-hover
-      className="group relative flex items-center justify-between gap-4 overflow-hidden border-b py-5 sm:py-7 lg:py-8 cursor-pointer select-none transition-colors"
+      className="group relative flex flex-wrap sm:flex-nowrap items-center justify-between gap-3 sm:gap-4 overflow-hidden border-b py-4 sm:py-6 lg:py-8 cursor-pointer select-none transition-colors"
       style={{ borderColor: BORDER_WARM }}
     >
       {/* Background sweep wipe */}
@@ -204,7 +276,7 @@ const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPla
       />
 
       {/* Left Details: Index Number, Icon & Clipped Typography */}
-      <div className="relative z-10 flex items-center gap-4 sm:gap-8 flex-1 min-w-0">
+      <div className="relative z-10 flex items-center gap-3 sm:gap-6 flex-1 min-w-0">
         <span
           ref={indexRef}
           className="shrink-0 font-mono text-xs font-bold transition-colors duration-300"
@@ -214,23 +286,23 @@ const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPla
         </span>
 
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 group-hover:bg-[#FFFDF9] group-hover:text-[#734A26]"
+          className="flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl border transition-all duration-300 group-hover:bg-[#FFFDF9] group-hover:text-[#734A26]"
           style={{ borderColor: BORDER_WARM, backgroundColor: LIGHT_BG, color: ACCENTS[0] }}
         >
-          <IconComponent className="h-5 w-5" />
+          <IconComponent className="h-4 w-4 sm:h-5 sm:w-5" />
         </div>
 
         {/* Title layer with twin clipped reveal layer */}
         <div className="relative flex-1 leading-none truncate">
           <span
-            className="block font-display font-black uppercase tracking-tight text-[6vw] sm:text-[4.2vw] lg:text-[2.6vw] truncate"
+            className="block font-display font-black uppercase tracking-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl truncate"
             style={{ color: TEXT_DARK }}
           >
             {sound.name}
           </span>
           <span
             ref={overlayRef}
-            className="pointer-events-none absolute inset-0 block font-display font-black uppercase tracking-tight text-[6vw] sm:text-[4.2vw] lg:text-[2.6vw] truncate"
+            className="pointer-events-none absolute inset-0 block font-display font-black uppercase tracking-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl truncate"
             style={{ color: accentText, clipPath: "inset(0 100% 0 0)" }}
           >
             {sound.name}
@@ -239,9 +311,9 @@ const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPla
       </div>
 
       {/* Right Details: Metadata Tags & Interactive Action Buttons */}
-      <div className="relative z-10 flex items-center gap-2 sm:gap-4 shrink-0">
+      <div className="relative z-10 flex items-center gap-1.5 sm:gap-3 shrink-0 ml-auto">
         <span
-          className="hidden md:inline-block font-mono text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-md border transition-colors group-hover:text-white group-hover:border-white/40"
+          className="hidden lg:inline-block font-mono text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-md border transition-colors group-hover:text-white group-hover:border-white/40"
           style={{ borderColor: BORDER_WARM, color: TEXT_MUTED }}
         >
           {sound.wave} &middot; {sound.duration}
@@ -250,7 +322,7 @@ const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPla
         <button
           ref={playBtnRef}
           onClick={handleRowClick}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border transition-all group-hover:border-white group-hover:bg-white group-hover:text-[#734A26]"
+          className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border transition-all group-hover:border-white group-hover:bg-white group-hover:text-[#734A26]"
           style={{ borderColor: BORDER_WARM, backgroundColor: CARD_BG, color: TEXT_DARK }}
           title="Play Sound"
         >
@@ -260,9 +332,21 @@ const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPla
         <button
           onClick={(e) => {
             e.stopPropagation();
+            onDownload(sound.type);
+          }}
+          className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border transition-colors group-hover:border-white/50 group-hover:text-white"
+          style={{ borderColor: BORDER_WARM, backgroundColor: CARD_BG, color: TEXT_DARK }}
+          title="Download WAV Sound"
+        >
+          <TbDownload className="h-4 w-4" />
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
             onSelect(sound);
           }}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border transition-colors group-hover:border-white/50 group-hover:text-white"
+          className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border transition-colors group-hover:border-white/50 group-hover:text-white"
           style={{ borderColor: BORDER_WARM, backgroundColor: CARD_BG, color: TEXT_DARK }}
           title="View Code Snippet"
         >
@@ -274,7 +358,7 @@ const SoundRow = ({ sound, index, accent, accentText, isPlaying, isCopied, onPla
             e.stopPropagation();
             onCopy(sound.id, sound.type);
           }}
-          className="flex h-10 w-10 items-center justify-center rounded-xl border transition-colors group-hover:border-white/50 group-hover:text-white"
+          className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border transition-colors group-hover:border-white/50 group-hover:text-white"
           style={{ borderColor: BORDER_WARM, backgroundColor: CARD_BG, color: isCopied ? ACCENTS[0] : TEXT_DARK }}
           title="Copy Code"
         >
@@ -317,7 +401,6 @@ export default function UiSoundsPage() {
     });
   }, [selectedCategory, filterText]);
 
-  // Audio trigger + Equalizer animation
   const triggerVisualizerBounce = () => {
     if (!canvasVisualizerRef.current.length) return;
     gsap.to(canvasVisualizerRef.current, {
@@ -329,7 +412,6 @@ export default function UiSoundsPage() {
       ease: "power2.out"
     });
 
-    // Expand background audio glow orb when audio triggers
     gsap.to(orbARef.current, {
       scale: 1.35,
       duration: 0.25,
@@ -353,7 +435,10 @@ export default function UiSoundsPage() {
     setTimeout(() => setCopiedId(null), 1800);
   };
 
-  // Drifting ambient warmth orbs animation
+  const handleDownloadWav = (soundType) => {
+    exportSoundAsWav(soundType);
+  };
+
   useLayoutEffect(() => {
     if (prefersReducedMotion()) return;
     const ctx = gsap.context(() => {
@@ -374,7 +459,6 @@ export default function UiSoundsPage() {
         yoyo: true
       });
 
-      // Row reveal trigger
       gsap.utils.toArray("[data-row]").forEach((row) => {
         gsap.fromTo(
           row,
@@ -397,7 +481,6 @@ export default function UiSoundsPage() {
     return () => ctx.revert();
   }, [filteredSounds]);
 
-  // Custom magnetic cursor motion
   useLayoutEffect(() => {
     if (prefersReducedMotion() || !cursorRef.current) return;
     cursorX.current = gsap.quickTo(cursorRef.current, "x", { duration: 0.35, ease: "power3" });
@@ -425,16 +508,16 @@ export default function UiSoundsPage() {
       {/* Drifting Ambient Background Glow Orbs */}
       <div
         ref={orbARef}
-        className="pointer-events-none absolute -left-32 -top-32 h-[450px] w-[450px] rounded-full blur-[130px] opacity-25"
+        className="pointer-events-none absolute -left-32 -top-32 h-[350px] w-[350px] sm:h-[450px] sm:w-[450px] rounded-full blur-[130px] opacity-25"
         style={{ backgroundColor: ACCENTS[0] }}
       />
       <div
         ref={orbBRef}
-        className="pointer-events-none absolute -right-32 top-1/3 h-[450px] w-[450px] rounded-full blur-[130px] opacity-20"
+        className="pointer-events-none absolute -right-32 top-1/3 h-[350px] w-[350px] sm:h-[450px] sm:w-[450px] rounded-full blur-[130px] opacity-20"
         style={{ backgroundColor: ACCENTS[1] }}
       />
 
-      {/* Floating Dynamic Disc Cursor */}
+      {/* Floating Dynamic Cursor */}
       <div
         ref={cursorRef}
         aria-hidden="true"
@@ -450,31 +533,31 @@ export default function UiSoundsPage() {
         )}
       </div>
 
-      <main className="relative z-10 mx-auto max-w-7xl px-6 pt-24 sm:pt-32 pb-32 sm:px-12">
+      <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-8 lg:px-12 pt-20 sm:pt-28 pb-24">
 
         {/* HERO AUDIO STAGE */}
-        <div className="rounded-3xl border p-8 sm:p-12 shadow-sm" style={{ backgroundColor: CARD_BG, borderColor: BORDER_WARM }}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="rounded-3xl border p-6 sm:p-10 lg:p-12 shadow-sm" style={{ backgroundColor: CARD_BG, borderColor: BORDER_WARM }}>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
 
             <div className="lg:col-span-7">
-              <div className="inline-flex items-center gap-2 rounded-full border px-3.5 py-1 font-mono text-xs font-bold uppercase mb-4" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: ACCENTS[0] }}>
+              <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[11px] sm:text-xs font-bold uppercase mb-4" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: ACCENTS[0] }}>
                 <TbWaveSquare className="h-4 w-4 animate-spin" />
-                <span>40 Zero-Latency Audio Synthesizers</span>
+                <span>Zero-Latency Audio Synthesizers</span>
               </div>
 
-              <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-black uppercase tracking-tight leading-[0.95]" style={{ color: TEXT_DARK }}>
+              <h1 className="font-display text-3xl sm:text-5xl lg:text-7xl font-black uppercase tracking-tight leading-[0.98]" style={{ color: TEXT_DARK }}>
                 Interactive <br />
                 <span style={{ color: ACCENTS[0] }}>Audio Canvas</span>
               </h1>
 
-              <p className="mt-4 text-sm sm:text-base font-medium leading-relaxed max-w-xl" style={{ color: TEXT_MUTED }}>
-                Native browser Web Audio API sounds. Zero external audio downloads. Hover and play editorial sound matrix below.
+              <p className="mt-3 sm:mt-4 text-xs sm:text-base font-medium leading-relaxed max-w-xl" style={{ color: TEXT_MUTED }}>
+                Native Web Audio FX parameters. Play sounds live, inspect synthesized code snippets, or download direct `.wav` files.
               </p>
             </div>
 
             {/* SYNTHESIZER OSCILLATOR CONTROLS */}
-            <div className="lg:col-span-5 rounded-2xl border p-6" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM }}>
-              <div className="flex items-center justify-between border-b pb-4 mb-4" style={{ borderColor: BORDER_WARM }}>
+            <div className="lg:col-span-5 rounded-2xl border p-5 sm:p-6" style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM }}>
+              <div className="flex items-center justify-between border-b pb-3 mb-4" style={{ borderColor: BORDER_WARM }}>
                 <span className="font-mono text-xs font-bold uppercase tracking-wider" style={{ color: ACCENTS[0] }}>
                   Synthesizer Oscillators
                 </span>
@@ -534,17 +617,17 @@ export default function UiSoundsPage() {
           variants={headerContainer}
           initial="hidden"
           animate="show"
-          className="mt-12 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6 pb-6 border-b"
+          className="mt-8 sm:mt-12 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 sm:gap-6 pb-6 border-b"
           style={{ borderColor: BORDER_WARM }}
         >
-          <motion.div variants={headerItem} className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 no-scrollbar">
+          <motion.div variants={headerItem} className="flex items-center gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-none">
             {categoryOptions.map((cat) => {
               const isActive = selectedCategory === cat;
               return (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  className="whitespace-nowrap rounded-full px-4 py-2 font-mono text-xs font-bold uppercase border transition-all duration-200"
+                  className="whitespace-nowrap rounded-full px-3.5 py-1.5 sm:px-4 sm:py-2 font-mono text-xs font-bold uppercase border transition-all duration-200"
                   style={{
                     backgroundColor: isActive ? ACCENTS[0] : CARD_BG,
                     color: isActive ? "#FFFDF9" : TEXT_DARK,
@@ -564,14 +647,14 @@ export default function UiSoundsPage() {
               placeholder="Search sounds or oscillators..."
               value={filterText}
               onChange={(e) => setFilterText(e.target.value)}
-              className="w-full rounded-full border py-3 pl-11 pr-4 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-[#734A26]"
+              className="w-full rounded-full border py-2.5 sm:py-3 pl-11 pr-4 font-mono text-xs focus:outline-none focus:ring-2 focus:ring-[#734A26]"
               style={{ backgroundColor: CARD_BG, borderColor: BORDER_WARM, color: TEXT_DARK }}
             />
           </motion.div>
         </motion.div>
 
         {/* EDITORIAL ROWS LIST */}
-        <div className="mt-4">
+        <div className="mt-2 sm:mt-4">
           {filteredSounds.length > 0 ? (
             filteredSounds.map((sound, i) => (
               <div data-row key={sound.id}>
@@ -585,12 +668,13 @@ export default function UiSoundsPage() {
                   onPlay={handlePlaySound}
                   onCopy={handleCopyCode}
                   onSelect={setActiveDrawerSound}
+                  onDownload={handleDownloadWav}
                 />
               </div>
             ))
           ) : (
-            <div className="flex min-h-[260px] flex-col items-center justify-center rounded-3xl border border-dashed p-8 text-center" style={{ borderColor: BORDER_WARM }}>
-              <p className="text-base font-bold uppercase tracking-wide" style={{ color: TEXT_DARK }}>
+            <div className="flex min-h-[220px] flex-col items-center justify-center rounded-3xl border border-dashed p-8 text-center" style={{ borderColor: BORDER_WARM }}>
+              <p className="text-sm sm:text-base font-bold uppercase tracking-wide" style={{ color: TEXT_DARK }}>
                 No UI sounds matching &ldquo;{filterText}&rdquo;
               </p>
               <button
@@ -612,13 +696,13 @@ export default function UiSoundsPage() {
       {/* CODE CANVAS DRAWER */}
       <AnimatePresence>
         {activeDrawerSound && (
-          <div className="fixed inset-0 z-50 flex justify-end bg-black/20 backdrop-blur-sm">
+          <div className="fixed inset-0 z-50 flex justify-end bg-black/30 backdrop-blur-sm">
             <motion.div
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-xl h-full border-l p-8 shadow-2xl flex flex-col justify-between overflow-y-auto"
+              className="relative w-full max-w-xl h-full border-l p-6 sm:p-8 shadow-2xl flex flex-col justify-between overflow-y-auto"
               style={{ backgroundColor: CARD_BG, borderColor: BORDER_WARM }}
             >
               <div>
@@ -628,7 +712,7 @@ export default function UiSoundsPage() {
                       <TbBrandReact className="h-6 w-6" />
                     </div>
                     <div>
-                      <h2 className="font-display text-xl font-bold uppercase" style={{ color: TEXT_DARK }}>
+                      <h2 className="font-display text-lg sm:text-xl font-bold uppercase" style={{ color: TEXT_DARK }}>
                         {activeDrawerSound.name}
                       </h2>
                       <span className="font-mono text-xs uppercase font-bold" style={{ color: ACCENTS[0] }}>
@@ -646,32 +730,43 @@ export default function UiSoundsPage() {
                   </button>
                 </div>
 
-                <p className="mt-4 text-xs font-medium leading-relaxed" style={{ color: TEXT_MUTED }}>
+                <p className="mt-4 text-xs sm:text-sm font-medium leading-relaxed" style={{ color: TEXT_MUTED }}>
                   {activeDrawerSound.desc}
                 </p>
 
-                <div className="my-6 rounded-2xl border p-5 font-mono text-xs overflow-x-auto max-h-[50vh] no-scrollbar shadow-inner" style={{ backgroundColor: TEXT_DARK, color: LIGHT_BG, borderColor: BORDER_WARM }}>
+                <div className="my-6 rounded-2xl border p-4 sm:p-5 font-mono text-xs overflow-x-auto max-h-[45vh] scrollbar-none shadow-inner" style={{ backgroundColor: TEXT_DARK, color: LIGHT_BG, borderColor: BORDER_WARM }}>
                   <pre>{getJsCodeSnippet(activeDrawerSound.type)}</pre>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-3 pt-4 border-t" style={{ borderColor: BORDER_WARM }}>
-                <button
-                  onClick={() => handlePlaySound(activeDrawerSound.type)}
-                  className="flex items-center gap-2 rounded-xl border px-5 py-3 font-mono text-xs uppercase font-bold transition-all hover:bg-black/5"
-                  style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: TEXT_DARK }}
-                >
-                  <TbPlayerPlay className="h-4 w-4" style={{ color: ACCENTS[0] }} />
-                  <span>Test Audio</span>
-                </button>
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-4 border-t" style={{ borderColor: BORDER_WARM }}>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handlePlaySound(activeDrawerSound.type)}
+                    className="flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 font-mono text-xs uppercase font-bold transition-all hover:bg-black/5"
+                    style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: TEXT_DARK }}
+                  >
+                    <TbPlayerPlay className="h-4 w-4" style={{ color: ACCENTS[0] }} />
+                    <span>Play</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleDownloadWav(activeDrawerSound.type)}
+                    className="flex items-center gap-1.5 rounded-xl border px-3.5 py-2.5 font-mono text-xs uppercase font-bold transition-all hover:bg-black/5"
+                    style={{ backgroundColor: LIGHT_BG, borderColor: BORDER_WARM, color: TEXT_DARK }}
+                  >
+                    <TbDownload className="h-4 w-4" style={{ color: ACCENTS[0] }} />
+                    <span>.WAV</span>
+                  </button>
+                </div>
 
                 <button
                   onClick={() => handleCopyCode(activeDrawerSound.id, activeDrawerSound.type)}
-                  className="flex items-center gap-2 rounded-xl px-6 py-3 font-mono text-xs uppercase font-bold text-white shadow-md transition-all active:scale-95"
+                  className="flex items-center gap-2 rounded-xl px-5 py-2.5 font-mono text-xs uppercase font-bold text-white shadow-md transition-all active:scale-95"
                   style={{ backgroundColor: ACCENTS[0] }}
                 >
                   {copiedId === activeDrawerSound.id ? <TbCheck className="h-4 w-4" /> : <TbCopy className="h-4 w-4" />}
-                  <span>{copiedId === activeDrawerSound.id ? "Copied Snippet!" : "Copy Code"}</span>
+                  <span>{copiedId === activeDrawerSound.id ? "Copied!" : "Copy Code"}</span>
                 </button>
               </div>
             </motion.div>
