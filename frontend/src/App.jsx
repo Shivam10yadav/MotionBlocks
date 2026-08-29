@@ -19,6 +19,7 @@ import PageTransition from "./localcomponents/PageTransition";
 import FontsPage from "./pages/FontsPage";
 import ColorPalettesPage from "./pages/ColorPalletesPage";
 import BackgroundGraidentGenerator from "./pages/BackgroundGradientGenerator";
+import UISoundsPage from "./pages/UiSoundsPage";
 
 function AppContent() {
   const navigate = useNavigate();
@@ -133,6 +134,13 @@ function AppContent() {
                 <Route
           path="/fonts"
           element={<FontsPage />}
+
+          
+        />
+
+                 <Route
+          path="/sounds"
+          element={<UISoundsPage />}
 
           
         />
