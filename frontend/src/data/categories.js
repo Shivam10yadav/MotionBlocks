@@ -9,6 +9,8 @@ export const categories = [
   { id: "ecommerce", name: "Ecommerce" },
   { id: "calendar", name: "Calendar-Section" },
   { id: "docks", name: "Docks" },
+    { id: "about", name: "About Section" },
+
   { id: "grids", name: "Grids Section" },
   { id: "transitions", name: "Transitions" },
   { id: "stats", name: "Stats Sections" },

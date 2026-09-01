@@ -102,6 +102,15 @@ import AnimatedCta from "../ui/cta/AnimatedCta";
 import AnimatedCtaCode from "../ui/cta/AnimatedCta.jsx?raw";
 import ClaymorphismCta from "../ui/cta/ClayMorphismCta";
 import ClaymorphismCtaCode from "../ui/cta/ClayMorphismCta.jsx?raw";
+import AboutSection from "../ui/about/AboutSection";
+import AboutSectionCode from "../ui/about/AboutSection.jsx?raw";
+import TimelineAboutSection from "../ui/about/TimelineAboutSection";
+import TimelineAboutSectionCode from "../ui/about/TimelineAboutSection.jsx?raw";
+
+
+
+
+
 
 
 
@@ -726,7 +735,33 @@ id: 44,
   install: "npm install framer-motion gsap lucide-react",
   usage: `<ClaymorphismCta />`,
   code: ClaymorphismCtaCode
+},
+
+{
+  id: 56,
+  slug: "minimalist-editorial-about-section",
+  name: "Minimalist Editorial About Section",
+  category: "about",
+  description: "An elegant, light-themed About section with asymmetric editorial typography, GSAP cursor spotlight tracking, dynamic tabbed pillar navigation, and Framer Motion layout transitions.",
+  preview: AboutSection,
+  install: "npm install framer-motion gsap react-icons",
+  usage: `<AboutSection />`,
+  code: AboutSectionCode
+},
+
+{
+  id: 57,
+  slug: "interactive-timeline-about-section",
+  name: "Interactive Timeline About Section",
+  category: "about",
+  description: "A clean, light-mode About section featuring a scroll-triggered vertical timeline powered by GSAP ScrollTrigger, stateful milestone nodes, and Framer Motion reveal animations.",
+  preview: TimelineAboutSection,
+  install: "npm install framer-motion gsap react-icons",
+  usage: `<TimelineAboutSection />`,
+  code: TimelineAboutSectionCode
 }
+
+
 
 
 
