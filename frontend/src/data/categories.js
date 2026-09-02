@@ -5,11 +5,13 @@ export const categories = [
   { id: "auth", name: "Login & Auth" },
   { id: "navbars", name: "Navbars" },
   { id: "progress-bars", name: "Progress Bars" },
-    { id: "team", name: "Teams Sections" },
+  { id: "team", name: "Teams Sections" },
   { id: "ecommerce", name: "Ecommerce" },
   { id: "calendar", name: "Calendar-Section" },
   { id: "docks", name: "Docks" },
-    { id: "about", name: "About Section" },
+  { id: "about", name: "About Section" },
+  { id: "pricing", name: "Pricing Section" },
+
 
   { id: "grids", name: "Grids Section" },
   { id: "transitions", name: "Transitions" },
@@ -18,6 +20,8 @@ export const categories = [
   { id: "navigation", name: "Navigation" },
   { id: "marquees", name: "Marquee" },
   { id: "cta-sections", name: "CTA Sections" },
+  { id: "payments", name: "Payments Sections" },
+
   { id: "testimonials", name: "Testimonials" },
   { id: "faq", name: "FAQ Sections" },
   { id: "footers", name: "Footer Sections" },

@@ -106,6 +106,12 @@ import AboutSection from "../ui/about/AboutSection";
 import AboutSectionCode from "../ui/about/AboutSection.jsx?raw";
 import TimelineAboutSection from "../ui/about/TimelineAboutSection";
 import TimelineAboutSectionCode from "../ui/about/TimelineAboutSection.jsx?raw";
+import TransactionCard from "../ui/payment/TransactionCard";
+import TransactionCardCode from "../ui/payment/TransactionCard.jsx?raw";
+import CompactPricing from "../ui/pricing/CompactPricing";
+import CompactPricingCode from "../ui/pricing/CompactPricing.jsx?raw";
+
+
 
 
 
@@ -759,6 +765,30 @@ id: 44,
   install: "npm install framer-motion gsap react-icons",
   usage: `<TimelineAboutSection />`,
   code: TimelineAboutSectionCode
+},
+
+{
+  id: 59,
+  slug: "premium-payment-gateway",
+  name: "Premium Payment Gateway",
+  category: "payments",
+  description: "A slick, light-themed payment gateway card with interactive credit card live previewing, tabbed checkout methods (Card, Apple Pay, Google Pay), micro-focused field animations, auto-formatting card/expiry inputs, and animated success state transition.",
+  preview: TransactionCard,
+  install: "npm install framer-motion react-icons",
+  usage: `<PremiumPaymentGateway />`,
+  code: TransactionCardCode
+},
+
+{
+  id: 60,
+  slug: "compact-pricing-section",
+  name: "Compact Pricing Section",
+  category: "pricing",
+  description: "A modern, light-themed 3-tier pricing section featuring compact card layouts, smooth monthly/annual billing toggle animations via Framer Motion, popular plan highlights, and micro-interactions.",
+  preview: CompactPricing,
+  install: "npm install framer-motion react-icons",
+  usage: `<CompactPricingSection />`,
+  code: CompactPricingCode
 }
 
 
