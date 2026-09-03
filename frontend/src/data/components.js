@@ -51,8 +51,7 @@ import LightDock from "../ui/dock/LightDock";
 import LightDockCode from "../ui/dock/LightDock.jsx?raw";
 import DarkDockCode from "../ui/dock/DarkDock.jsx?raw";
 import DarkDock from "../ui/dock/DarkDock";
-import WarHero from "../ui/hero/WarHero";
-import WarHeroCode from "../ui/hero/WarHero.jsx?raw";
+
 import HorizontalScrollText from "../ui/text-effect/HorizontalScrollText";
 import LightFooter from "../ui/footer/LightFooter";
 import LightFooterCode from "../ui/footer/LightFooter.jsx?raw";
@@ -114,6 +113,11 @@ import LightContact from "../ui/contact/LightContact";
 import LightContactCode from "../ui/contact/LightContact.jsx?raw";
 import DarkContact from "../ui/contact/DarkContact";
 import DarkContactCode from "../ui/contact/DarkContact.jsx?raw";
+import BrutalistHero from "../ui/hero/BrutalistHero";
+import BrutalistHeroCode from "../ui/hero/BrutalistHero.jsx?raw";
+import HeroSection from "../ui/hero/HeroSection";
+import HeroSectionCode from "../ui/hero/HeroSection.jsx?raw";
+
 
 
 
@@ -434,17 +438,7 @@ export const components = [
     code: DarkDockCode
   },
 
-  {
-  id: 32,
-  slug: "war-hero-section",
-  name: "War Tactical Hero Section",
-  category: "hero",
-  description: "Aggressive war-themed hero section featuring ember gradients, tactical grid layout, entry stagger animations, and GSAP ScrollTrigger parallax depth.",
-  preview: WarHero,
-  install: "npm install gsap @gsap/react lucide-react",
-  usage: `<WarHeroSection />`,
-  code: WarHeroCode
-},
+  
 
 
 
@@ -818,8 +812,31 @@ id: 44,
   install: "npm install framer-motion react-icons gsap",
   usage: `<DarkContactForm />`,
   code: DarkContactCode
-}
+},
 
+{
+  id: 63,
+  slug: "brutalist-hero-simple",
+  name: "Brutalist Hero Simple",
+  category: "hero",
+  description: "A high-impact brutalist hero section featuring high-contrast layout grids, plain-language messaging, GSAP infinite ticker bar, and Framer Motion micro-interactions.",
+  preview: BrutalistHero,
+  install: "npm install framer-motion react-icons gsap",
+  usage: `<BrutalistHero />`,
+  code: BrutalistHeroCode
+},
+
+{
+  id: 64,
+  slug: "awwwards-editorial-light-hero",
+  name: "Awwwards Editorial Light Hero",
+  category: "hero",
+  description: "A light, awards-style editorial product hero section featuring clip-path image reveals, GSAP ScrollTrigger parallax effects, fine typography, and high-contrast whitespace.",
+  preview: HeroSection,
+  install: "npm install framer-motion react-icons gsap",
+  usage: "<HeroSection />",
+  code: HeroSectionCode
+}
 
 
 

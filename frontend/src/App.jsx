@@ -20,6 +20,7 @@ import FontsPage from "./pages/FontsPage";
 import ColorPalettesPage from "./pages/ColorPalletesPage";
 import BackgroundGraidentGenerator from "./pages/BackgroundGradientGenerator";
 import UISoundsPage from "./pages/UiSoundsPage";
+import ComponentPreviewPage from "./pages/ComponentPreviewPage";
 
 function AppContent() {
   const navigate = useNavigate();
@@ -159,6 +160,10 @@ function AppContent() {
 
           
         />
+
+        <Route path="/preview/:category/:slug" element={<ComponentPreviewPage />} />
+
+W
 
         <Route
           path="*"

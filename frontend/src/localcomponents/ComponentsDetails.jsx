@@ -13,6 +13,7 @@ import {
   Tablet,
   Monitor,
   RotateCw,
+  ExternalLink,
 } from "lucide-react";
 import { components } from "../data/components";
 import { getHighlighter } from "../lib/Highlighter";
@@ -64,6 +65,10 @@ const ComponentDetails = () => {
 
   const handleRefreshPreview = () => {
     setPreviewKey((prev) => prev + 1);
+  };
+
+  const handleOpenInBrowser = () => {
+    window.open(`/preview/${category}/${slug}`, "_blank", "noopener,noreferrer");
   };
 
   // Lock body scroll when in fullscreen mode
@@ -332,6 +337,16 @@ const ComponentDetails = () => {
                   >
                     <Maximize2 size={14} />
                     Fullscreen
+                  </button>
+
+                  <button
+                    onClick={handleOpenInBrowser}
+                    aria-label="Open in full browser"
+                    title="Open in a new browser tab"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 normal-case tracking-normal text-[#08090D] shadow-[0_0_0_1px_rgba(255,255,255,0.15)] transition hover:bg-white/90 cursor-pointer"
+                  >
+                    <ExternalLink size={14} />
+                    Open in browser
                   </button>
                 </div>
               </div>
