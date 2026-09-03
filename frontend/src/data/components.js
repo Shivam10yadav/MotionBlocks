@@ -117,6 +117,8 @@ import BrutalistHero from "../ui/hero/BrutalistHero";
 import BrutalistHeroCode from "../ui/hero/BrutalistHero.jsx?raw";
 import HeroSection from "../ui/hero/HeroSection";
 import HeroSectionCode from "../ui/hero/HeroSection.jsx?raw";
+import LightHero from "../ui/hero/LightHero";
+import LightHeroCode from "../ui/hero/LightHero.jsx?raw";
 
 
 
@@ -828,14 +830,26 @@ id: 44,
 
 {
   id: 64,
-  slug: "awwwards-editorial-light-hero",
-  name: "Awwwards Editorial Light Hero",
+  slug: "awwwards-editorial-dark-hero",
+  name: "Awwwards Editorial dark Hero",
   category: "hero",
-  description: "A light, awards-style editorial product hero section featuring clip-path image reveals, GSAP ScrollTrigger parallax effects, fine typography, and high-contrast whitespace.",
+  description: "A dark, awards-style editorial product hero section featuring clip-path image reveals, GSAP ScrollTrigger parallax effects, fine typography, and high-contrast whitespace.",
   preview: HeroSection,
   install: "npm install framer-motion react-icons gsap",
   usage: "<HeroSection />",
   code: HeroSectionCode
+},
+
+{
+  id: 54,
+  slug: "awwwards-editorial-light-hero",
+  name: "Awwwards Editorial Light Hero",
+  category: "hero",
+  description: "A light, awards-style editorial product hero section featuring clip-path image reveals, GSAP ScrollTrigger parallax effects, fine typography, and high-contrast whitespace.",
+  preview: LightHero,
+  install: "npm install framer-motion react-icons gsap",
+  usage: "<LightHero />",
+  code: LightHeroCode
 }
 
 
