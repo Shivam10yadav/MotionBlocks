@@ -110,6 +110,11 @@ import TransactionCard from "../ui/payment/TransactionCard";
 import TransactionCardCode from "../ui/payment/TransactionCard.jsx?raw";
 import CompactPricing from "../ui/pricing/CompactPricing";
 import CompactPricingCode from "../ui/pricing/CompactPricing.jsx?raw";
+import LightContact from "../ui/contact/LightContact";
+import LightContactCode from "../ui/contact/LightContact.jsx?raw";
+import DarkContact from "../ui/contact/DarkContact";
+import DarkContactCode from "../ui/contact/DarkContact.jsx?raw";
+
 
 
 
@@ -789,6 +794,30 @@ id: 44,
   install: "npm install framer-motion react-icons",
   usage: `<CompactPricingSection />`,
   code: CompactPricingCode
+},
+
+{
+  id: 61,
+  slug: "light-contact-simple",
+  name: "Light Contact Simple",
+  category: "contact",
+  description: "A clean light-mode contact section displaying company details, copy-to-clipboard interactions, and help center redirect banner.",
+  preview: LightContact,
+  install: "npm install framer-motion react-icons gsap",
+  usage: `<LightContactSimple />`,
+  code: LightContactCode
+},
+
+{
+  id: 62,
+  slug: "dark-contact-form",
+  name: "Dark Contact Form",
+  category: "contact",
+  description: "A deep obsidian-black contact section featuring a two-column layout with direct contact metrics and an animated form with stateful submission.",
+  preview: DarkContact,
+  install: "npm install framer-motion react-icons gsap",
+  usage: `<DarkContactForm />`,
+  code: DarkContactCode
 }
 
 

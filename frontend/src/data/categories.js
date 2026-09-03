@@ -17,6 +17,8 @@ export const categories = [
   { id: "transitions", name: "Transitions" },
   { id: "stats", name: "Stats Sections" },
   { id: "modals", name: "Modals" },
+    { id: "contact", name: "Contact Sections" },
+
   { id: "navigation", name: "Navigation" },
   { id: "marquees", name: "Marquee" },
   { id: "cta-sections", name: "CTA Sections" },
