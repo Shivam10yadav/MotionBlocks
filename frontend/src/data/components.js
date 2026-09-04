@@ -118,6 +118,15 @@ import HeroSection from "../ui/hero/HeroSection";
 import HeroSectionCode from "../ui/hero/HeroSection.jsx?raw";
 import LightHero from "../ui/hero/LightHero";
 import LightHeroCode from "../ui/hero/LightHero.jsx?raw";
+import LightEmptyState  from "../ui/emptyStates/LightEmptyState";
+import  LightEmptyStateCode  from "../ui/emptyStates/LightEmptyState.jsx?raw";
+import DarkEmptyState from "../ui/emptyStates/DarkEmptyStates";
+import DarkEmptyStateCode from "../ui/emptyStates/DarkEmptyStates.jsx?raw";
+import  WarmEmptyState  from "../ui/emptyStates/WarmEmptyStates";
+import  WarmEmptyStateCode  from "../ui/emptyStates/WarmEmptyStates.jsx?raw";
+
+
+
 
 export const components = [
   {
@@ -823,5 +832,44 @@ export const components = [
     install: "npm install framer-motion react-icons gsap",
     usage: `<LightHero />`,
     code: LightHeroCode,
+  },
+
+  {
+    id: 59,
+    slug: "minimal-light-empty-state",
+    name: "Minimal Light Empty State",
+    category: "empty-states",
+    description:
+      "A clean, slate-toned editorial empty state for modern dashboards, document managers, and file systems with subtle scale animations.",
+    preview: LightEmptyState,
+    install: "npm install framer-motion react-icons",
+    usage: `<LightEmptyState />`,
+    code: LightEmptyStateCode,
+  },
+
+  {
+    id: 60,
+    slug: "high-contrast-dark-emerald-empty-state",
+    name: "High Contrast Dark Emerald Empty State",
+    category: "empty-states",
+    description:
+      "A dark zinc empty state with vibrant emerald accents, custom pulse indicators, and smooth Framer Motion entry micro-interactions.",
+    preview: DarkEmptyState,
+    install: "npm install framer-motion react-icons",
+    usage: `<DarkEmptyState />`,
+    code: DarkEmptyStateCode,
+  },
+
+  {
+    id: 61,
+    slug: "playful-warm-terracotta-empty-state",
+    name: "Playful Warm Terracotta Empty State",
+    category: "empty-states",
+    description:
+      "An earthy amber and terracotta empty state designed for search result fallbacks, e-commerce filters, and missing content states with ambient icon rotation.",
+    preview: WarmEmptyState,
+    install: "npm install framer-motion react-icons",
+    usage: `<WarmEmptyState />`,
+    code: WarmEmptyStateCode,
   },
 ];

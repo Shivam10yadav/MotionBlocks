@@ -13,6 +13,8 @@ export const categories = [
   { id: "docks", name: "Docks" },
   { id: "about", name: "About Section" },
   { id: "pricing", name: "Pricing Section" },
+    { id: "empty-states", name: "Empty States" },
+
 
 
   { id: "grids", name: "Grids Section" },

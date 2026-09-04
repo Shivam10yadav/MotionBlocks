@@ -116,20 +116,9 @@ export default function HorizontalScroll({
             {text}
           </span>
 
-          <span className="text-[#2C241C]/30 mx-[0.15em] inline-block">•</span>
 
-          <span
-            ref={accentTextRef}
-            className="inline-block transition-transform duration-300"
-            style={{
-              color: accentHex,
-              filter: "drop-shadow(0px 12px 10px rgba(140, 94, 50, 0.2))",
-            }}
-          >
-            COPY & PASTE
-          </span>
+        
 
-          <span className="text-[#2C241C]/30 mx-[0.15em] inline-block">•</span>
         </h2>
       </div>
 
