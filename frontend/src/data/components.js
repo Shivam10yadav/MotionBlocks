@@ -124,6 +124,9 @@ import DarkEmptyState from "../ui/emptyStates/DarkEmptyStates";
 import DarkEmptyStateCode from "../ui/emptyStates/DarkEmptyStates.jsx?raw";
 import  WarmEmptyState  from "../ui/emptyStates/WarmEmptyStates";
 import  WarmEmptyStateCode  from "../ui/emptyStates/WarmEmptyStates.jsx?raw";
+import PremiumGallery from "../ui/gallery/PremiumGallery";
+import PremiumGalleryCode from "../ui/gallery/PremiumGallery.jsx?raw";
+
 
 
 
@@ -872,4 +875,17 @@ export const components = [
     usage: `<WarmEmptyState />`,
     code: WarmEmptyStateCode,
   },
+
+  {
+  id: 62,
+  slug: "premium-interactive-gallery",
+  name: "Premium Interactive Gallery",
+  category: "galleries",
+  description:
+    "A high-end visual showcase featuring a high-performance GSAP physics cursor, Framer Motion layout animations, and modal zoom interactions.",
+  preview: PremiumGallery,
+  install: "npm install framer-motion gsap",
+  usage: `<PremiumGallery />`,
+  code: PremiumGalleryCode,
+}
 ];
