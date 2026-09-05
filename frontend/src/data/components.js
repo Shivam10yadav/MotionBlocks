@@ -126,6 +126,12 @@ import  WarmEmptyState  from "../ui/emptyStates/WarmEmptyStates";
 import  WarmEmptyStateCode  from "../ui/emptyStates/WarmEmptyStates.jsx?raw";
 import PremiumGallery from "../ui/gallery/PremiumGallery";
 import PremiumGalleryCode from "../ui/gallery/PremiumGallery.jsx?raw";
+import Animated404 from "../ui/404/Animated404";
+import Animated404Code from "../ui/404/Animated404.jsx?raw";
+import EditorialLight404 from "../ui/404/EditorialLight404";
+import EditorialLight404Code from "../ui/404/EditorialLight404.jsx?raw";
+
+
 
 
 
@@ -887,5 +893,32 @@ export const components = [
   install: "npm install framer-motion gsap",
   usage: `<PremiumGallery />`,
   code: PremiumGalleryCode,
-}
+},
+
+
+  {
+    id: 63,
+    slug: "ultra-animated-dark-404",
+    name: "Ultra Animated Dark 404",
+    category: "404-pages",
+    description:
+      "An award-style dark-themed 404 page featuring a mouse-tracking spotlight gradient, 3D tilt interaction, an orbital ring animation, and smooth magnetic cursor physics.",
+    preview: Animated404,
+    install: "npm install framer-motion gsap",
+    usage: `<Animated404 />`,
+    code: Animated404Code,
+  },
+
+  {
+    id: 64,
+    slug: "editorial-light-404",
+    name: "Editorial Light 404",
+    category: "404-pages",
+    description:
+      "A high-contrast light 404 page inspired by print design, featuring large serif typography, magnetic cursor pull physics, kinetic line reveals, and Klein blue accents.",
+    preview: EditorialLight404,
+    install: "npm install framer-motion gsap",
+    usage: `<EditorialLight404 />`,
+    code: EditorialLight404Code,
+  },
 ];
