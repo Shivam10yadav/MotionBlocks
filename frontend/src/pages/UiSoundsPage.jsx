@@ -55,7 +55,7 @@ import {
 } from "react-icons/tb";
 
 import { Navbar } from "../localcomponents/Navbar";
-import { INITIAL_SOUNDS, CATEGORY_ORDER, playSoundEffect, getJsCodeSnippet } from "../data/sounds";
+import { INITIAL_SOUNDS, CATEGORY_ORDER, playSoundEffect, getJsCodeSnippet, downloadSoundAsWav } from "../data/sounds";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -121,81 +121,6 @@ const headerContainer = {
 const headerItem = {
   hidden: { opacity: 0, y: 24 },
   show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
-};
-
-// Helper: Convert AudioBuffer to 16-bit PCM WAV Blob
-const bufferToWav = (buffer) => {
-  const numChannels = buffer.numberOfChannels;
-  const sampleRate = buffer.sampleRate;
-  const format = 1; // PCM
-  const bitDepth = 16;
-  const bytesPerSample = bitDepth / 8;
-  const blockAlign = numChannels * bytesPerSample;
-  const dataSize = buffer.length * blockAlign;
-  const headerSize = 44;
-  const arrayBuffer = new ArrayBuffer(headerSize + dataSize);
-  const view = new DataView(arrayBuffer);
-
-  const writeString = (offset, string) => {
-    for (let i = 0; i < string.length; i++) {
-      view.setUint8(offset + i, string.charCodeAt(i));
-    }
-  };
-
-  writeString(0, 'RIFF');
-  view.setUint32(4, 36 + dataSize, true);
-  writeString(8, 'WAVE');
-  writeString(12, 'fmt ');
-  view.setUint32(16, 16, true);
-  view.setUint16(20, format, true);
-  view.setUint16(22, numChannels, true);
-  view.setUint32(24, sampleRate, true);
-  view.setUint32(28, sampleRate * blockAlign, true);
-  view.setUint16(32, blockAlign, true);
-  view.setUint16(34, bitDepth, true);
-  writeString(36, 'data');
-  view.setUint32(40, dataSize, true);
-
-  let offset = 44;
-  for (let i = 0; i < buffer.length; i++) {
-    for (let channel = 0; channel < numChannels; channel++) {
-      let sample = buffer.getChannelData(channel)[i];
-      sample = Math.max(-1, Math.min(1, sample));
-      view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
-      offset += 2;
-    }
-  }
-
-  return new Blob([arrayBuffer], { type: 'audio/wav' });
-};
-
-// Render audio offline and download as WAV
-const exportSoundAsWav = async (soundType) => {
-  try {
-    const sound = INITIAL_SOUNDS.find((s) => s.type === soundType);
-    if (!sound) return;
-
-    const sampleRate = 44100;
-    const duration = 0.5; // Audio buffer length padding
-    const offlineCtx = new OfflineAudioContext(1, Math.ceil(sampleRate * duration), sampleRate);
-
-    // Play synthesized sound into offline context
-    playSoundEffect(soundType, 1, 0.2, offlineCtx);
-
-    const renderedBuffer = await offlineCtx.startRendering();
-    const wavBlob = bufferToWav(renderedBuffer);
-
-    const url = URL.createObjectURL(wavBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${sound.type || sound.id}.wav`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error("Failed to render WAV audio:", err);
-  }
 };
 
 /**
@@ -435,8 +360,13 @@ export default function UiSoundsPage() {
     setTimeout(() => setCopiedId(null), 1800);
   };
 
+  // Delegates straight to the shared, correct WAV exporter in data/sounds.js.
+  // (Previously this page had its own duplicate exporter that rendered every
+  // sound into a fixed 0.5s buffer, which truncated longer sounds like
+  // "bell"/"success" mid-decay and produced files that wouldn't play back
+  // cleanly in some media players. That duplicate has been removed.)
   const handleDownloadWav = (soundType) => {
-    exportSoundAsWav(soundType);
+    downloadSoundAsWav(soundType);
   };
 
   useLayoutEffect(() => {
