@@ -130,6 +130,31 @@ import Animated404 from "../ui/404/Animated404";
 import Animated404Code from "../ui/404/Animated404.jsx?raw";
 import EditorialLight404 from "../ui/404/EditorialLight404";
 import EditorialLight404Code from "../ui/404/EditorialLight404.jsx?raw";
+import MagneticButton from "../ui/microInteractions.jsx/MagneticButton";
+import MagneticButtonCode from "../ui/microInteractions.jsx/MagneticButton.jsx?raw";
+
+import HeartToggle from "../ui/microInteractions.jsx/HeartToggle";
+import HeartToggleCode from "../ui/microInteractions.jsx/HeartToggle.jsx?raw";
+
+
+
+import MorphingTabs from "../ui/microInteractions.jsx/MorphingTabs";
+import MorphingTabsCode from "../ui/microInteractions.jsx/MorphingTabs.jsx?raw";
+
+import MultiStepDelete from "../ui/microInteractions.jsx/MultiStepDelete";
+import MultiStepDeleteCode from "../ui/microInteractions.jsx/MultiStepDelete.jsx?raw";
+import CursorTrail from "../ui/microInteractions.jsx/CursorTrail";
+import CursorTrailCode from "../ui/microInteractions.jsx/CursorTrail.jsx?raw";
+import ClickRipple from "../ui/microInteractions.jsx/ClickRipple";
+import ClickRippleCode from "../ui/microInteractions.jsx/ClickRipple.jsx?raw";
+
+
+
+
+
+
+
+
 
 
 
@@ -921,4 +946,79 @@ export const components = [
     usage: `<EditorialLight404 />`,
     code: EditorialLight404Code,
   },
+
+  {
+    id: 65,
+    slug: "magnetic-button",
+    name: "Magnetic Button",
+    category: "buttons",
+    description: "A liquid magnetic button that warps and tracks the cursor with GSAP physics.",
+    preview: MagneticButton,
+    install: "npm install gsap",
+    usage: `<MagneticButton />`,
+    code: MagneticButtonCode,
+  },
+  {
+    id: 66,
+    slug: "heart-toggle",
+    name: "Animated Heart Toggle",
+    category: "buttons",
+    description: "An interactive favorite toggle with path morphing and scale bursts.",
+    preview: HeartToggle,
+    install: "npm install framer-motion",
+    usage: `<HeartToggle />`,
+    code: HeartToggleCode,
+  },
+
+  {
+    id: 68,
+    slug: "morphing-tabs",
+    name: "Morphing Tabs",
+    category: "navigation",
+    description: "Smooth sliding tab indicators powered by Framer Motion layoutId.",
+    preview: MorphingTabs,
+    install: "npm install framer-motion",
+    usage: `<MorphingTabs />`,
+    code: MorphingTabsCode,
+  },
+  {
+    id: 69,
+    slug: "multi-step-delete",
+    name: "Multi-Step Delete Button",
+    category: "micro-interaction",
+    description: "A stateful confirmation button featuring an integrated progress loader.",
+    preview: MultiStepDelete,
+    install: "npm install gsap",
+    usage: `<MultiStepDelete />`,
+    code: MultiStepDeleteCode,
+  },
+  {
+    id: 70,
+    slug: "cursor-trail",
+    name: "Cursor Particle Trail",
+    category: "micro-interaction",
+    description: "Fading particle effect that follows cursor movements in real-time.",
+    preview: CursorTrail,
+    install: "npm install gsap",
+    usage: `<CursorTrail />`,
+    code: CursorTrailCode,
+  },
+
+  {
+    id: 71,
+    slug: "click-ripple",
+    name: "Click Wave Ripple",
+    category: "micro-interaction",
+    description: "Expanding shockwave rings originating from exact cursor click points.",
+    preview: ClickRipple,
+    install: "npm install framer-motion",
+    usage: `<ClickRipple />`,
+    code: ClickRippleCode,
+  },
+
+
+
+
+  
+
 ];
