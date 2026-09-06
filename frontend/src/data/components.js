@@ -147,6 +147,10 @@ import CursorTrail from "../ui/microInteractions.jsx/CursorTrail";
 import CursorTrailCode from "../ui/microInteractions.jsx/CursorTrail.jsx?raw";
 import ClickRipple from "../ui/microInteractions.jsx/ClickRipple";
 import ClickRippleCode from "../ui/microInteractions.jsx/ClickRipple.jsx?raw";
+import PortfolioHero from "../ui/hero/PortfolioHero";
+import PortfolioHeroCode from "../ui/hero/PortfolioHero.jsx?raw";
+import DualPorfolioHero from "../ui/hero/DualPortfolioHero";
+import DualPorfolioHeroCode from "../ui/hero/DualPortfolioHero.jsx?raw";
 
 
 
@@ -1015,6 +1019,32 @@ export const components = [
     usage: `<ClickRipple />`,
     code: ClickRippleCode,
   },
+
+  {
+  id: 72,
+  slug: "editorial-layered-hero",
+  name: "Editorial Layered Hero",
+  category: "hero",
+  description:
+    "An ultra-sleek, magazine-style editorial hero section built with layered cutout visuals, bold background typography, floating micro-badges, and GSAP mouse parallax interactions.",
+  preview: PortfolioHero,
+  install: "npm install gsap react-icons",
+  usage: `<Portfoliohero />`,
+  code: PortfolioHeroCode,
+},
+
+{
+  id:73,
+  slug: "portfolio-hero-focus-duotone",
+  name: "Portfolio Hero Focus Duotone",
+  category: "hero",
+  description:
+    "A sleek editorial portfolio hero section featuring a custom navbar, high-contrast duotone backdrop, focus viewfinder portrait frame, reliable SVG social media cluster badges, and smooth GSAP mouse parallax interactions.",
+  preview: DualPorfolioHero,
+  install: "npm install gsap framer-motion react-icons",
+  usage: `<DualPortfolioHero />`,
+  code: DualPorfolioHeroCode,
+}
 
 
 

@@ -335,13 +335,7 @@ const ComponentDetails = () => {
                     Refresh
                   </button>
 
-                  <button
-                    onClick={() => setFullscreen(true)}
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-[#08090D] shadow-sm transition hover:bg-neutral-200"
-                  >
-                    <Maximize2 size={14} />
-                    Fullscreen
-                  </button>
+               
 
                   <button
                     onClick={handleOpenInBrowser}
