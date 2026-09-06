@@ -105,7 +105,7 @@ export default function PortfolioHero() {
           ref={scriptRef}
           className="absolute z-20 top-[60%] pointer-events-none text-center"
         >
-          <span className="font-serif italic text-6xl sm:text-7xl md:text-8xl text-neutral-950 tracking-tight block">
+          <span className="font-serif italic text-6xl sm:text-7xl md:text-8xl text-white tracking-tight block">
             Developer
           </span>
         </div>
