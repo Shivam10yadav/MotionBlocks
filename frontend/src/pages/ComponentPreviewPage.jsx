@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Smartphone, Tablet, Monitor, RotateCw, ArrowLeft, ArrowUpRight, Volume2, VolumeX } from "lucide-react";
+import { Smartphone, Tablet, Monitor, RotateCw, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -20,8 +20,7 @@ const FRAGRANCE_NOTES = [
   { id: "03", label: "WHITE AMBER", category: "BASE NOTE", desc: "Warm, lingering skin-close base note that stays all day.", x: 0, y: 36 },
 ];
 
-// ---------- Awwwards-Style Hero Component ----------
-function AwardHeroPreview() {
+function AwardHeroPreview({ scrollContainerRef }) {
   const containerRef = useRef(null);
   const stageRef = useRef(null);
   const bottleRef = useRef(null);
@@ -29,9 +28,7 @@ function AwardHeroPreview() {
   const canvasRef = useRef(null);
 
   const [activeNote, setActiveNote] = useState(null);
-  const [isMuted, setIsMuted] = useState(true);
 
-  // Mouse Parallax Springs
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { stiffness: 120, damping: 18 });
@@ -54,7 +51,6 @@ function AwardHeroPreview() {
     mouseY.set(0);
   };
 
-  // Particle Cursor Trail
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -83,11 +79,9 @@ function AwardHeroPreview() {
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
-
       trail.forEach((p) => {
         p.alpha *= 0.92;
         p.radius *= 0.96;
-
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(94, 234, 212, ${p.alpha * 0.4})`;
@@ -95,7 +89,6 @@ function AwardHeroPreview() {
         ctx.shadowColor = "#5EEAD4";
         ctx.fill();
       });
-
       animationId = requestAnimationFrame(render);
     };
 
@@ -115,12 +108,13 @@ function AwardHeroPreview() {
     };
   }, []);
 
-  // GSAP ScrollTrigger Sequence
+  // Updated ScrollTrigger linking directly to the outer scroll container ref
   useEffect(() => {
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
+          scroller: scrollContainerRef?.current || window,
           start: "top top",
           end: "+=220%",
           scrub: 0.8,
@@ -141,7 +135,7 @@ function AwardHeroPreview() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [scrollContainerRef]);
 
   return (
     <div
@@ -151,10 +145,7 @@ function AwardHeroPreview() {
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10 w-full h-full" />
       <div className="absolute inset-0 bg-radial-gradient from-[#111816]/60 via-[#08090D] to-[#08090D] pointer-events-none" />
 
-      {/* Hero Content Stage */}
       <div className="relative w-full h-screen flex flex-col items-center justify-center px-4">
-        
-        {/* Kinetic Hero Headline */}
         <div ref={headlineRef} className="absolute z-10 text-center pointer-events-none top-24 sm:top-28">
           <p className="text-[10px] sm:text-xs uppercase tracking-[0.4em] text-[#5EEAD4] font-code mb-2 font-semibold">
             LIMITED REACTION EDITION
@@ -164,7 +155,6 @@ function AwardHeroPreview() {
           </h1>
         </div>
 
-        {/* Parallax Interactive Bottle Canvas */}
         <div
           ref={stageRef}
           onPointerMove={handlePointerMove}
@@ -178,7 +168,6 @@ function AwardHeroPreview() {
           >
             <div className="absolute w-[280px] h-[280px] bg-[#5EEAD4]/10 rounded-full blur-[90px] pointer-events-none" />
 
-            {/* Orbit Rays */}
             {FRAGRANCE_NOTES.map((note, i) => {
               const length = Math.sqrt(note.x * note.x + note.y * note.y);
               const angle = Math.atan2(note.y, note.x) * (180 / Math.PI);
@@ -194,7 +183,6 @@ function AwardHeroPreview() {
               );
             })}
 
-            {/* Perfume Bottle SVG */}
             <div ref={bottleRef} className="relative z-30 group">
               <div className="relative transform-gpu transition-transform duration-500 group-hover:scale-105">
                 <svg
@@ -240,7 +228,6 @@ function AwardHeroPreview() {
               </div>
             </div>
 
-            {/* Interactive Note Nodes */}
             {FRAGRANCE_NOTES.map((note) => (
               <div
                 key={note.id}
@@ -270,7 +257,6 @@ function AwardHeroPreview() {
           </motion.div>
         </div>
 
-        {/* Footer Overlay CTA */}
         <div className="absolute bottom-8 left-6 right-6 z-30 flex items-center justify-between">
           <div className="hidden sm:flex flex-col text-[10px] font-code tracking-widest text-[#8B8D98] uppercase">
             <span>VOLUME: 100 ML</span>
@@ -286,11 +272,11 @@ function AwardHeroPreview() {
   );
 }
 
-// ---------- Parent Component Preview Page ----------
 const ComponentPreviewPage = () => {
   const { category, slug } = useParams();
   const [device, setDevice] = useState("desktop");
   const [previewKey, setPreviewKey] = useState(0);
+  const scrollContainerRef = useRef(null);
 
   const component = components.find(
     (item) => item.category === category && item.slug === slug
@@ -315,11 +301,10 @@ const ComponentPreviewPage = () => {
     );
   }
 
-  // Fallback to AwardHeroPreview if no custom component.preview exists
   const PreviewComponent = component.preview || AwardHeroPreview;
 
   return (
-    <div className="min-h-screen w-full bg-[#08090D] text-[#F4F3F1] [--ember:#FF7A45] [--teal:#5EEAD4]">
+    <div className="h-screen w-full bg-[#08090D] text-[#F4F3F1] [--ember:#FF7A45] [--teal:#5EEAD4] flex flex-col overflow-hidden">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
         .font-code { font-family: 'JetBrains Mono', ui-monospace, monospace; }
@@ -332,7 +317,7 @@ const ComponentPreviewPage = () => {
       `}</style>
 
       {/* Top Controls Header */}
-      <div className="sticky top-0 z-50 flex flex-wrap items-center justify-between gap-3 border-b border-[#23262F] bg-[#08090D]/95 px-4 py-3 backdrop-blur-md sm:px-6">
+      <div className="sticky top-0 z-50 flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#23262F] bg-[#08090D]/95 px-4 py-3 backdrop-blur-md sm:px-6">
         <div className="flex min-w-0 items-center gap-2 font-code text-xs uppercase tracking-widest text-[--teal] sm:text-sm">
           <span className="h-2 w-2 shrink-0 rounded-full bg-[--teal] shadow-[0_0_8px_#5EEAD4]" />
           <span className="truncate">{component.name}</span>
@@ -372,14 +357,17 @@ const ComponentPreviewPage = () => {
         </div>
       </div>
 
-      {/* Grid Canvas Viewport */}
-      <div className="blueprint-grid flex min-h-[calc(100vh-57px)] w-full items-center justify-center p-4 sm:p-8">
+      {/* Scrollable Viewport Stage */}
+      <div
+        ref={scrollContainerRef}
+        className="blueprint-grid flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-8 flex justify-center items-start"
+      >
         <div
           key={previewKey}
-          className="flex w-full items-center justify-center transition-[width] duration-300"
+          className="flex w-full justify-center transition-[width] duration-300"
           style={{ width: DEVICES.find((d) => d.key === device)?.width, maxWidth: "100%" }}
         >
-          <PreviewComponent />
+          <PreviewComponent scrollContainerRef={scrollContainerRef} />
         </div>
       </div>
     </div>

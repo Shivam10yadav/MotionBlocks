@@ -95,8 +95,9 @@ const ComponentDetails = () => {
     };
   }, [fullscreen]);
 
-  // Reset page and panel scroll when route changes
+  // Reset page, panel scroll, and active tab when route changes
   useLayoutEffect(() => {
+    setTab("code");
     if (mainRef.current) mainRef.current.scrollTop = 0;
     window.scrollTo(0, 0);
   }, [category, slug]);
@@ -115,14 +116,19 @@ const ComponentDetails = () => {
     let isCancelled = false;
     const lang = tab === "install" ? "bash" : "jsx";
 
-    getHighlighter().then((highlighter) => {
-      if (isCancelled) return;
-      const html = highlighter.codeToHtml(panelContent, {
-        lang,
-        theme: "dracula",
+    getHighlighter()
+      .then((highlighter) => {
+        if (isCancelled) return;
+        const html = highlighter.codeToHtml(panelContent, {
+          lang,
+          theme: "dracula",
+        });
+        setHighlightedHtml(html);
+      })
+      .catch((err) => {
+        console.error("Syntax highlighting failed:", err);
+        setHighlightedHtml("");
       });
-      setHighlightedHtml(html);
-    });
 
     return () => {
       isCancelled = true;
@@ -335,7 +341,14 @@ const ComponentDetails = () => {
                     Refresh
                   </button>
 
-               
+                  <button
+                    onClick={() => setFullscreen(true)}
+                    aria-label="View Fullscreen"
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-[#08090D] shadow-sm transition hover:bg-neutral-200"
+                  >
+                    <Maximize2 size={14} />
+                    Fullscreen
+                  </button>
 
                   <button
                     onClick={handleOpenInBrowser}

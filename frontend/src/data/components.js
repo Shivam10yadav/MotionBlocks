@@ -151,6 +151,10 @@ import PortfolioHero from "../ui/hero/PortfolioHero";
 import PortfolioHeroCode from "../ui/hero/PortfolioHero.jsx?raw";
 import DualPorfolioHero from "../ui/hero/DualPortfolioHero";
 import DualPorfolioHeroCode from "../ui/hero/DualPortfolioHero.jsx?raw";
+import AnimatedFooter from "../ui/footer/AnimatedFooter";
+import AnimatedFooterCode from "../ui/footer/AnimatedFooter.jsx?raw";
+import AnimatedHero from "../ui/hero/AnimatedHero";
+import AnimatedHeroCode from "../ui/hero/AnimatedHero.jsx?raw";
 
 
 
@@ -1044,6 +1048,32 @@ export const components = [
   install: "npm install gsap framer-motion react-icons",
   usage: `<DualPortfolioHero />`,
   code: DualPorfolioHeroCode,
+},
+
+{
+  id: 74,
+  slug: "animated-landscape-footer",
+  name: "Animated Landscape Footer",
+  category: "footers",
+  description:
+    "Clean multi-column footer featuring a staggered Motion grid layout, custom portal branding, and an illustrative landscape background with GSAP smooth loading animation.",
+  preview: AnimatedFooter,
+  install: "npm install framer-motion gsap",
+  usage: `<AnimatedFooter />`,
+  code: AnimatedFooterCode,
+},
+
+{
+  id: 29,
+  slug: "meridian-hero-section",
+  name: "Meridian Travel Hero",
+  category: "hero",
+  description:
+    "An editorial travel hero section featuring Framer Motion staggered entrances, a central floating destination card, and GSAP ScrollTrigger-powered parallax scaling on background and typography.",
+  preview: AnimatedHero,
+  install: "npm install framer-motion gsap",
+  usage: `<AnimatedHero />`,
+  code: AnimatedHeroCode,
 }
 
 
