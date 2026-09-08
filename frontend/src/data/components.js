@@ -160,6 +160,10 @@ import PremiumPricingCode from "../ui/pricing/PremiumPricing.jsx?raw";
 import ArchitecturalPricing from "../ui/pricing/ArchitecturalPricing";
 
 import ArchitecturalPricingCode from "../ui/pricing/ArchitecturalPricing.jsx?raw";
+import HeroSaas from "../ui/hero/HeroSaas";
+import HeroSaasCode from "../ui/hero/HeroSaas";
+import PremiumAbout from "../ui/about/PremiumAbout";
+import PremiumAboutCode from "../ui/about/PremiumAbout.jsx?raw";
 
 
 
@@ -1084,6 +1088,19 @@ export const components = [
 },
 
 {
+  id: 76,
+  slug: "saas-hero",
+  name: " SaaS Hero",
+  category: "hero",
+  description:
+    "A bold SaaS hero section featuring oversized editorial typography, animated pixel blocks, a dark geometric bottom panel, and Framer Motion entrance animations.",
+  preview: HeroSaas,
+  install: "npm install framer-motion",
+  usage: `<HeroSaas />`,
+  code: HeroSaasCode
+},
+
+{
     id: 76,
     slug: "Premium-pricing-section",
     name: "Visual Premium Pricing Section",
@@ -1096,7 +1113,7 @@ export const components = [
     code: PremiumPricingCode,
   },
   {
-    id: 76,
+    id: 77,
     slug: "architectural-pricing-section",
     name: "Architectural Tiered Pricing Section",
     category: "pricing",
@@ -1106,7 +1123,19 @@ export const components = [
     usage: `<ArchitecturalPricing />`,
     code: ArchitecturalPricingCode,
   },
-
+  
+  {
+  id: 79,
+  slug: "Premium About section",
+  name: "Premium About Section",
+  category: "about",
+  description:
+    "An elegant, light-themed Register section with centered editorial typography, interactive GSAP pixel canvas, dark floating capsule navigation, and seamless state handling.",
+  preview: PremiumAbout,
+  install: "npm install gsap",
+  usage: `<PremiumAbout />`,
+  code: PremiumAboutCode,
+}
 
 
 
