@@ -155,6 +155,13 @@ import AnimatedFooter from "../ui/footer/AnimatedFooter";
 import AnimatedFooterCode from "../ui/footer/AnimatedFooter.jsx?raw";
 import AnimatedHero from "../ui/hero/AnimatedHero";
 import AnimatedHeroCode from "../ui/hero/AnimatedHero.jsx?raw";
+import PremiumPricing from "../ui/pricing/PremiumPricing";
+import PremiumPricingCode from "../ui/pricing/PremiumPricing.jsx?raw";
+import ArchitecturalPricing from "../ui/pricing/ArchitecturalPricing";
+
+import ArchitecturalPricingCode from "../ui/pricing/ArchitecturalPricing.jsx?raw";
+
+
 
 
 
@@ -1064,7 +1071,7 @@ export const components = [
 },
 
 {
-  id: 29,
+  id: 75,
   slug: "meridian-hero-section",
   name: "Meridian Travel Hero",
   category: "hero",
@@ -1074,7 +1081,31 @@ export const components = [
   install: "npm install framer-motion gsap",
   usage: `<AnimatedHero />`,
   code: AnimatedHeroCode,
-}
+},
+
+{
+    id: 76,
+    slug: "Premium-pricing-section",
+    name: "Visual Premium Pricing Section",
+    category: "pricing",
+    description:
+      "A modern dark-themed pricing matrix featuring pastel color-coded cards, a prominent 'Most Popular' badge, bold typography, and an aligned feature comparison table with custom checkmarks.",
+    preview: PremiumPricing,
+    install: "npm install lucide-react",
+    usage: `<PremiumPricing />`,
+    code: PremiumPricingCode,
+  },
+  {
+    id: 76,
+    slug: "architectural-pricing-section",
+    name: "Architectural Tiered Pricing Section",
+    category: "pricing",
+    description: "An elegant, single-viewport pricing card section featuring an dynamic layout with stacked monochrome cards, custom pill badges, divider feature lines, and smooth micro-interactions.",
+    preview: ArchitecturalPricing,
+    install: "npm install lucide-react",
+    usage: `<ArchitecturalPricing />`,
+    code: ArchitecturalPricingCode,
+  },
 
 
 
