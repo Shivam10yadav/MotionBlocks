@@ -164,6 +164,12 @@ import HeroSaas from "../ui/hero/HeroSaas";
 import HeroSaasCode from "../ui/hero/HeroSaas";
 import PremiumAbout from "../ui/about/PremiumAbout";
 import PremiumAboutCode from "../ui/about/PremiumAbout.jsx?raw";
+import FeatureGrid from "../ui/grids/FeaturesGrid";
+import FeatureGridCode from "../ui/grids/FeaturesGrid.jsx?raw";
+import FeatureBentoGrid from "../ui/grids/FeatureBentoGrid";
+import FeatureBentoGridCode from "../ui/grids/FeatureBentoGrid.jsx?raw";
+
+
 
 
 
@@ -1135,7 +1141,33 @@ export const components = [
   install: "npm install gsap",
   usage: `<PremiumAbout />`,
   code: PremiumAboutCode,
-}
+},
+
+{
+  id: 80,
+  slug: "vega-bento-grid",
+  name: "Vega Gaming Bento Grid",
+  category: "grids",
+  description:
+    "A dark gaming feature grid with floating crypto badges, chat widget preview, and a central brand badge built with Framer Motion and GSAP.",
+  preview: FeatureGrid,
+  install: "npm install framer-motion gsap lucide-react",
+  usage: `<FeatureGrid />`,
+  code: FeatureGridCode,
+},
+
+{
+  id: 80,
+  slug: "aurora-bento-grid",
+  name: "Aurora Team Bento Grid",
+  category: "grids",
+  description:
+    "A vibrant bento feature grid displaying team collaboration stats, embedded avatar headlines, high-resolution media preview, and dynamic smooth entrance triggers.",
+  preview: FeatureBentoGrid,
+  install: "npm install framer-motion gsap lucide-react",
+  usage: `<FeatureBentoGrid />`,
+  code: FeatureBentoGridCode,
+},
 
 
 
