@@ -168,6 +168,10 @@ import FeatureGrid from "../ui/grids/FeaturesGrid";
 import FeatureGridCode from "../ui/grids/FeaturesGrid.jsx?raw";
 import FeatureBentoGrid from "../ui/grids/FeatureBentoGrid";
 import FeatureBentoGridCode from "../ui/grids/FeatureBentoGrid.jsx?raw";
+import RetroCTA from "../ui/cta/RetroCTA";
+import RetroCTACode from "../ui/cta/RetroCTA.jsx?raw";
+import AetheriaFooter from "../ui/cta/AetheriaFooter";
+import AetheriaFooterCode from "../ui/cta/AetheriaFooter.jsx?raw";
 
 
 
@@ -1168,6 +1172,32 @@ export const components = [
   usage: `<FeatureBentoGrid />`,
   code: FeatureBentoGridCode,
 },
+{
+  id: 81,
+  slug: "retro-cta-section",
+  name: "Retro CTA Section",
+  category: "cta-sections",
+  description:
+    "A vintage, neo-brutalist call-to-action block featuring top and bottom wavy border masks, interactive GSAP badge physics, a tactile primary button, and custom starburst badges.",
+  preview: RetroCTA,
+  install: "npm install framer-motion gsap react-icons",
+  usage: `<RetroCTA />`,
+  code: RetroCTACode,
+},
+{
+  id: 50,
+  slug: "aetheria-bio-footer",
+  name: "Aetheria Bio Minimalist Footer",
+  category: "footers",
+  description:
+    "A clean eco-tech footer featuring a soft sage green card container, multi-column navigation, direct contact CTA, social links, and bold organic typography.",
+  preview: AetheriaFooter,
+  install: "npm install framer-motion react-icons",
+  usage: `<AetheriaFooter />`,
+  code: AetheriaFooterCode,
+},
+
+
 
 
 
