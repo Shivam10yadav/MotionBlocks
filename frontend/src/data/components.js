@@ -176,6 +176,11 @@ import MatchstickCTA from "../ui/cta/MatchStickCTA";
 import MatchstickCTACode from "../ui/cta/MatchStickCTA.jsx?raw";
 import PremiumCTA from "../ui/cta/PremiumCTA";
 import PremiumCTACode from "../ui/cta/PremiumCTA.jsx?raw";
+import CleanHero from "../ui/hero/CleanHero";
+import CleanHeroCode from "../ui/hero/CleanHero.jsx?raw";
+
+
+
 
 
 
@@ -1225,7 +1230,20 @@ export const components = [
   install: "npm install framer-motion lucide-react",
   usage: `<premiumCTA />`,
   code: PremiumCTACode,
+},
+{
+  id: 84,
+  slug: "clean-hero",
+  name: "Clean Hero",
+  category: "hero",
+  description:
+    "An brutalist editorial hero section featuring oversized typography, background grid lines, a floating 3D geometric centerpiece animated with GSAP, and a neon green accent showcase card.",
+  preview: CleanHero,
+  install: "npm install framer-motion gsap lucide-react",
+  usage: `<CleanHero />`,
+  code: CleanHeroCode
 }
+
 
 
 
