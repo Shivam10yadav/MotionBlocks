@@ -178,6 +178,11 @@ import PremiumCTA from "../ui/cta/PremiumCTA";
 import PremiumCTACode from "../ui/cta/PremiumCTA.jsx?raw";
 import CleanHero from "../ui/hero/CleanHero";
 import CleanHeroCode from "../ui/hero/CleanHero.jsx?raw";
+import GlassPricing from "../ui/pricing/GlassPricing";
+import GlassPricingCode from "../ui/pricing/GlassPricing.jsx?raw";
+import PremiumTestimonial from "../ui/testimonials/PremiumTestimonial";
+import PremiumTestimonialCode from "../ui/testimonials/PremiumTestimonial.jsx?raw";
+
 
 
 
@@ -1242,8 +1247,31 @@ export const components = [
   install: "npm install framer-motion gsap lucide-react",
   usage: `<CleanHero />`,
   code: CleanHeroCode
-}
-
+},
+{
+    id: 85,
+    slug: "dark-glassmorphism-pricing",
+    name: "Dark Glassmorphism Pricing",
+    category: "pricing",
+    description:
+      "A high-end, dark-themed 3-tier pricing section featuring frosted glassmorphism cards, glowing ambient lighting, large backdrop typography, smooth Framer Motion entry animations, and an interactive billing toggle.",
+    preview: GlassPricing,
+    install: "npm install framer-motion lucide-react",
+    usage: `<GlassPricing />`,
+    code: GlassPricingCode,
+  },
+{
+    id: 6,
+    slug: "awwwards-editorial-testimonials",
+    name: "Awwwards Editorial Testimonials",
+    category: "testimonials",
+    description:
+      "A luxury, award-style testimonial showcase featuring directional blur transitions via Framer Motion, ambient glowing accents, award badges, and interactive controls.",
+    preview: PremiumTestimonial,
+    install: "npm install framer-motion lucide-react",
+    usage: `<PremiumTestimonial />`,
+    code: PremiumTestimonialCode,
+  },
 
 
 
