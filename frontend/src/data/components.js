@@ -170,8 +170,14 @@ import FeatureBentoGrid from "../ui/grids/FeatureBentoGrid";
 import FeatureBentoGridCode from "../ui/grids/FeatureBentoGrid.jsx?raw";
 import RetroCTA from "../ui/cta/RetroCTA";
 import RetroCTACode from "../ui/cta/RetroCTA.jsx?raw";
-import AetheriaFooter from "../ui/cta/AetheriaFooter";
-import AetheriaFooterCode from "../ui/cta/AetheriaFooter.jsx?raw";
+import AetheriaFooter from "../ui/footer/AetheriaFooter";
+import AetheriaFooterCode from "../ui/footer/AetheriaFooter.jsx?raw";
+import MatchstickCTA from "../ui/cta/MatchStickCTA";
+import MatchstickCTACode from "../ui/cta/MatchStickCTA.jsx?raw";
+import PremiumCTA from "../ui/cta/PremiumCTA";
+import PremiumCTACode from "../ui/cta/PremiumCTA.jsx?raw";
+
+
 
 
 
@@ -1185,7 +1191,7 @@ export const components = [
   code: RetroCTACode,
 },
 {
-  id: 50,
+  id: 82,
   slug: "aetheria-bio-footer",
   name: "Aetheria Bio Minimalist Footer",
   category: "footers",
@@ -1196,7 +1202,30 @@ export const components = [
   usage: `<AetheriaFooter />`,
   code: AetheriaFooterCode,
 },
-
+{
+  id: 82,
+  slug: "retro-matchstick-cta",
+  name: "Retro Matchstick CTA",
+  category: "cta-sections",
+  description:
+    "A vintage, neo-brutalist call-to-action block featuring an interactive GSAP matchstick strike ignition, canvas-rendered spark and flame particle physics, Framer Motion micro-interactions, and retro social link badges.",
+  preview: MatchstickCTA,
+  install: "npm install framer-motion gsap react-icons",
+  usage: `<MatchstickCTA />`,
+  code: MatchstickCTACode,
+},
+{
+  id: 83,
+  slug: "art-world-join-cta",
+  name: "Art World Join CTA",
+  category: "cta-sections",
+  description:
+    "An expressive, high-impact CTA section featuring ultra-bold typography, overlapping portrait cards with Framer Motion entry animations, stylized inline links, and a signature offset actionable button card.",
+  preview: PremiumCTA,
+  install: "npm install framer-motion lucide-react",
+  usage: `<premiumCTA />`,
+  code: PremiumCTACode,
+}
 
 
 
