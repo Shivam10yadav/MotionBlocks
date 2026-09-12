@@ -182,6 +182,8 @@ import GlassPricing from "../ui/pricing/GlassPricing";
 import GlassPricingCode from "../ui/pricing/GlassPricing.jsx?raw";
 import PremiumTestimonial from "../ui/testimonials/PremiumTestimonial";
 import PremiumTestimonialCode from "../ui/testimonials/PremiumTestimonial.jsx?raw";
+import SaasHeroCode from "../ui/hero/SaasHero.jsx?raw";
+import SaasHero from "../ui/hero/SaasHero";
 
 
 
@@ -1261,7 +1263,7 @@ export const components = [
     code: GlassPricingCode,
   },
 {
-    id: 6,
+    id: 86,
     slug: "awwwards-editorial-testimonials",
     name: "Awwwards Editorial Testimonials",
     category: "testimonials",
@@ -1272,6 +1274,18 @@ export const components = [
     usage: `<PremiumTestimonial />`,
     code: PremiumTestimonialCode,
   },
+  {
+  id: 87,
+  slug: "hero-saas",
+  name: "SaaS Hero",
+  category: "hero",
+  description:
+    "A vibrant, high-energy SaaS hero section featuring playful typography layouts, interactive glassmorphism toggle switches, animated dotted connection paths, floating 3D confetti icons, and GSAP ambient sparkle effects.",
+  preview: SaasHero,
+  install: "npm install framer-motion gsap lucide-react",
+  usage: `<SaasHero />`,
+  code: SaasHeroCode
+}
 
 
 

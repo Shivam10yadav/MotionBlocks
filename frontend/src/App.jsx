@@ -14,7 +14,6 @@ import ContributePage from "./pages/Contribute";
 import NotFound from "./localcomponents/NotFound";
 import ScrollToTop from "./localcomponents/ScrollToTop";
 import LogosPage from "./pages/LogosPage";
-import { Popup } from "./localcomponents/Popup";
 import PageTransition from "./localcomponents/PageTransition";
 import FontsPage from "./pages/FontsPage";
 import ColorPalettesPage from "./pages/ColorPalletesPage";
@@ -173,9 +172,7 @@ W
 
       <PageTransition ref={tearRef} />
 
-      <Popup
-        githubUrl="https://github.com/Shivam10yadav/Motion-blocks"
-      />
+      
     </>
   );
 }

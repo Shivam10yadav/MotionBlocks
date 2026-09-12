@@ -89,7 +89,7 @@ export default function LightTestimonial() {
         
         {/* BIG BOLD BACKDROP TEXT (Watermark / Hint) */}
         <div className="absolute top-2 left-0 right-0 z-0 pointer-events-none select-none">
-          <h1 className="text-[11vw] font-black uppercase tracking-widest text-black leading-none">
+          <h1 className="text-[8vw] font-black uppercase tracking-widest text-#F0E0C8 leading-none">
             Testimonials
           </h1>
         </div>
