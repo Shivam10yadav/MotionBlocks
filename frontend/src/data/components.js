@@ -184,6 +184,12 @@ import PremiumTestimonial from "../ui/testimonials/PremiumTestimonial";
 import PremiumTestimonialCode from "../ui/testimonials/PremiumTestimonial.jsx?raw";
 import SaasHeroCode from "../ui/hero/SaasHero.jsx?raw";
 import SaasHero from "../ui/hero/SaasHero";
+import PremiumBentoGrid from "../ui/grids/PremiumBentoGrids";
+import PremiumBentoGridCode from "../ui/grids/PremiumBentoGrids.jsx?raw";
+import EmeraldGrid from "../ui/grids/EmeraldGrid";
+import EmeraldGridCode from "../ui/grids/EmeraldGrid.jsx?raw";
+
+
 
 
 
@@ -1285,6 +1291,30 @@ export const components = [
   install: "npm install framer-motion gsap lucide-react",
   usage: `<SaasHero />`,
   code: SaasHeroCode
+},
+{
+  id: 88,
+  slug: "premium-bento-grid",
+  name: "Premium Bento Grid",
+  category: "grids",
+  description:
+    "A blush-pink & dark modern SaaS bento grid inspired by high-end design agency portfolios, featuring floating GSAP elements, stat badges, and staggered entrance animations powered by Framer Motion.",
+  preview: PremiumBentoGrid,
+  install: "npm install framer-motion gsap lucide-react",
+  usage: `<PremiumBentoGrid />`,
+  code: PremiumBentoGridCode,
+},
+{
+  id: 89,
+  slug: "emerald-grid",
+  name: "Emerald Bento Grid",
+  category: "grids",
+  description:
+    "A soft sage & deep emerald green modern fintech bento layout featuring mobile screen mockups, floating dynamic balance badges, hover scale effects, and GSAP micro-animations.",
+  preview: EmeraldGrid,
+  install: "npm install framer-motion gsap lucide-react",
+  usage: `<EmeraldGrid />`,
+  code: EmeraldGridCode,
 }
 
 
