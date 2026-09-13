@@ -1,174 +1,252 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { FaArrowRight, FaCopy, FaCheck } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  FaInstagram,
+  FaXTwitter,
+  FaLinkedinIn,
+  FaGithub,
+  FaYoutube,
+} from "react-icons/fa6";
+import { FiMail, FiPhone, FiMapPin, FiArrowRight } from "react-icons/fi";
 
-export default function LightContact() {
-  const containerRef = useRef(null);
-  const [copiedField, setCopiedField] = useState(null);
+const PHRASES = [
+  "NO NEED TO BE SHY.",
+  "LET'S TALK BUSINESS.",
+  "DROP US A MESSAGE.",
+  "WE ARE READY TO HELP.",
+];
 
+export default function ContactPage() {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Typewriter effect logic
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Reveal header text
-      gsap.from('.reveal-text', {
-        yPercent: 100,
-        duration: 1,
-        stagger: 0.1,
-        ease: 'power3.out',
-      });
+    const currentPhrase = PHRASES[phraseIndex];
+    let timer;
 
-      // Expand dividers
-      gsap.from('.divider-line', {
-        scaleX: 0,
-        transformOrigin: 'left center',
-        duration: 1.2,
-        stagger: 0.1,
-        ease: 'expo.out',
-        delay: 0.2,
-      });
+    if (!isDeleting && displayedText.length < currentPhrase.length) {
+      timer = setTimeout(() => {
+        setDisplayedText(currentPhrase.slice(0, displayedText.length + 1));
+      }, 80);
+    } else if (!isDeleting && displayedText.length === currentPhrase.length) {
+      timer = setTimeout(() => setIsDeleting(true), 2200);
+    } else if (isDeleting && displayedText.length > 0) {
+      timer = setTimeout(() => {
+        setDisplayedText(currentPhrase.slice(0, displayedText.length - 1));
+      }, 40);
+    } else if (isDeleting && displayedText.length === 0) {
+      setIsDeleting(false);
+      setPhraseIndex((prev) => (prev + 1) % PHRASES.length);
+    }
 
-      // Fade in contact items
-      gsap.from('.contact-row', {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: 'power2.out',
-        delay: 0.4,
-      });
-    }, containerRef);
+    return () => clearTimeout(timer);
+  }, [displayedText, isDeleting, phraseIndex]);
 
-    return () => ctx.revert();
-  }, []);
-
-  const handleCopy = (text, fieldName) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(fieldName);
-    setTimeout(() => setCopiedField(null), 2000);
+  // Stagger Container
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.1,
+      },
+    },
   };
 
-  const contactDetails = [
-    { id: 'email', label: 'Email', value: 'hello@studio-craft.design', note: 'Replies within a few hours', copyable: true },
-    { id: 'phone', label: 'Phone', value: '+1 (888) 492-0192', note: 'Monday to Friday', copyable: true },
-    { id: 'location', label: 'Office', value: '740 Broadway, Fl 12, New York', note: 'By appointment only', copyable: false },
-  ];
+  // Stagger Children Items
+  const itemVariants = {
+    hidden: { y: 35, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
+    },
+  };
 
-  const socialLinks = [
-    { name: 'Twitter', handle: '@studiocraft', url: '#' },
-    { name: 'GitHub', handle: 'studiocraft-dev', url: '#' },
-    { name: 'LinkedIn', handle: 'studio-craft-agency', url: '#' },
-    { name: 'Dribbble', handle: 'studiocraft', url: '#' },
-    { name: 'Discord', handle: 'Join community', url: '#' },
-  ];
+  // Letter Hover Twist Effect
+  const twistLetter = {
+    hover: {
+      rotate: [0, -10, 10, -5, 0],
+      y: -4,
+      transition: { duration: 0.3 },
+    },
+  };
 
   return (
-    <section 
-      ref={containerRef} 
-      className="w-full min-h-screen bg-[#FBFBFB] text-[#111111] py-20 px-6 sm:px-12 lg:px-20 font-sans flex items-center selection:bg-black selection:text-white"
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className="min-h-screen bg-[#F6F6F4] text-neutral-900 font-sans flex flex-col justify-between p-6 sm:p-10 md:p-14 select-none overflow-hidden"
     >
-      <div className="w-full max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-12 items-start">
-        
-        {/* Left Column */}
-        <div className="lg:col-span-5 flex flex-col justify-between min-h-[60vh]">
-          <div>
-            <div className="overflow-hidden mb-3">
-              <span className="reveal-text block text-xs tracking-widest text-neutral-500 uppercase font-medium">
-                Get in touch
-              </span>
-            </div>
-
-            <div className="overflow-hidden">
-              <h1 className="reveal-text text-5xl sm:text-7xl font-light tracking-tight leading-none text-black">
-                Let's work <br />
-                <span className="italic font-normal">together.</span>
-              </h1>
-            </div>
-
-            <div className="overflow-hidden mt-6">
-              <p className="reveal-text text-base text-neutral-600 leading-relaxed font-normal max-w-sm">
-                Have a project in mind or want to say hello? Send us a message and we'll get back to you shortly.
-              </p>
-            </div>
-          </div>
-
-          {/* Availability note */}
-          <div className="mt-12 lg:mt-0 pt-6 border-t border-neutral-200 flex items-center justify-between text-xs text-neutral-500">
-            <span>New York, NY</span>
-            <span className="flex items-center gap-2 font-medium text-black">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              Available for new projects
-            </span>
-          </div>
+      {/* Top Header Badge */}
+      <motion.div
+        variants={itemVariants}
+        className="flex justify-between items-center w-full"
+      >
+        <div className="flex items-center gap-2 border border-neutral-300 bg-white/70 backdrop-blur-md rounded-full px-4 py-1.5 text-xs md:text-sm font-semibold tracking-wider uppercase shadow-xs">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+          OPEN FOR NEW WORK
         </div>
 
-        {/* Right Column - Contact Details */}
-        <div className="lg:col-span-7 flex flex-col">
-          
-          <div className="divider-line w-full h-[1px] bg-neutral-200" />
+        <a
+          href="mailto:contact@shivam.dev"
+          className="hidden sm:inline-flex items-center gap-2 border border-neutral-900 rounded-full px-5 py-1.5 text-xs md:text-sm font-semibold uppercase hover:bg-neutral-900 hover:text-white transition-colors duration-200"
+        >
+          SAY HI
+        </a>
+      </motion.div>
 
-          {contactDetails.map((item, idx) => (
-            <React.Fragment key={item.id}>
-              <div className="contact-row group py-8 transition-colors duration-300 hover:bg-neutral-100/60 px-2 sm:px-4 -mx-2 sm:-mx-4 rounded-lg">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  
-                  <div className="w-24">
-                    <span className="text-xs text-neutral-400 font-medium block">
-                      0{idx + 1} / {item.label}
-                    </span>
-                  </div>
+      {/* Hero Interactive Typography Section */}
+      <div className="my-auto py-12 flex flex-col items-center justify-center text-center">
+        <motion.div variants={itemVariants} className="max-w-6xl w-full">
+          <div className="flex items-center justify-center flex-wrap gap-2 md:gap-3 text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-black tracking-tighter leading-none min-h-[140px] sm:min-h-[180px]">
+            {/* Animated Arrow */}
+            <motion.span
+              animate={{ x: [0, 8, 0] }}
+              transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+              className="inline-block"
+            >
+              →
+            </motion.span>
 
-                  <div className="flex-1">
-                    <span className="text-xl sm:text-2xl font-normal text-black group-hover:translate-x-1 transition-transform duration-300 block">
-                      {item.value}
-                    </span>
-                    <span className="text-xs text-neutral-500 mt-1 block">
-                      {item.note}
-                    </span>
-                  </div>
+            {/* Interactive Typewritten Letters with Twist Hover Effect */}
+            {displayedText.split("").map((char, index) => (
+              <motion.span
+                key={index}
+                whileHover="hover"
+                variants={twistLetter}
+                className="inline-block cursor-default hover:text-neutral-600 transition-colors duration-150"
+              >
+                {char === " " ? "\u00A0" : char}
+              </motion.span>
+            ))}
 
-                  {item.copyable && (
-                    <button
-                      onClick={() => handleCopy(item.value, item.id)}
-                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-neutral-300 text-xs text-neutral-700 hover:border-black hover:text-black transition-all self-start sm:self-auto bg-white shadow-sm"
-                    >
-                      {copiedField === item.id ? (
-                        <>
-                          <FaCheck className="text-emerald-600" /> Copied
-                        </>
-                      ) : (
-                        <>
-                          <FaCopy className="text-neutral-400" /> Copy
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
+            {/* Blinking Cursor */}
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ repeat: Infinity, duration: 0.8 }}
+              className="inline-block w-2.5 md:w-3.5 h-[0.75em] bg-neutral-900 ml-1 rounded-xs"
+            />
+
+            {/* Interactive Embedded Media Box */}
+            <motion.div
+              whileHover={{ scale: 1.08, rotate: 3 }}
+              className="inline-block relative mx-2 rounded-xl overflow-hidden border-2 border-neutral-900 shadow-md align-middle cursor-pointer"
+            >
+              <div className="w-16 h-12 sm:w-24 sm:h-16 md:w-32 md:h-20 bg-neutral-200">
+                <img
+                  src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM3ZtZGNicHJ0bTkycXkyMnJ0aHZ1NmJvaG80dnE2OXhrcDFwbWRrayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/26tP213vtzZPPv2eI/giphy.gif"
+                  alt="Interactive Element"
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="divider-line w-full h-[1px] bg-neutral-200" />
-            </React.Fragment>
-          ))}
-
-          {/* Social Links */}
-          <div className="mt-12 pt-4">
-            <span className="text-xs text-neutral-400 uppercase tracking-wider block mb-4 font-medium">
-              Socials
-            </span>
-            <div className="flex flex-wrap gap-6">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  className="group flex items-center gap-1.5 text-sm text-neutral-700 hover:text-black font-medium transition-colors"
-                >
-                  <span>{social.name}</span>
-                  <FaArrowRight className="text-[10px] -rotate-45 group-hover:rotate-0 transition-transform duration-300 text-neutral-400 group-hover:text-black" />
-                </a>
-              ))}
-            </div>
+            </motion.div>
           </div>
+        </motion.div>
 
-        </div>
-
+        {/* CTA Button */}
+        <motion.div variants={itemVariants} className="mt-8 md:mt-12">
+          <motion.a
+            href="mailto:contact@shivam.dev"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
+            className="inline-flex items-center gap-3 bg-neutral-900 text-white px-8 py-4 rounded-full text-sm sm:text-base font-semibold shadow-md transition-all duration-200"
+          >
+            <span>SEND AN EMAIL</span>
+            <FiArrowRight className="text-lg" />
+          </motion.a>
+        </motion.div>
       </div>
-    </section>
+
+      {/* Footer Grid */}
+      <motion.footer
+        variants={itemVariants}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 pt-8 border-t border-neutral-300 text-xs sm:text-sm font-medium"
+      >
+        {/* Simple Plain Summary */}
+        <motion.div variants={itemVariants} className="space-y-2">
+          <div className="font-bold text-base">→ ABOUT</div>
+          <p className="text-neutral-700 leading-snug font-normal max-w-[220px]">
+            We design and build fast, simple web applications that work smoothly on all devices.
+          </p>
+        </motion.div>
+
+        {/* Social Icons using react-icons */}
+        <motion.div variants={itemVariants} className="space-y-3">
+          <span className="block uppercase text-neutral-500 font-semibold tracking-wider text-xs">
+            SOCIAL
+          </span>
+          <div className="flex items-center gap-2.5">
+            {[
+              { icon: FaGithub, label: "GitHub", href: "https://github.com" },
+              { icon: FaLinkedinIn, label: "LinkedIn", href: "https://linkedin.com" },
+              { icon: FaXTwitter, label: "Twitter", href: "https://x.com" },
+              { icon: FaInstagram, label: "Instagram", href: "https://instagram.com" },
+              { icon: FaYoutube, label: "YouTube", href: "https://youtube.com" },
+            ].map((social, idx) => {
+              const Icon = social.icon;
+              return (
+                <motion.a
+                  key={idx}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.label}
+                  whileHover={{ y: -3, scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  className="p-2.5 rounded-full border border-neutral-300 bg-white hover:bg-neutral-900 hover:text-white transition-colors duration-200 text-neutral-800"
+                >
+                  <Icon className="text-base" />
+                </motion.a>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* Direct Contacts */}
+        <motion.div variants={itemVariants} className="space-y-3">
+          <span className="block uppercase text-neutral-500 font-semibold tracking-wider text-xs">
+            CONTACT
+          </span>
+          <div className="flex flex-col space-y-1.5 font-semibold text-neutral-900">
+            <a
+              href="mailto:contact@shivam.dev"
+              className="inline-flex items-center gap-2 hover:underline"
+            >
+              <FiMail className="text-neutral-500" />
+              contact@shivam.dev
+            </a>
+            <a
+              href="tel:+919876543210"
+              className="inline-flex items-center gap-2 hover:underline"
+            >
+              <FiPhone className="text-neutral-500" />
+              +91 98765 43210
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Indian Location */}
+        <motion.div variants={itemVariants} className="space-y-3">
+          <span className="block uppercase text-neutral-500 font-semibold tracking-wider text-xs">
+            LOCATION
+          </span>
+          <div className="flex items-start gap-2 font-semibold text-neutral-900">
+            <FiMapPin className="text-neutral-500 mt-1 shrink-0" />
+            <address className="not-italic leading-relaxed font-normal text-neutral-800">
+              Sector 12, Urban Estate
+              <br />
+              Karnal, Haryana 132001
+              <br />
+              India
+            </address>
+          </div>
+        </motion.div>
+      </motion.footer>
+    </motion.div>
   );
 }

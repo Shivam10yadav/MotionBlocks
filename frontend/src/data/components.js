@@ -12,10 +12,6 @@ import Testimonial from "../ui/testimonials/Testimonials-1";
 import TestimonialCode from "../ui/testimonials/Testimonials-1.jsx?raw";
 import HoverGallery from "../ui/gallery/HoverGallery";
 import HoverGalleryCode from "../ui/gallery/HoverGallery.jsx?raw";
-import MinimalFaq from "../ui/faq/MinimalFaq";
-import MinimalFaqCode from "../ui/faq/MinimalFaq.jsx?raw";
-import TabbedFaq from "../ui/faq/TabbedFaq";
-import TabbedFaqCode from "../ui/faq/TabbedFaq.jsx?raw";
 
 import LightAuth from "../ui/auth/LightAuth";
 import LightAuthCode from "../ui/auth/LightAuth.jsx?raw";
@@ -56,34 +52,16 @@ import LightFooter from "../ui/footer/LightFooter";
 import LightFooterCode from "../ui/footer/LightFooter.jsx?raw";
 import DarkFooter from "../ui/footer/DarkFooter";
 import DarkFooterCode from "../ui/footer/DarkFooter.jsx?raw";
-import DarkNavbar from "../ui/navbar/DarkNavbar";
-import DarkNavbarCode from "../ui/navbar/DarkNavbar.jsx?raw";
-import LightNavbar from "../ui/navbar/LightNavbar";
-import LightNavbarCode from "../ui/navbar/LightNavbar.jsx?raw";
-import LightMarquee from "../ui/marquee/LightMarquee";
-import LightMarqueeCode from "../ui/marquee/LightMarquee.jsx?raw";
-import OtpVerify from "../ui/input/VerifyOtp";
-import OtpVerifyCode from "../ui/input/VerifyOtp.jsx?raw";
-import DarkVerifyOtp from "../ui/input/DarkVerifyOtp";
-import DarkVerifyOtpCode from "../ui/input/DarkVerifyOtp.jsx?raw";
-import PromptInput from "../ui/input/PromptInput";
-import PromptInputCode from "../ui/input/PromptInput.jsx?raw";
+
 import WheelNavigation from "../ui/dock/WheelNavigation";
 import WheelNavigationCode from "../ui/dock/WheelNavigation.jsx?raw";
-import DeleteModal from "../ui/modals/DeleteModal";
-import DeleteModalCode from "../ui/modals/DeleteModal.jsx?raw";
-import FileUpload from "../ui/input/FileUpload";
-import FileUploadCode from "../ui/input/FileUpload.jsx?raw";
+
 import SkeletonLoader from "../ui/loader/SkeletonLoader";
 import SkeletonLoaderCode from "../ui/loader/SkeletonLoader.jsx?raw";
 import BentoGrid from "../ui/grids/BentoGrid";
 import BentoGridCode from "../ui/grids/BentoGrid.jsx?raw";
 import PageTransitions from "../ui/transitions/PageTransitions";
 import PageTransitionsCode from "../ui/transitions/PageTransitions";
-import StatsCard from "../ui/stats/StatsCard";
-import StatsCardCode from "../ui/stats/StatsCard.jsx?raw";
-import TeamSection from "../ui/teams/TeamSection";
-import TeamSectionCode from "../ui/teams/TeamSection.jsx?raw";
 import PlaneText from "../ui/text-effect/PlaneText";
 import PlaneTextCode from "../ui/text-effect/PlaneText.jsx?raw";
 import AnimatedCalendar from "../ui/calender/AnimatedCalendar";
@@ -94,8 +72,6 @@ import ScratchCard from "../ui/ecommerce/ScratchCard";
 import ScratchCardCode from "../ui/ecommerce/ScratchCard.jsx?raw";
 import AnimatedAuth from "../ui/auth/AnimatedAuth";
 import AnimatedAuthCode from "../ui/auth/AnimatedAuth.jsx?raw";
-import AnimatedFaq from "../ui/faq/AnimatedFaq";
-import AnimatedFaqCode from "../ui/faq/AnimatedFaq.jsx?raw";
 import AnimatedCta from "../ui/cta/AnimatedCta";
 import AnimatedCtaCode from "../ui/cta/AnimatedCta.jsx?raw";
 import ClaymorphismCta from "../ui/cta/ClayMorphismCta";
@@ -104,8 +80,6 @@ import AboutSection from "../ui/about/AboutSection";
 import AboutSectionCode from "../ui/about/AboutSection.jsx?raw";
 import TimelineAboutSection from "../ui/about/TimelineAboutSection";
 import TimelineAboutSectionCode from "../ui/about/TimelineAboutSection.jsx?raw";
-import TransactionCard from "../ui/payment/TransactionCard";
-import TransactionCardCode from "../ui/payment/TransactionCard.jsx?raw";
 import CompactPricing from "../ui/pricing/CompactPricing";
 import CompactPricingCode from "../ui/pricing/CompactPricing.jsx?raw";
 import LightContact from "../ui/contact/LightContact";
@@ -130,23 +104,11 @@ import Animated404 from "../ui/404/Animated404";
 import Animated404Code from "../ui/404/Animated404.jsx?raw";
 import EditorialLight404 from "../ui/404/EditorialLight404";
 import EditorialLight404Code from "../ui/404/EditorialLight404.jsx?raw";
-import MagneticButton from "../ui/microInteractions.jsx/MagneticButton";
-import MagneticButtonCode from "../ui/microInteractions.jsx/MagneticButton.jsx?raw";
-
-import HeartToggle from "../ui/microInteractions.jsx/HeartToggle";
-import HeartToggleCode from "../ui/microInteractions.jsx/HeartToggle.jsx?raw";
 
 
 
-import MorphingTabs from "../ui/microInteractions.jsx/MorphingTabs";
-import MorphingTabsCode from "../ui/microInteractions.jsx/MorphingTabs.jsx?raw";
 
-import MultiStepDelete from "../ui/microInteractions.jsx/MultiStepDelete";
-import MultiStepDeleteCode from "../ui/microInteractions.jsx/MultiStepDelete.jsx?raw";
-import CursorTrail from "../ui/microInteractions.jsx/CursorTrail";
-import CursorTrailCode from "../ui/microInteractions.jsx/CursorTrail.jsx?raw";
-import ClickRipple from "../ui/microInteractions.jsx/ClickRipple";
-import ClickRippleCode from "../ui/microInteractions.jsx/ClickRipple.jsx?raw";
+
 import PortfolioHero from "../ui/hero/PortfolioHero";
 import PortfolioHeroCode from "../ui/hero/PortfolioHero.jsx?raw";
 import DualPorfolioHero from "../ui/hero/DualPortfolioHero";
@@ -315,30 +277,6 @@ export const components = [
   },
   {
     id: 8,
-    slug: "minimal-faq",
-    name: "Minimalist Accordion FAQ",
-    category: "faq",
-    description:
-      "A clean, dark accordion-style FAQ section with smooth height expansion.",
-    preview: MinimalFaq,
-    install: "npm install framer-motion lucide-react",
-    usage: `<MinimalFaq />`,
-    code: MinimalFaqCode,
-  },
-  {
-    id: 9,
-    slug: "tabbed-faq",
-    name: "Categorized Tabbed FAQ",
-    category: "faq",
-    description:
-      "Advanced FAQ component with search capability, active tab highlights, and dynamic 2-column layout.",
-    preview: TabbedFaq,
-    install: "npm install framer-motion lucide-react",
-    usage: `<TabbedFaq />`,
-    code: TabbedFaqCode,
-  },
-  {
-    id: 10,
     slug: "light-auth",
     name: "Light Auth Card",
     category: "auth",
@@ -350,7 +288,7 @@ export const components = [
     code: LightAuthCode,
   },
   {
-    id: 11,
+    id: 9,
     slug: "dark-auth",
     name: "Dark Split Auth",
     category: "auth",
@@ -362,7 +300,7 @@ export const components = [
     code: DarkAuthCode,
   },
   {
-    id: 12,
+    id: 10,
     slug: "funky-404",
     name: "Funky Playful 404 Page",
     category: "404-pages",
@@ -374,7 +312,7 @@ export const components = [
     code: Funky404Code,
   },
   {
-    id: 13,
+    id: 11,
     slug: "apple-hello",
     name: "Apple Hello Text Effect",
     category: "text-effects",
@@ -386,7 +324,7 @@ export const components = [
     code: AppleHelloCode,
   },
   {
-    id: 14,
+    id: 12,
     slug: "minimal-loader",
     name: "MinimalLoader",
     category: "loaders",
@@ -398,7 +336,7 @@ export const components = [
     code: MinimalLoaderCode,
   },
   {
-    id: 15,
+    id: 13,
     slug: "cyber-loader",
     name: "Cyber Lime Matrix Loader",
     category: "loaders",
@@ -410,7 +348,7 @@ export const components = [
     code: FlashyLoaderCode,
   },
   {
-    id: 16,
+    id: 14,
     slug: "horizon-loader",
     name: "Horizon Wave Loader",
     category: "loaders",
@@ -422,7 +360,7 @@ export const components = [
     code: LuxuryLoaderCode,
   },
   {
-    id: 17,
+    id: 15,
     slug: "light-product-card",
     name: "Minimal Light Product Card",
     category: "ecommerce",
@@ -434,7 +372,7 @@ export const components = [
     code: LightCardCode,
   },
   {
-    id: 18,
+    id: 16,
     slug: "dark-product-card",
     name: "Luxury Dark Product Card",
     category: "ecommerce",
@@ -446,7 +384,7 @@ export const components = [
     code: DarkCardCode,
   },
   {
-    id: 19,
+    id: 17,
     slug: "light-pagination",
     name: "Minimal Light Pagination",
     category: "pagination",
@@ -458,7 +396,7 @@ export const components = [
     code: LightPaginationCode,
   },
   {
-    id: 20,
+    id: 18,
     slug: "dark-pagination",
     name: "Cyber Dark Segmented Pagination",
     category: "pagination",
@@ -470,7 +408,7 @@ export const components = [
     code: DarkPaginationCode,
   },
   {
-    id: 21,
+    id: 19,
     slug: "animated-404",
     name: "Animated 404 Page",
     category: "404-pages",
@@ -482,7 +420,7 @@ export const components = [
     code: animatedNotFoundCode,
   },
   {
-    id: 22,
+    id: 20,
     slug: "light-progress-bar",
     name: "Light Theme Animated Progress Bar",
     category: "progress-bars",
@@ -494,7 +432,7 @@ export const components = [
     code: LightProgressCode,
   },
   {
-    id: 23,
+    id: 21,
     slug: "dark-progress-bar",
     name: "Dark Progress Bar",
     category: "progress-bars",
@@ -506,7 +444,7 @@ export const components = [
     code: DarkProgressCode,
   },
   {
-    id: 24,
+    id: 22,
     slug: "white-wave-dock",
     name: "Glassmorphic Wave Dock (Light)",
     category: "docks",
@@ -518,7 +456,7 @@ export const components = [
     code: LightDockCode,
   },
   {
-    id: 25,
+    id: 23,
     slug: "dark-wave-dock",
     name: "Obsidian Teal Wave Dock (Dark)",
     category: "docks",
@@ -530,7 +468,7 @@ export const components = [
     code: DarkDockCode,
   },
   {
-    id: 26,
+    id: 24,
     slug: "light-footer",
     name: "Light Footer",
     category: "footers",
@@ -542,7 +480,7 @@ export const components = [
     code: LightFooterCode,
   },
   {
-    id: 27,
+    id: 25,
     slug: "dark-footer",
     name: "Dark Footer",
     category: "footers",
@@ -554,79 +492,7 @@ export const components = [
     code: DarkFooterCode,
   },
   {
-    id: 28,
-    slug: "light-navbar",
-    name: "Light Navbar",
-    category: "navbars",
-    description:
-      "Editorial warm-cream sticky navbar with backdrop glassmorphism, responsive animated drawer, and smooth hover states.",
-    preview: LightNavbar,
-    install: "npm install framer-motion react-icons",
-    usage: `<LightNavbar />`,
-    code: LightNavbarCode,
-  },
-  {
-    id: 29,
-    slug: "dark-navbar",
-    name: "Dark Navbar",
-    category: "navbars",
-    description:
-      "Sleek dark-themed sticky navbar featuring custom brand mark, blurred glass backdrop, and responsive mobile drawer.",
-    preview: DarkNavbar,
-    install: "npm install framer-motion react-icons",
-    usage: `<DarkNavbar />`,
-    code: DarkNavbarCode,
-  },
-  {
-    id: 30,
-    slug: "light-marquee",
-    name: "Light Infinite Marquee",
-    category: "marquees",
-    description:
-      "Warm cream infinite auto-scrolling brand logo marquee with edge fading and interactive hover states.",
-    preview: LightMarquee,
-    install: "npm install framer-motion",
-    usage: `<LightMarquee />`,
-    code: LightMarqueeCode,
-  },
-  {
-    id: 31,
-    slug: "animated-otp-input",
-    name: "Animated OTP Verification",
-    category: "inputs",
-    description:
-      "Light-themed 4-digit animated OTP verification field with auto-focus, paste support, and interactive success states.",
-    preview: OtpVerify,
-    install: "npm install framer-motion",
-    usage: `<OtpVerify />`,
-    code: OtpVerifyCode,
-  },
-  {
-    id: 32,
-    slug: "animated-otp-card",
-    name: "Dark OTP Card",
-    category: "inputs",
-    description:
-      "Dark-mode cyber aesthetic OTP input card with slate and cyan styling, scanning beam indicators, grid overlay, and error feedback.",
-    preview: DarkVerifyOtp,
-    install: "npm install framer-motion",
-    usage: `<DarkVerifyOtp />`,
-    code: DarkVerifyOtpCode,
-  },
-  {
-    id: 33,
-    slug: "ai-prompt-box",
-    name: "Prompt",
-    category: "inputs",
-    description:
-      "Modern light-theme AI prompt input card with file context attachments, search/think feature toggles, and responsive state animations.",
-    preview: PromptInput,
-    install: "npm install framer-motion",
-    usage: `<PromptInput />`,
-    code: PromptInputCode,
-  },
-  {
-    id: 34,
+    id: 26,
     slug: "circular-wheel-nav",
     name: "Circular Wheel Navigation",
     category: "navigation",
@@ -638,31 +504,7 @@ export const components = [
     code: WheelNavigationCode,
   },
   {
-    id: 35,
-    slug: "animated-delete-modal",
-    name: "Animated Delete Modal",
-    category: "modals",
-    description:
-      "A pop-up delete box with smooth entrance animations, dark mode support, a backdrop blur, and a loading state for actions.",
-    preview: DeleteModal,
-    install: "npm install framer-motion react-icons",
-    usage: `<DeleteModal isOpen={isOpen} onClose={() => setIsOpen(false)} onDelete={handleDelete} itemName="Project Alpha" />`,
-    code: DeleteModalCode,
-  },
-  {
-    id: 36,
-    slug: "file-upload",
-    name: "File Upload Dropzone",
-    category: "inputs",
-    description:
-      "A light-theme drag and drop file uploader with upload progress bars, file validation, and list removal animations.",
-    preview: FileUpload,
-    install: "npm install framer-motion react-icons",
-    usage: `<FileUpload onFilesSelected={(files) => console.log(files)} maxSizeBytes={10485760} />`,
-    code: FileUploadCode,
-  },
-  {
-    id: 37,
+    id: 27,
     slug: "skeleton-card-loader",
     name: "Skeleton Card Loader",
     category: "loaders",
@@ -674,7 +516,7 @@ export const components = [
     code: SkeletonLoaderCode,
   },
   {
-    id: 38,
+    id: 28,
     slug: "bento-grid",
     name: "Bento Grid with Expandable Modal",
     category: "grids",
@@ -686,7 +528,7 @@ export const components = [
     code: BentoGridCode,
   },
   {
-    id: 39,
+    id: 29,
     slug: "experience-curtains-transition",
     name: "Experience Curtains Transition",
     category: "transitions",
@@ -698,31 +540,7 @@ export const components = [
     code: PageTransitionsCode,
   },
   {
-    id: 40,
-    slug: "stats-section",
-    name: "Stats Section",
-    category: "stats",
-    description:
-      "A 4-card metric section featuring warm lighting ambient glow, skeleton shimmer loading states, and staggered entrance animations.",
-    preview: StatsCard,
-    install: "npm install framer-motion react-icons",
-    usage: `<StatsCard />`,
-    code: StatsCardCode,
-  },
-  {
-    id: 41,
-    slug: "warm-team-section",
-    name: "Warm Editorial Team Section",
-    category: "team",
-    description:
-      "A light-themed, warm-toned team grid featuring interactive category filtering, Framer Motion transitions, and GSAP scroll-triggered entrance animations.",
-    preview: TeamSection,
-    install: "npm install framer-motion gsap react-icons",
-    usage: `<TeamSection />`,
-    code: TeamSectionCode,
-  },
-  {
-    id: 42,
+    id: 30,
     slug: "airplane-text-animation",
     name: "Airplane text",
     category: "text-effects",
@@ -733,7 +551,7 @@ export const components = [
     code: PlaneTextCode,
   },
   {
-    id: 43,
+    id: 31,
     slug: "animated-light-calendar",
     name: "Animated Light Calendar",
     category: "calendar",
@@ -745,7 +563,7 @@ export const components = [
     code: AnimatedCalendarCode,
   },
   {
-    id: 44,
+    id: 32,
     slug: "mini-dark-calendar",
     name: "Mini Dark Calendar",
     category: "calendar",
@@ -757,7 +575,7 @@ export const components = [
     code: MiniCalendarCode,
   },
   {
-    id: 45,
+    id: 33,
     slug: "light-scratch-card",
     name: "Minimal Scratch Card",
     category: "ecommerce",
@@ -769,7 +587,7 @@ export const components = [
     code: ScratchCardCode,
   },
   {
-    id: 46,
+    id: 34,
     slug: "animated-auth",
     name: "Animated Auth Page",
     category: "auth",
@@ -781,18 +599,7 @@ export const components = [
     code: AnimatedAuthCode,
   },
   {
-    id: 47,
-    slug: "animated-faq",
-    name: "Animated FAQ",
-    category: "faq",
-    description: "A clean, dark accordion-style FAQ section with smooth height expansion.",
-    preview: AnimatedFaq,
-    install: "npm install framer-motion react-icons gsap",
-    usage: `<AnimatedFaq />`,
-    code: AnimatedFaqCode,
-  },
-  {
-    id: 48,
+    id: 35,
     slug: "glow-cta-section",
     name: "Glow CTA Section",
     category: "cta-sections",
@@ -804,7 +611,7 @@ export const components = [
     code: AnimatedCtaCode,
   },
   {
-    id: 49,
+    id: 36,
     slug: "claymorphism-cta-section",
     name: "Claymorphism CTA Section",
     category: "cta-sections",
@@ -816,7 +623,7 @@ export const components = [
     code: ClaymorphismCtaCode,
   },
   {
-    id: 50,
+    id: 37,
     slug: "minimalist-editorial-about-section",
     name: "Minimalist Editorial About Section",
     category: "about",
@@ -828,7 +635,7 @@ export const components = [
     code: AboutSectionCode,
   },
   {
-    id: 51,
+    id: 38,
     slug: "interactive-timeline-about-section",
     name: "Interactive Timeline About Section",
     category: "about",
@@ -840,19 +647,7 @@ export const components = [
     code: TimelineAboutSectionCode,
   },
   {
-    id: 52,
-    slug: "premium-payment-gateway",
-    name: "Premium Payment Gateway",
-    category: "payments",
-    description:
-      "A slick, light-themed payment gateway card with interactive credit card live previewing, tabbed checkout methods (Card, Apple Pay, Google Pay), micro-focused field animations, auto-formatting card/expiry inputs, and animated success state transition.",
-    preview: TransactionCard,
-    install: "npm install framer-motion react-icons",
-    usage: `<TransactionCard />`,
-    code: TransactionCardCode,
-  },
-  {
-    id: 53,
+    id: 39,
     slug: "compact-pricing-section",
     name: "Compact Pricing Section",
     category: "pricing",
@@ -863,20 +658,20 @@ export const components = [
     usage: `<CompactPricing />`,
     code: CompactPricingCode,
   },
+  { 
+id: 40,
+  slug: "light-contact-simple",
+  name: "Light Contact Simple",
+  category: "contact",
+  description:
+    "A clean light-mode contact section displaying company details, copy-to-clipboard interactions, and help center redirect banner.",
+  preview: LightContact,
+  install: "npm install framer-motion react-icons gsap",
+  usage: `<LightContact />`,
+  code: LightContactCode,
+},
   {
-    id: 54,
-    slug: "light-contact-simple",
-    name: "Light Contact Simple",
-    category: "contact",
-    description:
-      "A clean light-mode contact section displaying company details, copy-to-clipboard interactions, and help center redirect banner.",
-    preview: LightContact,
-    install: "npm install framer-motion react-icons gsap",
-    usage: `<LightContact />`,
-    code: LightContactCode,
-  },
-  {
-    id: 55,
+    id: 41,
     slug: "dark-contact-form",
     name: "Dark Contact Form",
     category: "contact",
@@ -888,7 +683,7 @@ export const components = [
     code: DarkContactCode,
   },
   {
-    id: 56,
+    id: 42,
     slug: "brutalist-hero-simple",
     name: "Brutalist Hero Simple",
     category: "hero",
@@ -900,7 +695,7 @@ export const components = [
     code: BrutalistHeroCode,
   },
   {
-    id: 57,
+    id: 43,
     slug: "awwwards-editorial-dark-hero",
     name: "Awwwards Editorial Dark Hero",
     category: "hero",
@@ -912,7 +707,7 @@ export const components = [
     code: HeroSectionCode,
   },
   {
-    id: 58,
+    id: 44,
     slug: "awwwards-editorial-light-hero",
     name: "Awwwards Editorial Light Hero",
     category: "hero",
@@ -925,7 +720,7 @@ export const components = [
   },
 
   {
-    id: 59,
+    id: 45,
     slug: "minimal-light-empty-state",
     name: "Minimal Light Empty State",
     category: "empty-states",
@@ -938,7 +733,7 @@ export const components = [
   },
 
   {
-    id: 60,
+    id: 46,
     slug: "high-contrast-dark-emerald-empty-state",
     name: "High Contrast Dark Emerald Empty State",
     category: "empty-states",
@@ -951,7 +746,7 @@ export const components = [
   },
 
   {
-    id: 61,
+    id: 47,
     slug: "playful-warm-terracotta-empty-state",
     name: "Playful Warm Terracotta Empty State",
     category: "empty-states",
@@ -964,7 +759,7 @@ export const components = [
   },
 
   {
-  id: 62,
+  id: 48,
   slug: "premium-interactive-gallery",
   name: "Premium Interactive Gallery",
   category: "galleries",
@@ -978,7 +773,7 @@ export const components = [
 
 
   {
-    id: 63,
+    id: 49,
     slug: "ultra-animated-dark-404",
     name: "Ultra Animated Dark 404",
     category: "404-pages",
@@ -991,7 +786,7 @@ export const components = [
   },
 
   {
-    id: 64,
+    id: 50,
     slug: "editorial-light-404",
     name: "Editorial Light 404",
     category: "404-pages",
@@ -1003,77 +798,14 @@ export const components = [
     code: EditorialLight404Code,
   },
 
-  {
-    id: 65,
-    slug: "magnetic-button",
-    name: "Magnetic Button",
-    category: "buttons",
-    description: "A liquid magnetic button that warps and tracks the cursor with GSAP physics.",
-    preview: MagneticButton,
-    install: "npm install gsap",
-    usage: `<MagneticButton />`,
-    code: MagneticButtonCode,
-  },
-  {
-    id: 66,
-    slug: "heart-toggle",
-    name: "Animated Heart Toggle",
-    category: "buttons",
-    description: "An interactive favorite toggle with path morphing and scale bursts.",
-    preview: HeartToggle,
-    install: "npm install framer-motion",
-    usage: `<HeartToggle />`,
-    code: HeartToggleCode,
-  },
+
+
+
+  
+
 
   {
-    id: 68,
-    slug: "morphing-tabs",
-    name: "Morphing Tabs",
-    category: "navigation",
-    description: "Smooth sliding tab indicators powered by Framer Motion layoutId.",
-    preview: MorphingTabs,
-    install: "npm install framer-motion",
-    usage: `<MorphingTabs />`,
-    code: MorphingTabsCode,
-  },
-  {
-    id: 69,
-    slug: "multi-step-delete",
-    name: "Multi-Step Delete Button",
-    category: "micro-interaction",
-    description: "A stateful confirmation button featuring an integrated progress loader.",
-    preview: MultiStepDelete,
-    install: "npm install gsap",
-    usage: `<MultiStepDelete />`,
-    code: MultiStepDeleteCode,
-  },
-  {
-    id: 70,
-    slug: "cursor-trail",
-    name: "Cursor Particle Trail",
-    category: "micro-interaction",
-    description: "Fading particle effect that follows cursor movements in real-time.",
-    preview: CursorTrail,
-    install: "npm install gsap",
-    usage: `<CursorTrail />`,
-    code: CursorTrailCode,
-  },
-
-  {
-    id: 71,
-    slug: "click-ripple",
-    name: "Click Wave Ripple",
-    category: "micro-interaction",
-    description: "Expanding shockwave rings originating from exact cursor click points.",
-    preview: ClickRipple,
-    install: "npm install framer-motion",
-    usage: `<ClickRipple />`,
-    code: ClickRippleCode,
-  },
-
-  {
-  id: 72,
+  id: 54,
   slug: "editorial-layered-hero",
   name: "Editorial Layered Hero",
   category: "hero",
@@ -1086,7 +818,7 @@ export const components = [
 },
 
 {
-  id:73,
+  id: 55,
   slug: "portfolio-hero-focus-duotone",
   name: "Portfolio Hero Focus Duotone",
   category: "hero",
@@ -1099,7 +831,7 @@ export const components = [
 },
 
 {
-  id: 74,
+  id: 56,
   slug: "animated-landscape-footer",
   name: "Animated Landscape Footer",
   category: "footers",
@@ -1112,7 +844,7 @@ export const components = [
 },
 
 {
-  id: 75,
+  id: 57,
   slug: "meridian-hero-section",
   name: "Meridian Travel Hero",
   category: "hero",
@@ -1125,7 +857,7 @@ export const components = [
 },
 
 {
-  id: 76,
+  id: 58,
   slug: "saas-hero",
   name: " SaaS Hero",
   category: "hero",
@@ -1138,7 +870,7 @@ export const components = [
 },
 
 {
-    id: 76,
+    id: 59,
     slug: "Premium-pricing-section",
     name: "Visual Premium Pricing Section",
     category: "pricing",
@@ -1150,7 +882,7 @@ export const components = [
     code: PremiumPricingCode,
   },
   {
-    id: 77,
+    id: 60,
     slug: "architectural-pricing-section",
     name: "Architectural Tiered Pricing Section",
     category: "pricing",
@@ -1162,7 +894,7 @@ export const components = [
   },
   
   {
-  id: 79,
+  id: 61,
   slug: "Premium About section",
   name: "Premium About Section",
   category: "about",
@@ -1175,7 +907,7 @@ export const components = [
 },
 
 {
-  id: 80,
+  id: 62,
   slug: "vega-bento-grid",
   name: "Vega Gaming Bento Grid",
   category: "grids",
@@ -1188,7 +920,7 @@ export const components = [
 },
 
 {
-  id: 80,
+  id: 63,
   slug: "aurora-bento-grid",
   name: "Aurora Team Bento Grid",
   category: "grids",
@@ -1200,7 +932,7 @@ export const components = [
   code: FeatureBentoGridCode,
 },
 {
-  id: 81,
+  id: 64,
   slug: "retro-cta-section",
   name: "Retro CTA Section",
   category: "cta-sections",
@@ -1212,7 +944,7 @@ export const components = [
   code: RetroCTACode,
 },
 {
-  id: 82,
+  id: 65,
   slug: "aetheria-bio-footer",
   name: "Aetheria Bio Minimalist Footer",
   category: "footers",
@@ -1224,7 +956,7 @@ export const components = [
   code: AetheriaFooterCode,
 },
 {
-  id: 82,
+  id: 66,
   slug: "retro-matchstick-cta",
   name: "Retro Matchstick CTA",
   category: "cta-sections",
@@ -1236,7 +968,7 @@ export const components = [
   code: MatchstickCTACode,
 },
 {
-  id: 83,
+  id: 67,
   slug: "art-world-join-cta",
   name: "Art World Join CTA",
   category: "cta-sections",
@@ -1248,7 +980,7 @@ export const components = [
   code: PremiumCTACode,
 },
 {
-  id: 84,
+  id: 68,
   slug: "clean-hero",
   name: "Clean Hero",
   category: "hero",
@@ -1260,7 +992,7 @@ export const components = [
   code: CleanHeroCode
 },
 {
-    id: 85,
+    id: 69,
     slug: "dark-glassmorphism-pricing",
     name: "Dark Glassmorphism Pricing",
     category: "pricing",
@@ -1272,7 +1004,7 @@ export const components = [
     code: GlassPricingCode,
   },
 {
-    id: 86,
+    id: 70,
     slug: "awwwards-editorial-testimonials",
     name: "Awwwards Editorial Testimonials",
     category: "testimonials",
@@ -1284,7 +1016,7 @@ export const components = [
     code: PremiumTestimonialCode,
   },
   {
-  id: 87,
+  id: 71,
   slug: "hero-saas",
   name: "SaaS Hero",
   category: "hero",
@@ -1296,7 +1028,7 @@ export const components = [
   code: SaasHeroCode
 },
 {
-  id: 88,
+  id: 72,
   slug: "premium-bento-grid",
   name: "Premium Bento Grid",
   category: "grids",
@@ -1308,7 +1040,7 @@ export const components = [
   code: PremiumBentoGridCode,
 },
 {
-  id: 89,
+  id: 73,
   slug: "emerald-grid",
   name: "Emerald Bento Grid",
   category: "grids",
@@ -1320,7 +1052,7 @@ export const components = [
   code: EmeraldGridCode,
 },
 {
-  id: 90,
+  id: 74,
   slug: "transit-pricing-tier",
   name: "Transit Pricing Kiosk",
   category: "pricing",

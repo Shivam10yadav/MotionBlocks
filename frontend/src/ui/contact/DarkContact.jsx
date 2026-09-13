@@ -1,30 +1,88 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { gsap } from 'gsap';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaArrowRight, FaCheck, FaPaperPlane } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import {
+  FaInstagram,
+  FaXTwitter,
+  FaLinkedinIn,
+  FaGithub,
+  FaYoutube,
+} from "react-icons/fa6";
+import {
+  FiArrowUpRight,
+  FiCopy,
+  FiCheck,
+  FiMail,
+  FiPhone,
+  FiMapPin,
+  FiSend,
+} from "react-icons/fi";
 
 export default function DarkContact() {
   const containerRef = useRef(null);
   const buttonRef = useRef(null);
-  
-  // Form State
-  const [formData, setFormData] = useState({ name: '', email: '', budget: '$25k - $50k', message: '' });
-  const [focusedField, setFocusedField] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [copiedField, setCopiedField] = useState(null);
 
-  // Magnetic Button Micro-Interaction
+  // GSAP Entrance Animations
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ defaults: { ease: "power4.out", duration: 1.2 } });
+
+      // Badge reveal
+      tl.fromTo(
+        ".gsap-badge",
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8 }
+      );
+
+      // Kinetic Title Character Stagger
+      tl.fromTo(
+        ".gsap-char",
+        { y: "120%", opacity: 0, rotateX: -90 },
+        { y: "0%", opacity: 1, rotateX: 0, stagger: 0.015, duration: 1.1 },
+        "-=0.6"
+      );
+
+      // Description reveal
+      tl.fromTo(
+        ".gsap-subtitle",
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8 },
+        "-=0.6"
+      );
+
+      // Main CTA button reveal
+      tl.fromTo(
+        ".gsap-cta",
+        { scale: 0.85, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.4)" },
+        "-=0.5"
+      );
+
+      // Direct Info & Social Cards reveal
+      tl.fromTo(
+        ".gsap-info-card",
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, stagger: 0.1, duration: 0.8 },
+        "-=0.4"
+      );
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // Magnetic Physics on Main CTA Button
   const handleMouseMove = (e) => {
     if (!buttonRef.current) return;
-    const rect = buttonRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = buttonRef.current.getBoundingClientRect();
+    const x = (clientX - (left + width / 2)) * 0.3;
+    const y = (clientY - (top + height / 2)) * 0.3;
 
     gsap.to(buttonRef.current, {
-      x: x * 0.35,
-      y: y * 0.35,
+      x: x,
+      y: y,
       duration: 0.3,
-      ease: 'power2.out',
+      ease: "power2.out",
     });
   };
 
@@ -34,307 +92,184 @@ export default function DarkContact() {
       x: 0,
       y: 0,
       duration: 0.6,
-      ease: 'elastic.out(1, 0.3)',
+      ease: "elastic.out(1, 0.4)",
     });
   };
 
-  // Entrance Animations
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Split Text Stagger Reveal
-      gsap.from('.reveal-text', {
-        yPercent: 120,
-        rotateX: -10,
-        duration: 1.1,
-        stagger: 0.08,
-        ease: 'power4.out',
-      });
-
-      // Expand dividers with elastic feel
-      gsap.from('.divider-line', {
-        scaleX: 0,
-        transformOrigin: 'left center',
-        duration: 1.4,
-        stagger: 0.1,
-        ease: 'expo.out',
-        delay: 0.2,
-      });
-
-      // Staggered entry for inputs
-      gsap.from('.form-row', {
-        y: 40,
-        opacity: 0,
-        duration: 0.9,
-        stagger: 0.08,
-        ease: 'power3.out',
-        delay: 0.3,
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 1600);
+  // Letter Hover Distortion Physics
+  const handleCharHover = (e) => {
+    gsap.to(e.currentTarget, {
+      y: "-12%",
+      color: "#38BDF8",
+      duration: 0.15,
+      yoyo: true,
+      repeat: 1,
+      ease: "power2.out",
+    });
   };
 
-  const budgetOptions = ['< $10k', '$10k - $25k', '$25k - $50k', '$50k+'];
-
-  const directContacts = [
-    { label: 'Direct Line', value: 'hello@deepcode.io', note: 'Response ~ 2h' },
-    { label: 'Global Call', value: '+1 (415) 890-1234', note: 'Mon — Fri / PST' },
-    { label: 'Studio Base', value: '799 Market St, SF', note: 'Appointment Only' },
-  ];
+  const handleCopy = (text, field) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
+  };
 
   return (
-    <section 
-      ref={containerRef} 
-      className="w-full min-h-screen bg-black text-white py-20 px-6 sm:px-12 lg:px-20 font-sans flex items-center justify-center selection:bg-emerald-400 selection:text-black overflow-hidden"
+    <div
+      ref={containerRef}
+      className="min-h-screen bg-[#000000] text-[#F4F4F5] font-sans p-6 sm:p-12 lg:p-16 flex flex-col justify-between items-center select-none relative overflow-hidden"
     >
-      <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-20 items-start">
-        
-        {/* Left Editorial Header & Details */}
-        <div className="lg:col-span-5 flex flex-col justify-between min-h-[72vh]">
-          <div>
-            <div className="overflow-hidden mb-3">
-              <span className="reveal-text block text-xs tracking-[0.25em] text-emerald-400 uppercase font-mono">
-                [ 01 // DIRECT CHANNEL ]
-              </span>
-            </div>
+      {/* High-Contrast Grid Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#27272a25_1px,transparent_1px),linear-gradient(to_bottom,#27272a25_1px,transparent_1px)] bg-[size:4rem_4rem] pointer-events-none" />
 
-            <div className="overflow-hidden">
-              <h1 className="reveal-text text-5xl sm:text-7xl font-light tracking-tight leading-[0.92] text-white">
-                LET'S MAKE <br />
-                <span className="italic font-normal text-zinc-400">AN IMPACT</span>
-                <span className="text-emerald-400">.</span>
-              </h1>
-            </div>
-
-            <div className="overflow-hidden mt-6">
-              <p className="reveal-text text-base text-zinc-300 leading-relaxed font-normal max-w-sm">
-                Engineering platforms, design systems, and digital products for high-growth teams.
-              </p>
-            </div>
-          </div>
-
-          {/* Contact Details List */}
-          <div className="mt-12 space-y-5">
-            <div className="divider-line w-full h-[1px] bg-zinc-800" />
-            {directContacts.map((contact, idx) => (
-              <div key={idx} className="group py-1.5 flex items-baseline justify-between">
-                <div>
-                  <span className="text-[10px] text-zinc-500 font-mono block uppercase tracking-wider mb-0.5">
-                    0{idx + 1} / {contact.label}
-                  </span>
-                  <span className="text-lg font-medium text-white group-hover:text-emerald-400 transition-colors duration-300">
-                    {contact.value}
-                  </span>
-                </div>
-                <span className="text-xs text-zinc-500 font-mono">
-                  {contact.note}
-                </span>
-              </div>
-            ))}
-            <div className="divider-line w-full h-[1px] bg-zinc-800" />
-          </div>
-
-          {/* Availability Indicator */}
-          <div className="mt-8 pt-4 flex items-center justify-between text-xs text-zinc-400 font-mono">
-            <span>SAN FRANCISCO, CA</span>
-            <span className="flex items-center gap-2 font-medium text-white">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              Q3/Q4 AVAILABLE
-            </span>
-          </div>
+      {/* Clear Top Badge / Section Hint */}
+      <div className="gsap-badge z-10 pt-4">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-700 bg-zinc-900/80 backdrop-blur-md">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs font-mono font-bold tracking-widest text-zinc-200 uppercase">
+            CONTACT & WORK WITH ME
+          </span>
         </div>
-
-        {/* Right Editorial Interactive Form */}
-        <div className="lg:col-span-7 flex flex-col justify-center">
-          <AnimatePresence mode="wait">
-            {!isSubmitted ? (
-              <motion.form 
-                key="form"
-                initial={{ opacity: 1 }}
-                exit={{ opacity: 0, y: -20, filter: 'blur(10px)' }}
-                onSubmit={handleSubmit} 
-                className="space-y-10"
-              >
-                {/* Inputs: Name & Email */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                  
-                  {/* Name Input */}
-                  <div className="form-row relative group">
-                    <div className="flex justify-between items-center mb-2">
-                      <label 
-                        className={`text-xs uppercase tracking-wider font-mono transition-colors duration-300 ${
-                          focusedField === 'name' ? 'text-emerald-400' : 'text-zinc-400'
-                        }`}
-                      >
-                        01 // Your Name *
-                      </label>
-                      {formData.name && <FaCheck className="text-xs text-emerald-400" />}
-                    </div>
-                    <input
-                      type="text"
-                      required
-                      value={formData.name}
-                      onFocus={() => setFocusedField('name')}
-                      onBlur={() => setFocusedField(null)}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Alex Morgan"
-                      className="w-full bg-transparent border-b-2 border-zinc-800 py-3 text-xl text-white placeholder-zinc-600 outline-none transition-colors duration-300 focus:border-emerald-400"
-                    />
-                  </div>
-
-                  {/* Email Input */}
-                  <div className="form-row relative group">
-                    <div className="flex justify-between items-center mb-2">
-                      <label 
-                        className={`text-xs uppercase tracking-wider font-mono transition-colors duration-300 ${
-                          focusedField === 'email' ? 'text-emerald-400' : 'text-zinc-400'
-                        }`}
-                      >
-                        02 // Email Address *
-                      </label>
-                      {formData.email && <FaCheck className="text-xs text-emerald-400" />}
-                    </div>
-                    <input
-                      type="email"
-                      required
-                      value={formData.email}
-                      onFocus={() => setFocusedField('email')}
-                      onBlur={() => setFocusedField(null)}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="alex@company.com"
-                      className="w-full bg-transparent border-b-2 border-zinc-800 py-3 text-xl text-white placeholder-zinc-600 outline-none transition-colors duration-300 focus:border-emerald-400"
-                    />
-                  </div>
-                </div>
-
-                {/* Micro-Interaction: Budget Selector Pills */}
-                <div className="form-row">
-                  <label className="block text-xs uppercase tracking-wider font-mono text-zinc-400 mb-4">
-                    03 // Project Scope / Budget
-                  </label>
-                  <div className="flex flex-wrap gap-3">
-                    {budgetOptions.map((option) => {
-                      const isSelected = formData.budget === option;
-                      return (
-                        <button
-                          key={option}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, budget: option })}
-                          className={`relative px-5 py-2.5 rounded-full text-xs font-mono transition-all duration-300 border ${
-                            isSelected
-                              ? 'bg-emerald-400 text-black border-emerald-400 font-bold scale-105 shadow-[0_0_20px_rgba(52,211,153,0.3)]'
-                              : 'bg-zinc-950 text-zinc-300 border-zinc-800 hover:border-zinc-500 hover:text-white'
-                          }`}
-                        >
-                          {option}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Input: Message */}
-                <div className="form-row relative group">
-                  <div className="flex justify-between items-center mb-2">
-                    <label 
-                      className={`text-xs uppercase tracking-wider font-mono transition-colors duration-300 ${
-                        focusedField === 'message' ? 'text-emerald-400' : 'text-zinc-400'
-                      }`}
-                    >
-                      04 // Project Details *
-                    </label>
-                    {formData.message && <FaCheck className="text-xs text-emerald-400" />}
-                  </div>
-                  <textarea
-                    required
-                    rows={3}
-                    value={formData.message}
-                    onFocus={() => setFocusedField('message')}
-                    onBlur={() => setFocusedField(null)}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Briefly describe your objectives, scope, or timeline..."
-                    className="w-full bg-transparent border-b-2 border-zinc-800 py-3 text-xl text-white placeholder-zinc-600 outline-none transition-colors duration-300 focus:border-emerald-400 resize-none"
-                  />
-                </div>
-
-                {/* Magnetic Interactive Submit Button */}
-                <div className="form-row pt-4 flex items-center justify-between">
-                  <div 
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                    className="inline-block"
-                  >
-                    <button
-                      ref={buttonRef}
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="relative group inline-flex items-center gap-6 px-10 py-5 rounded-full bg-white text-black text-sm font-semibold overflow-hidden transition-colors duration-300 hover:bg-emerald-400 disabled:opacity-70 cursor-pointer"
-                    >
-                      {isSubmitting ? (
-                        <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                      ) : (
-                        <>
-                          <span className="relative z-10">TRANSMIT MESSAGE</span>
-                          <span className="relative z-10 w-8 h-8 rounded-full bg-black text-white flex items-center justify-center transition-transform duration-300 group-hover:scale-110 group-hover:bg-black group-hover:text-emerald-400">
-                            <FaArrowRight className="text-xs -rotate-45 group-hover:rotate-0 transition-transform duration-300" />
-                          </span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-
-                  <span className="text-[10px] font-mono text-zinc-500 uppercase hidden sm:block">
-                    [ Encrypted Transmission ]
-                  </span>
-                </div>
-              </motion.form>
-            ) : (
-              /* Success State Reveal */
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="py-16 space-y-6"
-              >
-                <div className="w-16 h-16 rounded-full border border-emerald-400 flex items-center justify-center text-emerald-400 text-xl">
-                  <FaCheck />
-                </div>
-                <div>
-                  <span className="text-xs font-mono text-emerald-400 uppercase tracking-widest block mb-1">
-                    // Transmission Received
-                  </span>
-                  <h3 className="text-4xl font-light text-white">Message Logged.</h3>
-                  <p className="text-base text-zinc-300 mt-3 max-w-md leading-relaxed font-normal">
-                    Thank you, <span className="text-white font-semibold">{formData.name}</span>. Our lead team has received your project details ({formData.budget}) and will reach out shortly.
-                  </p>
-                </div>
-                <button
-                  onClick={() => {
-                    setIsSubmitted(false);
-                    setFormData({ name: '', email: '', budget: '$25k - $50k', message: '' });
-                  }}
-                  className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-emerald-400 uppercase tracking-wider transition-colors pt-6"
-                >
-                  <FaPaperPlane className="text-[10px]" /> Reset & Send Another
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
       </div>
-    </section>
+
+      {/* Main Centered Content */}
+      <main className="my-auto py-10 flex flex-col items-center text-center max-w-5xl z-10 space-y-8">
+        
+        {/* Clear Headline */}
+        <div className="perspective-1000 space-y-1">
+          {["HAVE A PROJECT", "IN MIND?"].map((line, lIdx) => (
+            <h1
+              key={lIdx}
+              className="text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem] font-black tracking-tighter uppercase leading-[0.9] text-[#FAFAFA] flex justify-center flex-wrap"
+            >
+              {line.split(" ").map((word, wIdx) => (
+                <span key={wIdx} className="inline-flex mx-2 sm:mx-4 overflow-hidden py-1">
+                  {word.split("").map((char, cIdx) => (
+                    <span
+                      key={cIdx}
+                      onMouseEnter={handleCharHover}
+                      className="gsap-char inline-block cursor-default transition-colors duration-150"
+                    >
+                      {char}
+                    </span>
+                  ))}
+                </span>
+              ))}
+            </h1>
+          ))}
+        </div>
+
+        {/* Clear Subtitle & Details */}
+        <p className="gsap-subtitle text-zinc-300 font-medium text-base sm:text-xl max-w-2xl leading-relaxed">
+          I am currently available for full-stack freelance projects, web design engineering, and long-term contracts. Let’s build something special.
+        </p>
+
+        {/* Primary Call To Action (CTA) Button */}
+        <div
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          className="gsap-cta pt-2"
+        >
+          <a
+            ref={buttonRef}
+            href="mailto:contact@shivam.dev"
+            className="group inline-flex items-center gap-4 bg-[#F4F4F5] hover:bg-white text-[#09090B] px-10 py-5 rounded-full text-sm font-extrabold tracking-widest uppercase transition-all duration-300 shadow-[0_0_50px_rgba(255,255,255,0.18)]"
+          >
+            <FiSend className="text-base" />
+            <span>SEND ME AN EMAIL</span>
+            <div className="w-8 h-8 rounded-full bg-[#09090B] text-[#F4F4F5] flex items-center justify-center group-hover:rotate-45 transition-transform duration-300">
+              <FiArrowUpRight className="text-lg" />
+            </div>
+          </a>
+        </div>
+      </main>
+
+      {/* Explicit Contact Details & Social Links Footer */}
+      <footer className="w-full max-w-4xl pt-8 border-t border-zinc-800 flex flex-col items-center gap-6 z-10">
+        
+        {/* Direct Contact Options Box */}
+        <div className="flex flex-wrap justify-center items-center gap-4">
+          
+          {/* Email Copy Card */}
+          <div className="gsap-info-card flex items-center gap-3 bg-zinc-900 border border-zinc-700/80 px-5 py-2.5 rounded-full">
+            <FiMail className="text-zinc-400 text-sm" />
+            <a
+              href="mailto:contact@shivam.dev"
+              className="text-sm font-mono font-semibold text-zinc-100 hover:text-white transition-colors"
+            >
+              contact@shivam.dev
+            </a>
+            <button
+              onClick={() => handleCopy("contact@shivam.dev", "email")}
+              className="p-1 text-zinc-400 hover:text-white transition-colors"
+              title="Copy Email"
+            >
+              {copiedField === "email" ? (
+                <span className="text-emerald-400 text-xs font-mono font-bold flex items-center gap-1">
+                  <FiCheck /> COPIED
+                </span>
+              ) : (
+                <FiCopy className="text-xs" />
+              )}
+            </button>
+          </div>
+
+          {/* Phone Contact Card */}
+          <div className="gsap-info-card flex items-center gap-3 bg-zinc-900 border border-zinc-700/80 px-5 py-2.5 rounded-full">
+            <FiPhone className="text-zinc-400 text-sm" />
+            <a
+              href="tel:+919876543210"
+              className="text-sm font-mono font-semibold text-zinc-100 hover:text-white transition-colors"
+            >
+              +91 98765 43210
+            </a>
+            <button
+              onClick={() => handleCopy("+919876543210", "phone")}
+              className="p-1 text-zinc-400 hover:text-white transition-colors"
+              title="Copy Phone"
+            >
+              {copiedField === "phone" ? (
+                <span className="text-emerald-400 text-xs font-mono font-bold flex items-center gap-1">
+                  <FiCheck /> COPIED
+                </span>
+              ) : (
+                <FiCopy className="text-xs" />
+              )}
+            </button>
+          </div>
+
+          {/* Location Badge */}
+          <div className="gsap-info-card flex items-center gap-2 bg-zinc-900 border border-zinc-700/80 px-5 py-2.5 rounded-full text-sm font-mono text-zinc-300">
+            <FiMapPin className="text-zinc-400" />
+            <span>Karnal, Haryana, India</span>
+          </div>
+        </div>
+
+        {/* Social Icons Bar */}
+        <div className="gsap-info-card flex items-center gap-3 pt-2">
+          {[
+            { icon: FaGithub, label: "GitHub", href: "https://github.com" },
+            { icon: FaLinkedinIn, label: "LinkedIn", href: "https://linkedin.com" },
+            { icon: FaXTwitter, label: "Twitter", href: "https://x.com" },
+            { icon: FaInstagram, label: "Instagram", href: "https://instagram.com" },
+            { icon: FaYoutube, label: "YouTube", href: "https://youtube.com" },
+          ].map((social, idx) => {
+            const Icon = social.icon;
+            return (
+              <a
+                key={idx}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={social.label}
+                className="p-3 rounded-full border border-zinc-700/80 bg-zinc-900 hover:bg-[#F4F4F5] hover:text-[#09090B] transition-colors duration-200 text-zinc-200"
+              >
+                <Icon className="text-sm" />
+              </a>
+            );
+          })}
+        </div>
+      </footer>
+    </div>
   );
 }
