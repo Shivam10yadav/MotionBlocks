@@ -188,6 +188,9 @@ import PremiumBentoGrid from "../ui/grids/PremiumBentoGrids";
 import PremiumBentoGridCode from "../ui/grids/PremiumBentoGrids.jsx?raw";
 import EmeraldGrid from "../ui/grids/EmeraldGrid";
 import EmeraldGridCode from "../ui/grids/EmeraldGrid.jsx?raw";
+import TransitPricingSection from "../ui/pricing/TransitPricingSection";
+import TransitPricingSectionCode from "../ui/pricing/TransitPricingSection.jsx?raw";
+
 
 
 
@@ -1315,6 +1318,18 @@ export const components = [
   install: "npm install framer-motion gsap lucide-react",
   usage: `<EmeraldGrid />`,
   code: EmeraldGridCode,
+},
+{
+  id: 90,
+  slug: "transit-pricing-tier",
+  name: "Transit Pricing Kiosk",
+  category: "pricing",
+  description:
+    "An editorial, high-contrast subway kiosk pricing section featuring soft warm tile backgrounds, stepped pixel gradients, clear tier badges, and GSAP micro-animations.",
+  preview: TransitPricingSection,
+  install: "npm install framer-motion gsap lucide-react",
+  usage: `<TransitPricingSection />`,
+  code: TransitPricingSectionCode,
 }
 
 
